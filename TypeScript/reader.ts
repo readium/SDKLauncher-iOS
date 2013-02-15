@@ -81,11 +81,7 @@ module ReadiumSdk {
         }
 
         private updateLauncher(pageIx: number, pageCount: number) {
-
-            var launcher = window['LauncherUI'];
-            if (launcher) {
-                launcher.onOpenPageIndexOfPages(pageIx, pageCount);
-            }
+            window.location.href = "epubobjc:setPageIndexAndPageCount/" + pageIx + "/" + pageCount;
         }
 
         public updateViewPortSize() : bool

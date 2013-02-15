@@ -65,10 +65,7 @@ var ReadiumSdk;
             this.updateLauncher(this.paginationInfo.currentPage, this.paginationInfo.pageCount);
         };
         Reader.prototype.updateLauncher = function (pageIx, pageCount) {
-            var launcher = window['LauncherUI'];
-            if(launcher) {
-                launcher.onOpenPageIndexOfPages(pageIx, pageCount);
-            }
+            window.location.href = "epubobjc:setPageIndexAndPageCount/" + pageIx + "/" + pageCount;
         };
         Reader.prototype.updateViewPortSize = function () {
             var newWidth = $("#key-hole").width();

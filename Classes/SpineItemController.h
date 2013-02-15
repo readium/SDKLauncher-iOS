@@ -11,8 +11,11 @@
 @class RDPackage;
 @class RDSpineItem;
 
-@interface SpineItemController : BaseViewController {
+@interface SpineItemController : BaseViewController <UIWebViewDelegate> {
+	@private int m_currentPageIndex;
+	@private BOOL m_didHandleFirstRequest;
 	@private RDPackage *m_package;
+	@private int m_pageCount;
 	@private RDSpineItem *m_spineItem;
 	@private UIWebView *m_webView;
 }

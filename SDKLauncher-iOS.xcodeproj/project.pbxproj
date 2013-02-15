@@ -13,6 +13,7 @@
 		3403516D16CE9FF2009E3B88 /* BundleURLProtocol.m in Sources */ = {isa = PBXBuildFile; fileRef = 3403516C16CE9FF2009E3B88 /* BundleURLProtocol.m */; };
 		3403516E16CEA93F009E3B88 /* jquery-1.8.2.min.js in Resources */ = {isa = PBXBuildFile; fileRef = 3403516016CE93F2009E3B88 /* jquery-1.8.2.min.js */; };
 		3403516F16CEA93F009E3B88 /* reader.js in Resources */ = {isa = PBXBuildFile; fileRef = 3403516316CE93F2009E3B88 /* reader.js */; };
+		3403517216CEB93D009E3B88 /* TypeScript in Resources */ = {isa = PBXBuildFile; fileRef = 3403517116CEB93D009E3B88 /* TypeScript */; };
 		340535AA16BC5DD100D4A802 /* BaseViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 340535A916BC5DD100D4A802 /* BaseViewController.m */; };
 		340535AD16BC5F4700D4A802 /* ContainerListController.m in Sources */ = {isa = PBXBuildFile; fileRef = 340535AC16BC5F4700D4A802 /* ContainerListController.m */; };
 		340535B216BC608900D4A802 /* LocStr.m in Sources */ = {isa = PBXBuildFile; fileRef = 340535AF16BC608900D4A802 /* LocStr.m */; };
@@ -96,6 +97,7 @@
 		3403516916CE9BE2009E3B88 /* ScriptInjector.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ScriptInjector.m; sourceTree = "<group>"; };
 		3403516B16CE9FF2009E3B88 /* BundleURLProtocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BundleURLProtocol.h; sourceTree = "<group>"; };
 		3403516C16CE9FF2009E3B88 /* BundleURLProtocol.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BundleURLProtocol.m; sourceTree = "<group>"; };
+		3403517116CEB93D009E3B88 /* TypeScript */ = {isa = PBXFileReference; lastKnownFileType = folder; path = TypeScript; sourceTree = "<group>"; };
 		340535A816BC5DD100D4A802 /* BaseViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BaseViewController.h; sourceTree = "<group>"; };
 		340535A916BC5DD100D4A802 /* BaseViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BaseViewController.m; sourceTree = "<group>"; };
 		340535AB16BC5F4700D4A802 /* ContainerListController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ContainerListController.h; sourceTree = "<group>"; };
@@ -203,6 +205,7 @@
 				340FC15A16BC3B4600346A59 /* Products */,
 				3462FBBF16BC3C8F003C79E1 /* Resources */,
 				3462FBC916BC3CBA003C79E1 /* Supporting Files */,
+				3403517116CEB93D009E3B88 /* TypeScript */,
 				347C58B216BC873700A647B0 /* ePub3.xcodeproj */,
 			);
 			sourceTree = "<group>";
@@ -452,6 +455,7 @@
 				3403516616CE93F2009E3B88 /* reader.html in Resources */,
 				3403516F16CEA93F009E3B88 /* reader.js in Resources */,
 				340535BB16BC793700D4A802 /* wasteland-20120118.epub in Resources */,
+				3403517216CEB93D009E3B88 /* TypeScript in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

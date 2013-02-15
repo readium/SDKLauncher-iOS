@@ -32,9 +32,9 @@
 @property (nonatomic, readonly) NSString *subtitle;
 @property (nonatomic, readonly) NSString *title;
 
-// Returns the data at the given relative path or nil if it doesn't exist.  If the data happens
-// to be HTML, the out parameter is set.
-- (NSData *)dataAtRelativePath:(NSString *)relativePath html:(NSString **)html;
+// Returns the data at the given relative path or nil if it doesn't exist.  The isHTML out
+// parameter returns whether or not the resource is HTML.
+- (NSData *)dataAtRelativePath:(NSString *)relativePath isHTML:(BOOL *)isHTML;
 
 - (id)initWithPackage:(void *)package;
 

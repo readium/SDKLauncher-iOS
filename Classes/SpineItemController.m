@@ -7,10 +7,10 @@
 //
 
 #import "SpineItemController.h"
-#import "EPubURLProtocol.h"
 #import "EPubURLProtocolBridge.h"
 #import "RDPackage.h"
 #import "RDSpineItem.h"
+#import "ScriptInjector.h"
 
 
 @implementation SpineItemController
@@ -26,11 +26,6 @@
 	[m_package release];
 	[m_spineItem release];
 	[super dealloc];
-}
-
-
-+ (void)initialize {
-	[NSURLProtocol registerClass:[EPubURLProtocol class]];
 }
 
 
@@ -62,7 +57,7 @@
 	[self.view addSubview:m_webView];
 
 	NSString *url = [NSString stringWithFormat:@"%@://%@/%@",
-		kSDKLauncherWebViewProtocol,
+		kSDKLauncherWebViewSDKProtocol,
 		m_package.packageID,
 		m_spineItem.baseHref];
 
@@ -73,7 +68,7 @@
 - (void)onProtocolBridgeNeedsResponse:(NSNotification *)notification {
 	NSURL *url = [notification.userInfo objectForKey:@"url"];
 	NSString *s = url.absoluteString;
-	NSString *prefix = [kSDKLauncherWebViewProtocol stringByAppendingString:@"://"];
+	NSString *prefix = [kSDKLauncherWebViewSDKProtocol stringByAppendingString:@"://"];
 
 	if (s == nil || ![s hasPrefix:prefix] || s.length == prefix.length) {
 		return;
@@ -99,12 +94,13 @@
 	}
 
 	NSString *relativePath = [s substringFromIndex:1];
-	NSString *html = nil;
-	NSData *data = [m_package dataAtRelativePath:relativePath html:&html];
+	BOOL isHTML = NO;
+	NSData *data = [m_package dataAtRelativePath:relativePath isHTML:&isHTML];
 	EPubURLProtocolBridge *bridge = notification.object;
 
-	if (html != nil) {
-		// To do: inject script...
+	if (isHTML && NO) {
+		// To do: get script injection working...
+		NSString *html = [ScriptInjector htmlByInjectingIntoHTMLAtURL:url.absoluteString];
 		bridge.currentData = [html dataUsingEncoding:NSUTF8StringEncoding];
 		bridge.currentResponse = [[[NSHTTPURLResponse alloc]
 			initWithURL:url

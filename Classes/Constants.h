@@ -8,7 +8,8 @@
 
 #import <Foundation/Foundation.h>
 
-#define kSDKLauncherWebViewProtocol @"epubwebview"
+#define kSDKLauncherWebViewBundleProtocol @"epubwebviewbundle"
+#define kSDKLauncherWebViewSDKProtocol @"epubwebviewsdk"
 
 @interface Constants : NSObject
 

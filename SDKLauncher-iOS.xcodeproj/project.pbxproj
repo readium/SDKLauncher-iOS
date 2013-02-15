@@ -7,6 +7,12 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		3403516516CE93F2009E3B88 /* reader.css in Resources */ = {isa = PBXBuildFile; fileRef = 3403516116CE93F2009E3B88 /* reader.css */; };
+		3403516616CE93F2009E3B88 /* reader.html in Resources */ = {isa = PBXBuildFile; fileRef = 3403516216CE93F2009E3B88 /* reader.html */; };
+		3403516A16CE9BE2009E3B88 /* ScriptInjector.m in Sources */ = {isa = PBXBuildFile; fileRef = 3403516916CE9BE2009E3B88 /* ScriptInjector.m */; };
+		3403516D16CE9FF2009E3B88 /* BundleURLProtocol.m in Sources */ = {isa = PBXBuildFile; fileRef = 3403516C16CE9FF2009E3B88 /* BundleURLProtocol.m */; };
+		3403516E16CEA93F009E3B88 /* jquery-1.8.2.min.js in Resources */ = {isa = PBXBuildFile; fileRef = 3403516016CE93F2009E3B88 /* jquery-1.8.2.min.js */; };
+		3403516F16CEA93F009E3B88 /* reader.js in Resources */ = {isa = PBXBuildFile; fileRef = 3403516316CE93F2009E3B88 /* reader.js */; };
 		340535AA16BC5DD100D4A802 /* BaseViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 340535A916BC5DD100D4A802 /* BaseViewController.m */; };
 		340535AD16BC5F4700D4A802 /* ContainerListController.m in Sources */ = {isa = PBXBuildFile; fileRef = 340535AC16BC5F4700D4A802 /* ContainerListController.m */; };
 		340535B216BC608900D4A802 /* LocStr.m in Sources */ = {isa = PBXBuildFile; fileRef = 340535AF16BC608900D4A802 /* LocStr.m */; };
@@ -82,6 +88,14 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		3403516016CE93F2009E3B88 /* jquery-1.8.2.min.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = "jquery-1.8.2.min.js"; sourceTree = "<group>"; };
+		3403516116CE93F2009E3B88 /* reader.css */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.css; path = reader.css; sourceTree = "<group>"; };
+		3403516216CE93F2009E3B88 /* reader.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = reader.html; sourceTree = "<group>"; };
+		3403516316CE93F2009E3B88 /* reader.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = reader.js; sourceTree = "<group>"; };
+		3403516816CE9BE2009E3B88 /* ScriptInjector.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ScriptInjector.h; sourceTree = "<group>"; };
+		3403516916CE9BE2009E3B88 /* ScriptInjector.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ScriptInjector.m; sourceTree = "<group>"; };
+		3403516B16CE9FF2009E3B88 /* BundleURLProtocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BundleURLProtocol.h; sourceTree = "<group>"; };
+		3403516C16CE9FF2009E3B88 /* BundleURLProtocol.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BundleURLProtocol.m; sourceTree = "<group>"; };
 		340535A816BC5DD100D4A802 /* BaseViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BaseViewController.h; sourceTree = "<group>"; };
 		340535A916BC5DD100D4A802 /* BaseViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BaseViewController.m; sourceTree = "<group>"; };
 		340535AB16BC5F4700D4A802 /* ContainerListController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ContainerListController.h; sourceTree = "<group>"; };
@@ -161,13 +175,24 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		340535B716BC728800D4A802 /* Epub */ = {
+		3403515F16CE9362009E3B88 /* Injection */ = {
+			isa = PBXGroup;
+			children = (
+				3403516016CE93F2009E3B88 /* jquery-1.8.2.min.js */,
+				3403516116CE93F2009E3B88 /* reader.css */,
+				3403516216CE93F2009E3B88 /* reader.html */,
+				3403516316CE93F2009E3B88 /* reader.js */,
+			);
+			name = Injection;
+			sourceTree = "<group>";
+		};
+		340535B716BC728800D4A802 /* EPub */ = {
 			isa = PBXGroup;
 			children = (
 				340535B816BC729200D4A802 /* moby-dick-20120118.epub */,
 				340535BA16BC793700D4A802 /* wasteland-20120118.epub */,
 			);
-			name = Epub;
+			name = EPub;
 			sourceTree = "<group>";
 		};
 		340FC15016BC3B4600346A59 = {
@@ -209,6 +234,8 @@
 				3462FBBB16BC3C43003C79E1 /* AppDelegate.m */,
 				340535A816BC5DD100D4A802 /* BaseViewController.h */,
 				340535A916BC5DD100D4A802 /* BaseViewController.m */,
+				3403516B16CE9FF2009E3B88 /* BundleURLProtocol.h */,
+				3403516C16CE9FF2009E3B88 /* BundleURLProtocol.m */,
 				345DA0DB16C310F400E7285C /* Constants.h */,
 				345DA0DC16C310F400E7285C /* Constants.m */,
 				3413980916C02DE7000912C1 /* ContainerController.h */,
@@ -228,6 +255,8 @@
 				3462FBBC16BC3C43003C79E1 /* main.m */,
 				341652A116C2F85700AFDB8B /* PackageMetadataController.h */,
 				341652A216C2F85700AFDB8B /* PackageMetadataController.m */,
+				3403516816CE9BE2009E3B88 /* ScriptInjector.h */,
+				3403516916CE9BE2009E3B88 /* ScriptInjector.m */,
 				3425F8DF16C16A9D001BD464 /* SpineItemController.h */,
 				3425F8E016C16A9D001BD464 /* SpineItemController.m */,
 				341652A616C2F9E700AFDB8B /* SpineItemListController.h */,
@@ -261,8 +290,9 @@
 		3462FBBF16BC3C8F003C79E1 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				3403515F16CE9362009E3B88 /* Injection */,
 				3462FBDE16BC4037003C79E1 /* Default */,
-				340535B716BC728800D4A802 /* Epub */,
+				340535B716BC728800D4A802 /* EPub */,
 				3462FBDD16BC4031003C79E1 /* Icon */,
 				3462FBC316BC3C8F003C79E1 /* Localizable.strings */,
 			);
@@ -327,6 +357,7 @@
 				340FC15516BC3B4600346A59 /* Sources */,
 				340FC15616BC3B4600346A59 /* Frameworks */,
 				340FC15716BC3B4600346A59 /* Resources */,
+				3403517016CEB1B1009E3B88 /* ShellScript */,
 			);
 			buildRules = (
 			);
@@ -399,7 +430,13 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				3462FBC816BC3C8F003C79E1 /* Localizable.strings in Resources */,
+				3462FBEB16BC40F9003C79E1 /* Default.png in Resources */,
+				3462FBEC16BC40F9003C79E1 /* Default@2x.png in Resources */,
+				3462FBE616BC40F9003C79E1 /* Default-568h@2x.png in Resources */,
+				3462FBE716BC40F9003C79E1 /* Default-Landscape.png in Resources */,
+				3462FBE816BC40F9003C79E1 /* Default-Landscape@2x.png in Resources */,
+				3462FBE916BC40F9003C79E1 /* Default-Portrait.png in Resources */,
+				3462FBEA16BC40F9003C79E1 /* Default-Portrait@2x.png in Resources */,
 				3462FBD516BC402E003C79E1 /* Icon-72.png in Resources */,
 				3462FBD616BC402E003C79E1 /* Icon-72@2x.png in Resources */,
 				3462FBD716BC402E003C79E1 /* Icon-Small-50.png in Resources */,
@@ -408,19 +445,33 @@
 				3462FBDA16BC402E003C79E1 /* Icon-Small@2x.png in Resources */,
 				3462FBDB16BC402E003C79E1 /* Icon.png in Resources */,
 				3462FBDC16BC402E003C79E1 /* Icon@2x.png in Resources */,
-				3462FBE616BC40F9003C79E1 /* Default-568h@2x.png in Resources */,
-				3462FBE716BC40F9003C79E1 /* Default-Landscape.png in Resources */,
-				3462FBE816BC40F9003C79E1 /* Default-Landscape@2x.png in Resources */,
-				3462FBE916BC40F9003C79E1 /* Default-Portrait.png in Resources */,
-				3462FBEA16BC40F9003C79E1 /* Default-Portrait@2x.png in Resources */,
-				3462FBEB16BC40F9003C79E1 /* Default.png in Resources */,
-				3462FBEC16BC40F9003C79E1 /* Default@2x.png in Resources */,
+				3403516E16CEA93F009E3B88 /* jquery-1.8.2.min.js in Resources */,
+				3462FBC816BC3C8F003C79E1 /* Localizable.strings in Resources */,
 				340535B916BC729200D4A802 /* moby-dick-20120118.epub in Resources */,
+				3403516516CE93F2009E3B88 /* reader.css in Resources */,
+				3403516616CE93F2009E3B88 /* reader.html in Resources */,
+				3403516F16CEA93F009E3B88 /* reader.js in Resources */,
 				340535BB16BC793700D4A802 /* wasteland-20120118.epub in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		3403517016CEB1B1009E3B88 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/bash;
+			shellScript = "export PATH=/usr/local/bin:$PATH\ntsc --out Resources/reader.js TypeScript/reader.ts";
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		340FC15516BC3B4600346A59 /* Sources */ = {
@@ -428,22 +479,24 @@
 			buildActionMask = 2147483647;
 			files = (
 				3462FBBD16BC3C43003C79E1 /* AppDelegate.m in Sources */,
-				3462FBBE16BC3C43003C79E1 /* main.m in Sources */,
 				340535AA16BC5DD100D4A802 /* BaseViewController.m in Sources */,
-				340535AD16BC5F4700D4A802 /* ContainerListController.m in Sources */,
-				340535B216BC608900D4A802 /* LocStr.m in Sources */,
-				340535B316BC608900D4A802 /* LocStrError.m in Sources */,
-				340535B616BC669C00D4A802 /* ContainerList.m in Sources */,
-				345CA3E516C00F0500B8B56A /* RDContainer.mm in Sources */,
-				3413980B16C02DE7000912C1 /* ContainerController.m in Sources */,
-				3413981016C03062000912C1 /* RDPackage.mm in Sources */,
-				34A94D9716C060E000FD4143 /* RDSpineItem.mm in Sources */,
-				3425F8E116C16A9D001BD464 /* SpineItemController.m in Sources */,
-				341652A316C2F85700AFDB8B /* PackageMetadataController.m in Sources */,
-				341652A816C2F9E700AFDB8B /* SpineItemListController.m in Sources */,
 				345DA0DD16C310F500E7285C /* Constants.m in Sources */,
+				3413980B16C02DE7000912C1 /* ContainerController.m in Sources */,
+				340535B616BC669C00D4A802 /* ContainerList.m in Sources */,
+				340535AD16BC5F4700D4A802 /* ContainerListController.m in Sources */,
 				345DA0E216C3151E00E7285C /* EPubURLProtocol.m in Sources */,
 				345DA0E516C334B300E7285C /* EPubURLProtocolBridge.m in Sources */,
+				340535B216BC608900D4A802 /* LocStr.m in Sources */,
+				340535B316BC608900D4A802 /* LocStrError.m in Sources */,
+				3462FBBE16BC3C43003C79E1 /* main.m in Sources */,
+				341652A316C2F85700AFDB8B /* PackageMetadataController.m in Sources */,
+				345CA3E516C00F0500B8B56A /* RDContainer.mm in Sources */,
+				3413981016C03062000912C1 /* RDPackage.mm in Sources */,
+				34A94D9716C060E000FD4143 /* RDSpineItem.mm in Sources */,
+				3403516A16CE9BE2009E3B88 /* ScriptInjector.m in Sources */,
+				3425F8E116C16A9D001BD464 /* SpineItemController.m in Sources */,
+				341652A816C2F9E700AFDB8B /* SpineItemListController.m in Sources */,
+				3403516D16CE9FF2009E3B88 /* BundleURLProtocol.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

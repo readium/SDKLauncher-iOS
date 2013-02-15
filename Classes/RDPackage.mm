@@ -45,9 +45,9 @@
 }
 
 
-- (NSData *)dataAtRelativePath:(NSString *)relativePath html:(NSString **)html {
-	if (html != nil) {
-		*html = nil;
+- (NSData *)dataAtRelativePath:(NSString *)relativePath isHTML:(BOOL *)isHTML {
+	if (isHTML != NULL) {
+		*isHTML = NO;
 	}
 
 	if (relativePath == nil || relativePath.length == 0) {
@@ -77,13 +77,11 @@
 		readBytes = reader->read(buffer, 1024);
 	}
 
-	// Determine if the data represents HTML.  If so, set the html out parameter.
+	// Determine if the data represents HTML.
 
-	if (html != nil) {
-		BOOL isHTML = NO;
-
+	if (isHTML != NULL) {
 		if ([m_relativePathsThatAreHTML containsObject:relativePath]) {
-			isHTML = YES;
+			*isHTML = YES;
 		}
 		else if (![m_relativePathsThatAreNotHTML containsObject:relativePath]) {
 			ePub3::ManifestTable manifest = m_package->Manifest();
@@ -94,69 +92,15 @@
 				if (item->Href() == s) {
 					if (item->MediaType() == "application/xhtml+xml") {
 						[m_relativePathsThatAreHTML addObject:relativePath];
-						isHTML = YES;
+						*isHTML = YES;
 					}
 
 					break;
 				}
 			}
 
-			if (!isHTML) {
+			if (*isHTML == NO) {
 				[m_relativePathsThatAreNotHTML addObject:relativePath];
-			}
-		}
-
-		if (isHTML) {
-			UInt8 *bytes = (UInt8 *)data.bytes;
-
-			// Scan for "<html" in UTF-8, UTF-16BE, and UTF-16LE.
-
-			for (int i = 0; i < 320 && i < data.length; i++) {
-				if (i + 4 < data.length &&
-					bytes[i + 0] == 0x3C &&
-					bytes[i + 1] == 0x68 &&
-					bytes[i + 2] == 0x74 &&
-					bytes[i + 3] == 0x6D &&
-					bytes[i + 4] == 0x6C)
-				{
-					*html = [[[NSString alloc] initWithData:data
-						encoding:NSUTF8StringEncoding] autorelease];
-					break;
-				}
-
-				if (i + 9 < data.length &&
-					bytes[i + 0] == 0x00 &&
-					bytes[i + 1] == 0x3C &&
-					bytes[i + 2] == 0x00 &&
-					bytes[i + 3] == 0x68 &&
-					bytes[i + 4] == 0x00 &&
-					bytes[i + 5] == 0x74 &&
-					bytes[i + 6] == 0x00 &&
-					bytes[i + 7] == 0x6D &&
-					bytes[i + 8] == 0x00 &&
-					bytes[i + 9] == 0x6C)
-				{
-					*html = [[[NSString alloc] initWithData:data
-						encoding:NSUnicodeStringEncoding] autorelease];
-					break;
-				}
-
-				if (i + 9 < data.length &&
-					bytes[i + 0] == 0x3C &&
-					bytes[i + 1] == 0x00 &&
-					bytes[i + 2] == 0x68 &&
-					bytes[i + 3] == 0x00 &&
-					bytes[i + 4] == 0x74 &&
-					bytes[i + 5] == 0x00 &&
-					bytes[i + 6] == 0x6D &&
-					bytes[i + 7] == 0x00 &&
-					bytes[i + 8] == 0x6C &&
-					bytes[i + 9] == 0x00)
-				{
-					*html = [[[NSString alloc] initWithData:data
-						encoding:NSUnicodeStringEncoding] autorelease];
-					break;
-				}
 			}
 		}
 	}

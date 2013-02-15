@@ -1,0 +1,30 @@
+html {
+	height: 100%;
+	margin: 0;
+}
+
+body {
+	height: 100%;
+	width: 100%;
+	margin: 0;
+	padding: 20px;
+	box-sizing:border-box;
+	-moz-box-sizing:border-box; /* Firefox */
+	-webkit-box-sizing:border-box; /* Safari */
+}
+
+#key-hole {
+	height: 100%;
+	width: 100%;
+	margin: 0;
+	padding: 0;
+	opacity: 1;
+	visibility: visible;
+	overflow: hidden;
+}
+
+iframe {
+	height:100%;
+	width: 99%;
+	border-width: 0px;
+}

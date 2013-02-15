@@ -1,21 +1,20 @@
 //
-//  EPubURLProtocol.m
+//  BundleURLProtocol.m
 //  SDKLauncher-iOS
 //
-//  Created by Shane Meyer on 2/6/13.
+//  Created by Shane Meyer on 2/15/13.
 //  Copyright (c) 2012-2013 The Readium Foundation.
 //
 
-#import "EPubURLProtocol.h"
-#import "EPubURLProtocolBridge.h"
+#import "BundleURLProtocol.h"
 
 
-@implementation EPubURLProtocol
+@implementation BundleURLProtocol
 
 
 + (BOOL)canInitWithRequest:(NSURLRequest *)request {
 	NSString *s = request.URL.scheme;
-	return s != nil && [s isEqualToString:kSDKLauncherWebViewSDKProtocol];
+	return s != nil && [s isEqualToString:kSDKLauncherWebViewBundleProtocol];
 }
 
 
@@ -37,10 +36,24 @@
 
 
 - (void)startLoading {
-	NSURLRequest *request = self.request;
 	NSData *data = nil;
-	NSURLResponse *response = [[EPubURLProtocolBridge shared]
-		responseForURL:request.URL data:&data];
+	NSURLResponse *response = nil;
+	NSString *prefix = [kSDKLauncherWebViewBundleProtocol stringByAppendingString:@"://"];
+	NSString *s = self.request.URL.absoluteString;
+
+	if (s != nil && [s hasPrefix:prefix] && s.length > prefix.length) {
+		s = [s substringFromIndex:prefix.length];
+		s = [[NSBundle mainBundle] pathForResource:s ofType:nil];
+		data = [NSData dataWithContentsOfFile:s];
+
+		if (data != nil) {
+			response = [[[NSHTTPURLResponse alloc]
+				initWithURL:[NSURL fileURLWithPath:s]
+				statusCode:200
+				HTTPVersion:@"HTTP/1.1"
+				headerFields:nil] autorelease];
+		}
+	}
 
 	if (response == nil || data == nil) {
 		NSError *error = [NSError errorWithDomain:NSURLErrorDomain

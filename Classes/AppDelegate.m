@@ -7,7 +7,9 @@
 //
 
 #import "AppDelegate.h"
+#import "BundleURLProtocol.h"
 #import "ContainerListController.h"
+#import "EPubURLProtocol.h"
 
 
 @implementation AppDelegate
@@ -17,11 +19,15 @@
 	application:(UIApplication *)application
 	didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
+	[NSURLProtocol registerClass:[BundleURLProtocol class]];
+	[NSURLProtocol registerClass:[EPubURLProtocol class]];
+
 	m_window = [[UIWindow alloc] initWithFrame:[UIScreen mainScreen].bounds];
 	ContainerListController *c = [[[ContainerListController alloc] init] autorelease];
 	m_window.rootViewController = [[[UINavigationController alloc]
 		initWithRootViewController:c] autorelease];
 	[m_window makeKeyAndVisible];
+
 	return YES;
 }
 

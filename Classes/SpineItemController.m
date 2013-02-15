@@ -99,10 +99,20 @@
 	}
 
 	NSString *relativePath = [s substringFromIndex:1];
-	NSData *data = [m_package dataAtRelativePath:relativePath];
+	NSString *html = nil;
+	NSData *data = [m_package dataAtRelativePath:relativePath html:&html];
+	EPubURLProtocolBridge *bridge = notification.object;
 
-	if (data != nil) {
-		EPubURLProtocolBridge *bridge = notification.object;
+	if (html != nil) {
+		// To do: inject script...
+		bridge.currentData = [html dataUsingEncoding:NSUTF8StringEncoding];
+		bridge.currentResponse = [[[NSHTTPURLResponse alloc]
+			initWithURL:url
+			statusCode:200
+			HTTPVersion:@"HTTP/1.1"
+			headerFields:nil] autorelease];
+	}
+	else if (data != nil) {
 		bridge.currentData = data;
 		bridge.currentResponse = [[[NSHTTPURLResponse alloc]
 			initWithURL:url

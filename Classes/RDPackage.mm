@@ -45,7 +45,11 @@
 }
 
 
-- (NSData *)dataAtRelativePath:(NSString *)relativePath {
+- (NSData *)dataAtRelativePath:(NSString *)relativePath html:(NSString **)html {
+	if (html != nil) {
+		*html = nil;
+	}
+
 	if (relativePath == nil || relativePath.length == 0) {
 		return nil;
 	}
@@ -56,7 +60,7 @@
 		relativePath = [relativePath substringToIndex:range.location];
 	}
 
-	const ePub3::string s = ePub3::string(relativePath.UTF8String);
+	ePub3::string s = ePub3::string(relativePath.UTF8String);
 	ePub3::ArchiveReader *reader = m_package->ReaderForRelativePath(s);
 
 	if (reader == NULL) {
@@ -65,12 +69,96 @@
 	}
 
 	UInt8 buffer[1024];
-	NSMutableData * data = [NSMutableData data];
+	NSMutableData *data = [NSMutableData data];
 	ssize_t readBytes = reader->read(buffer, 1024);
 
 	while (readBytes > 0) {
 		[data appendBytes:buffer length:readBytes];
 		readBytes = reader->read(buffer, 1024);
+	}
+
+	// Determine if the data represents HTML.  If so, set the html out parameter.
+
+	if (html != nil) {
+		BOOL isHTML = NO;
+
+		if ([m_relativePathsThatAreHTML containsObject:relativePath]) {
+			isHTML = YES;
+		}
+		else if (![m_relativePathsThatAreNotHTML containsObject:relativePath]) {
+			ePub3::ManifestTable manifest = m_package->Manifest();
+
+			for (auto i = manifest.begin(); i != manifest.end(); i++) {
+				ePub3::ManifestItem *item = i->second;
+
+				if (item->Href() == s) {
+					if (item->MediaType() == "application/xhtml+xml") {
+						[m_relativePathsThatAreHTML addObject:relativePath];
+						isHTML = YES;
+					}
+
+					break;
+				}
+			}
+
+			if (!isHTML) {
+				[m_relativePathsThatAreNotHTML addObject:relativePath];
+			}
+		}
+
+		if (isHTML) {
+			UInt8 *bytes = (UInt8 *)data.bytes;
+
+			// Scan for "<html" in UTF-8, UTF-16BE, and UTF-16LE.
+
+			for (int i = 0; i < 320 && i < data.length; i++) {
+				if (i + 4 < data.length &&
+					bytes[i + 0] == 0x3C &&
+					bytes[i + 1] == 0x68 &&
+					bytes[i + 2] == 0x74 &&
+					bytes[i + 3] == 0x6D &&
+					bytes[i + 4] == 0x6C)
+				{
+					*html = [[[NSString alloc] initWithData:data
+						encoding:NSUTF8StringEncoding] autorelease];
+					break;
+				}
+
+				if (i + 9 < data.length &&
+					bytes[i + 0] == 0x00 &&
+					bytes[i + 1] == 0x3C &&
+					bytes[i + 2] == 0x00 &&
+					bytes[i + 3] == 0x68 &&
+					bytes[i + 4] == 0x00 &&
+					bytes[i + 5] == 0x74 &&
+					bytes[i + 6] == 0x00 &&
+					bytes[i + 7] == 0x6D &&
+					bytes[i + 8] == 0x00 &&
+					bytes[i + 9] == 0x6C)
+				{
+					*html = [[[NSString alloc] initWithData:data
+						encoding:NSUnicodeStringEncoding] autorelease];
+					break;
+				}
+
+				if (i + 9 < data.length &&
+					bytes[i + 0] == 0x3C &&
+					bytes[i + 1] == 0x00 &&
+					bytes[i + 2] == 0x68 &&
+					bytes[i + 3] == 0x00 &&
+					bytes[i + 4] == 0x74 &&
+					bytes[i + 5] == 0x00 &&
+					bytes[i + 6] == 0x6D &&
+					bytes[i + 7] == 0x00 &&
+					bytes[i + 8] == 0x6C &&
+					bytes[i + 9] == 0x00)
+				{
+					*html = [[[NSString alloc] initWithData:data
+						encoding:NSUnicodeStringEncoding] autorelease];
+					break;
+				}
+			}
+		}
 	}
 
 	return data;
@@ -79,6 +167,8 @@
 
 - (void)dealloc {
 	[m_packageID release];
+	[m_relativePathsThatAreHTML release];
+	[m_relativePathsThatAreNotHTML release];
 	[m_spineItems release];
 	[m_subjects release];
 	[super dealloc];
@@ -99,6 +189,8 @@
 
 	if (self = [super init]) {
 		m_package = (ePub3::Package *)package;
+		m_relativePathsThatAreHTML = [[NSMutableSet alloc] init];
+		m_relativePathsThatAreNotHTML = [[NSMutableSet alloc] init];
 
 		// Package ID.
 

@@ -12,6 +12,8 @@
 
 @interface RDPackage : NSObject {
 	@private NSString *m_packageID;
+	@private NSMutableSet *m_relativePathsThatAreHTML;
+	@private NSMutableSet *m_relativePathsThatAreNotHTML;
 	@private NSMutableArray *m_spineItems;
 	@private NSMutableArray *m_subjects;
 }
@@ -30,7 +32,10 @@
 @property (nonatomic, readonly) NSString *subtitle;
 @property (nonatomic, readonly) NSString *title;
 
-- (NSData *)dataAtRelativePath:(NSString *)relativePath;
+// Returns the data at the given relative path or nil if it doesn't exist.  If the data happens
+// to be HTML, the out parameter is set.
+- (NSData *)dataAtRelativePath:(NSString *)relativePath html:(NSString **)html;
+
 - (id)initWithPackage:(void *)package;
 
 @end

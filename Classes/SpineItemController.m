@@ -67,7 +67,7 @@
 
 	NSString *url = [NSString stringWithFormat:@"%@://%@/%@",
 		kSDKLauncherWebViewSDKProtocol,
-		m_package.packageID,
+		m_package.packageUUID,
 		m_spineItem.baseHref];
 
 	[m_webView loadRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:url]]];
@@ -102,13 +102,13 @@
 		return;
 	}
 
-	NSString *packageID = [s substringToIndex:range.location];
+	NSString *packageUUID = [s substringToIndex:range.location];
 
-	if (![packageID isEqualToString:m_package.packageID]) {
+	if (![packageUUID isEqualToString:m_package.packageUUID]) {
 		return;
 	}
 
-	s = [s substringFromIndex:packageID.length];
+	s = [s substringFromIndex:packageUUID.length];
 
 	if (![s hasPrefix:@"/"]) {
 		return;

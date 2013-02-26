@@ -39,6 +39,7 @@
 	m_labelISBN = nil;
 	m_labelLanguage = nil;
 	m_labelModificationDate = nil;
+	m_labelPackageID = nil;
 	m_labelSource = nil;
 	m_labelSubjects = nil;
 	m_labelSubtitle = nil;
@@ -99,6 +100,9 @@
 	m_labelModificationDate = [self addLabelWithText:
 		LocStr(@"METADATA_MODIFICATION_DATE", m_package.modificationDateString)];
 
+	m_labelPackageID = [self addLabelWithText:
+		LocStr(@"METADATA_PACKAGE_ID", m_package.packageID)];
+
 	m_labelISBN = [self addLabelWithText:
 		LocStr(@"METADATA_ISBN", m_package.isbn)];
 
@@ -146,6 +150,10 @@
 	m_labelModificationDate.frame = CGRectMake(margin, y + margin, width, 1);
 	[m_labelModificationDate sizeToFit];
 	y = CGRectGetMaxY(m_labelModificationDate.frame);
+
+	m_labelPackageID.frame = CGRectMake(margin, y + margin, width, 1);
+	[m_labelPackageID sizeToFit];
+	y = CGRectGetMaxY(m_labelPackageID.frame);
 
 	m_labelISBN.frame = CGRectMake(margin, y + margin, width, 1);
 	[m_labelISBN sizeToFit];

@@ -11,7 +11,7 @@
 @class RDContainer;
 
 @interface RDPackage : NSObject {
-	@private NSString *m_packageID;
+	@private NSString *m_packageUUID;
 	@private NSMutableSet *m_relativePathsThatAreHTML;
 	@private NSMutableSet *m_relativePathsThatAreNotHTML;
 	@private NSMutableArray *m_spineItems;
@@ -26,6 +26,7 @@
 @property (nonatomic, readonly) NSString *language;
 @property (nonatomic, readonly) NSString *modificationDateString;
 @property (nonatomic, readonly) NSString *packageID;
+@property (nonatomic, readonly) NSString *packageUUID;
 @property (nonatomic, readonly) NSString *source;
 @property (nonatomic, readonly) NSArray *spineItems;
 @property (nonatomic, readonly) NSArray *subjects;

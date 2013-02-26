@@ -22,7 +22,7 @@
 @implementation RDPackage
 
 
-@synthesize packageID = m_packageID;
+@synthesize packageUUID = m_packageUUID;
 @synthesize spineItems = m_spineItems;
 @synthesize subjects = m_subjects;
 
@@ -110,7 +110,7 @@
 
 
 - (void)dealloc {
-	[m_packageID release];
+	[m_packageUUID release];
 	[m_relativePathsThatAreHTML release];
 	[m_relativePathsThatAreNotHTML release];
 	[m_spineItems release];
@@ -139,7 +139,7 @@
 		// Package ID.
 
 		CFUUIDRef uuid = CFUUIDCreate(NULL);
-		m_packageID = (NSString *)CFUUIDCreateString(NULL, uuid);
+		m_packageUUID = (NSString *)CFUUIDCreateString(NULL, uuid);
 		CFRelease(uuid);
 
 		// Spine items.
@@ -184,6 +184,12 @@
 
 - (NSString *)modificationDateString {
 	const ePub3::string s = m_package->ModificationDate();
+	return [NSString stringWithUTF8String:s.c_str()];
+}
+
+
+- (NSString *)packageID {
+	const ePub3::string s = m_package->PackageID();
 	return [NSString stringWithUTF8String:s.c_str()];
 }
 

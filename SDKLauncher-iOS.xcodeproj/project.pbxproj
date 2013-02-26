@@ -293,10 +293,10 @@
 		3462FBBF16BC3C8F003C79E1 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
-				3403515F16CE9362009E3B88 /* Injection */,
 				3462FBDE16BC4037003C79E1 /* Default */,
 				340535B716BC728800D4A802 /* EPub */,
 				3462FBDD16BC4031003C79E1 /* Icon */,
+				3403515F16CE9362009E3B88 /* Injection */,
 				3462FBC316BC3C8F003C79E1 /* Localizable.strings */,
 			);
 			path = Resources;

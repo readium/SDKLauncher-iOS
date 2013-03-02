@@ -230,9 +230,9 @@
 	UILabel *label = [[[UILabel alloc] init] autorelease];
 	label.backgroundColor = [UIColor clearColor];
 	label.font = [UIFont boldSystemFontOfSize:16];
-	label.shadowColor = [UIColor colorWithWhite:0 alpha:IS_IPAD ? 0.0 : 0.5];
+	label.shadowColor = [UIColor colorWithWhite:0 alpha:0.5];
 	label.shadowOffset = CGSizeMake(0, -1);
-	label.textColor = IS_IPAD ? [UIColor blackColor] : [UIColor whiteColor];
+	label.textColor = [UIColor whiteColor];
 
 	if (m_pageCount == 0) {
 		label.text = @"";

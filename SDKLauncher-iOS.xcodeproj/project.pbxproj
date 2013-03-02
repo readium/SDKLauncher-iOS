@@ -9,7 +9,6 @@
 /* Begin PBXBuildFile section */
 		3403516516CE93F2009E3B88 /* reader.css in Resources */ = {isa = PBXBuildFile; fileRef = 3403516116CE93F2009E3B88 /* reader.css */; };
 		3403516616CE93F2009E3B88 /* reader.html in Resources */ = {isa = PBXBuildFile; fileRef = 3403516216CE93F2009E3B88 /* reader.html */; };
-		3403516A16CE9BE2009E3B88 /* ScriptInjector.m in Sources */ = {isa = PBXBuildFile; fileRef = 3403516916CE9BE2009E3B88 /* ScriptInjector.m */; };
 		3403516D16CE9FF2009E3B88 /* BundleURLProtocol.m in Sources */ = {isa = PBXBuildFile; fileRef = 3403516C16CE9FF2009E3B88 /* BundleURLProtocol.m */; };
 		3403516E16CEA93F009E3B88 /* jquery-1.8.2.min.js in Resources */ = {isa = PBXBuildFile; fileRef = 3403516016CE93F2009E3B88 /* jquery-1.8.2.min.js */; };
 		3403516F16CEA93F009E3B88 /* reader.js in Resources */ = {isa = PBXBuildFile; fileRef = 3403516316CE93F2009E3B88 /* reader.js */; };
@@ -55,6 +54,11 @@
 		34A94D9716C060E000FD4143 /* RDSpineItem.mm in Sources */ = {isa = PBXBuildFile; fileRef = 34A94D9616C060E000FD4143 /* RDSpineItem.mm */; };
 		34B5457C16BCB07800D14838 /* libxml2.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 34B5457B16BCB07800D14838 /* libxml2.dylib */; };
 		34B5457E16BCB08000D14838 /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 34B5457D16BCB08000D14838 /* libz.dylib */; };
+		34C5533916E15C76003A7C23 /* AsyncSocket.m in Sources */ = {isa = PBXBuildFile; fileRef = 34C5533816E15C76003A7C23 /* AsyncSocket.m */; };
+		34C5533C16E15CCB003A7C23 /* HTMLUtil.m in Sources */ = {isa = PBXBuildFile; fileRef = 34C5533B16E15CCB003A7C23 /* HTMLUtil.m */; };
+		34C5533F16E15CDF003A7C23 /* RDPackageResource.mm in Sources */ = {isa = PBXBuildFile; fileRef = 34C5533E16E15CDF003A7C23 /* RDPackageResource.mm */; };
+		34C5534116E15D08003A7C23 /* CFNetwork.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 34C5534016E15D08003A7C23 /* CFNetwork.framework */; };
+		34C5534416E15D32003A7C23 /* PackageResourceServer.m in Sources */ = {isa = PBXBuildFile; fileRef = 34C5534316E15D32003A7C23 /* PackageResourceServer.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -93,8 +97,6 @@
 		3403516116CE93F2009E3B88 /* reader.css */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.css; path = reader.css; sourceTree = "<group>"; };
 		3403516216CE93F2009E3B88 /* reader.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = reader.html; sourceTree = "<group>"; };
 		3403516316CE93F2009E3B88 /* reader.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = reader.js; sourceTree = "<group>"; };
-		3403516816CE9BE2009E3B88 /* ScriptInjector.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ScriptInjector.h; sourceTree = "<group>"; };
-		3403516916CE9BE2009E3B88 /* ScriptInjector.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ScriptInjector.m; sourceTree = "<group>"; };
 		3403516B16CE9FF2009E3B88 /* BundleURLProtocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BundleURLProtocol.h; sourceTree = "<group>"; };
 		3403516C16CE9FF2009E3B88 /* BundleURLProtocol.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BundleURLProtocol.m; sourceTree = "<group>"; };
 		3403517116CEB93D009E3B88 /* TypeScript */ = {isa = PBXFileReference; lastKnownFileType = folder; path = TypeScript; sourceTree = "<group>"; };
@@ -158,6 +160,15 @@
 		34A94D9616C060E000FD4143 /* RDSpineItem.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = RDSpineItem.mm; sourceTree = "<group>"; };
 		34B5457B16BCB07800D14838 /* libxml2.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libxml2.dylib; path = usr/lib/libxml2.dylib; sourceTree = SDKROOT; };
 		34B5457D16BCB08000D14838 /* libz.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libz.dylib; path = usr/lib/libz.dylib; sourceTree = SDKROOT; };
+		34C5533716E15C76003A7C23 /* AsyncSocket.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AsyncSocket.h; sourceTree = "<group>"; };
+		34C5533816E15C76003A7C23 /* AsyncSocket.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AsyncSocket.m; sourceTree = "<group>"; };
+		34C5533A16E15CCB003A7C23 /* HTMLUtil.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HTMLUtil.h; sourceTree = "<group>"; };
+		34C5533B16E15CCB003A7C23 /* HTMLUtil.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HTMLUtil.m; sourceTree = "<group>"; };
+		34C5533D16E15CDF003A7C23 /* RDPackageResource.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RDPackageResource.h; sourceTree = "<group>"; };
+		34C5533E16E15CDF003A7C23 /* RDPackageResource.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = RDPackageResource.mm; sourceTree = "<group>"; };
+		34C5534016E15D08003A7C23 /* CFNetwork.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CFNetwork.framework; path = System/Library/Frameworks/CFNetwork.framework; sourceTree = SDKROOT; };
+		34C5534216E15D32003A7C23 /* PackageResourceServer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PackageResourceServer.h; sourceTree = "<group>"; };
+		34C5534316E15D32003A7C23 /* PackageResourceServer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PackageResourceServer.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -165,6 +176,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				34C5534116E15D08003A7C23 /* CFNetwork.framework in Frameworks */,
 				340FC16116BC3B4600346A59 /* CoreGraphics.framework in Frameworks */,
 				340FC15F16BC3B4600346A59 /* Foundation.framework in Frameworks */,
 				340FC15D16BC3B4600346A59 /* UIKit.framework in Frameworks */,
@@ -221,6 +233,7 @@
 		340FC15B16BC3B4600346A59 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				34C5534016E15D08003A7C23 /* CFNetwork.framework */,
 				340FC16016BC3B4600346A59 /* CoreGraphics.framework */,
 				340FC15E16BC3B4600346A59 /* Foundation.framework */,
 				340FC15C16BC3B4600346A59 /* UIKit.framework */,
@@ -251,6 +264,8 @@
 				345DA0E116C3151E00E7285C /* EPubURLProtocol.m */,
 				345DA0E316C334B300E7285C /* EPubURLProtocolBridge.h */,
 				345DA0E416C334B300E7285C /* EPubURLProtocolBridge.m */,
+				34C5533A16E15CCB003A7C23 /* HTMLUtil.h */,
+				34C5533B16E15CCB003A7C23 /* HTMLUtil.m */,
 				340535AE16BC608900D4A802 /* LocStr.h */,
 				340535AF16BC608900D4A802 /* LocStr.m */,
 				340535B016BC608900D4A802 /* LocStrError.h */,
@@ -258,8 +273,8 @@
 				3462FBBC16BC3C43003C79E1 /* main.m */,
 				341652A116C2F85700AFDB8B /* PackageMetadataController.h */,
 				341652A216C2F85700AFDB8B /* PackageMetadataController.m */,
-				3403516816CE9BE2009E3B88 /* ScriptInjector.h */,
-				3403516916CE9BE2009E3B88 /* ScriptInjector.m */,
+				34C5534216E15D32003A7C23 /* PackageResourceServer.h */,
+				34C5534316E15D32003A7C23 /* PackageResourceServer.m */,
 				3425F8DF16C16A9D001BD464 /* SpineItemController.h */,
 				3425F8E016C16A9D001BD464 /* SpineItemController.m */,
 				341652A616C2F9E700AFDB8B /* SpineItemListController.h */,
@@ -275,6 +290,8 @@
 				345CA3E416C00F0500B8B56A /* RDContainer.mm */,
 				3413980E16C03062000912C1 /* RDPackage.h */,
 				3413980F16C03062000912C1 /* RDPackage.mm */,
+				34C5533D16E15CDF003A7C23 /* RDPackageResource.h */,
+				34C5533E16E15CDF003A7C23 /* RDPackageResource.mm */,
 				34A94D9516C060E000FD4143 /* RDSpineItem.h */,
 				34A94D9616C060E000FD4143 /* RDSpineItem.mm */,
 			);
@@ -286,6 +303,7 @@
 			children = (
 				345CA3E116C00EE100B8B56A /* Main */,
 				345CA3E216C00EE600B8B56A /* RDServices */,
+				34C5533316E15C4B003A7C23 /* ThirdParty */,
 			);
 			path = Classes;
 			sourceTree = "<group>";
@@ -348,6 +366,23 @@
 				347C58BD16BC873700A647B0 /* UnitTests */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		34C5533316E15C4B003A7C23 /* ThirdParty */ = {
+			isa = PBXGroup;
+			children = (
+				34C5533616E15C54003A7C23 /* AsyncSocket */,
+			);
+			name = ThirdParty;
+			sourceTree = "<group>";
+		};
+		34C5533616E15C54003A7C23 /* AsyncSocket */ = {
+			isa = PBXGroup;
+			children = (
+				34C5533716E15C76003A7C23 /* AsyncSocket.h */,
+				34C5533816E15C76003A7C23 /* AsyncSocket.m */,
+			);
+			name = AsyncSocket;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -497,10 +532,13 @@
 				345CA3E516C00F0500B8B56A /* RDContainer.mm in Sources */,
 				3413981016C03062000912C1 /* RDPackage.mm in Sources */,
 				34A94D9716C060E000FD4143 /* RDSpineItem.mm in Sources */,
-				3403516A16CE9BE2009E3B88 /* ScriptInjector.m in Sources */,
 				3425F8E116C16A9D001BD464 /* SpineItemController.m in Sources */,
 				341652A816C2F9E700AFDB8B /* SpineItemListController.m in Sources */,
 				3403516D16CE9FF2009E3B88 /* BundleURLProtocol.m in Sources */,
+				34C5533916E15C76003A7C23 /* AsyncSocket.m in Sources */,
+				34C5533C16E15CCB003A7C23 /* HTMLUtil.m in Sources */,
+				34C5533F16E15CDF003A7C23 /* RDPackageResource.mm in Sources */,
+				34C5534416E15D32003A7C23 /* PackageResourceServer.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

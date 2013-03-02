@@ -12,13 +12,11 @@ extern NSString * const kSDKLauncherEPubURLProtocolBridgeNeedsResponse;
 
 @interface EPubURLProtocolBridge : NSObject {
 	@private NSData *m_currentData;
-	@private NSURLResponse *m_currentResponse;
 }
 
 @property (nonatomic, retain) NSData *currentData;
-@property (nonatomic, retain) NSURLResponse *currentResponse;
 
-- (NSURLResponse *)responseForURL:(NSURL *)url data:(NSData **)data;
+- (NSData *)dataForURL:(NSURL *)url;
 + (EPubURLProtocolBridge *)shared;
 
 @end

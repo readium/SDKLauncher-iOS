@@ -8,6 +8,7 @@
 
 #import "BaseViewController.h"
 
+@class PackageResourceServer;
 @class RDPackage;
 @class RDSpineItem;
 
@@ -16,6 +17,7 @@
 	@private BOOL m_didHandleFirstRequest;
 	@private RDPackage *m_package;
 	@private int m_pageCount;
+	@private PackageResourceServer *m_resourceServer;
 	@private RDSpineItem *m_spineItem;
 	@private UIWebView *m_webView;
 }

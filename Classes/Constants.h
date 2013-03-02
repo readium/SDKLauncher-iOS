@@ -8,6 +8,7 @@
 
 #import <Foundation/Foundation.h>
 
+#define kSDKLauncherPackageResourceServerPort 8080
 #define kSDKLauncherWebViewBundleProtocol @"epubwebviewbundle"
 #define kSDKLauncherWebViewSDKProtocol @"epubwebviewsdk"
 

@@ -8,13 +8,16 @@
 
 #import "SpineItemController.h"
 #import "EPubURLProtocolBridge.h"
+#import "HTMLUtil.h"
+#import "PackageResourceServer.h"
 #import "RDPackage.h"
+#import "RDPackageResource.h"
 #import "RDSpineItem.h"
-#import "ScriptInjector.h"
 
 
 @interface SpineItemController()
 
+- (NSString *)htmlFromData:(NSData *)data;
 - (void)updateToolbar;
 
 @end
@@ -31,8 +34,64 @@
 
 - (void)dealloc {
 	[m_package release];
+	[m_resourceServer release];
 	[m_spineItem release];
 	[super dealloc];
+}
+
+
+//
+// Converts the given HTML data to a string.  The character set and encoding are assumed to be
+// UTF-8, UTF-16BE, or UTF-16LE.
+//
+- (NSString *)htmlFromData:(NSData *)data {
+	if (data == nil || data.length == 0) {
+		return nil;
+	}
+
+	NSString *html = nil;
+	UInt8 *bytes = (UInt8 *)data.bytes;
+
+	if (data.length >= 3) {
+		if (bytes[0] == 0xFE && bytes[1] == 0xFF) {
+			html = [[NSString alloc] initWithData:data
+				encoding:NSUTF16BigEndianStringEncoding];
+		}
+		else if (bytes[0] == 0xFF && bytes[1] == 0xFE) {
+			html = [[NSString alloc] initWithData:data
+				encoding:NSUTF16LittleEndianStringEncoding];
+		}
+		else if (bytes[0] == 0xEF && bytes[1] == 0xBB && bytes[2] == 0xBF) {
+			html = [[NSString alloc] initWithData:data
+				encoding:NSUTF8StringEncoding];
+		}
+		else if (bytes[0] == 0x00) {
+			// There's a very high liklihood of this being UTF-16BE, just without the BOM.
+			html = [[NSString alloc] initWithData:data
+				encoding:NSUTF16BigEndianStringEncoding];
+		}
+		else if (bytes[1] == 0x00) {
+			// There's a very high liklihood of this being UTF-16LE, just without the BOM.
+			html = [[NSString alloc] initWithData:data
+				encoding:NSUTF16LittleEndianStringEncoding];
+		}
+		else {
+			html = [[NSString alloc] initWithData:data
+				encoding:NSUTF8StringEncoding];
+
+			if (html == nil) {
+				html = [[NSString alloc] initWithData:data
+					encoding:NSUTF16BigEndianStringEncoding];
+
+				if (html == nil) {
+					html = [[NSString alloc] initWithData:data
+						encoding:NSUTF16LittleEndianStringEncoding];
+				}
+			}
+		}
+	}
+
+	return [html autorelease];
 }
 
 
@@ -44,6 +103,7 @@
 
 	if (self = [super initWithTitle:spineItem.idref navBarHidden:NO]) {
 		m_package = [package retain];
+		m_resourceServer = [[PackageResourceServer alloc] initWithPackage:package];
 		m_spineItem = [spineItem retain];
 		[self updateToolbar];
 	}
@@ -116,33 +176,36 @@
 
 	NSString *relativePath = [s substringFromIndex:1];
 	BOOL isHTML = NO;
-	NSData *data = [m_package dataAtRelativePath:relativePath isHTML:&isHTML];
+	NSData *data = [m_package resourceAtRelativePath:relativePath isHTML:&isHTML].data;
 	EPubURLProtocolBridge *bridge = notification.object;
 
 	BOOL didHandleFirstRequest = m_didHandleFirstRequest;
 	m_didHandleFirstRequest = YES;
 
-	if (isHTML && !didHandleFirstRequest) {
+	if (isHTML) {
+		NSString *html = nil;
 
-		// Inject script only if this is the first request.  The reason is that for any given
-		// HTML file, we tuck it into an iframe of reader.html.  Once reader.html's iframe
-		// makes a request for the same HTML file, we need to avoid injection recursion.
+		if (didHandleFirstRequest) {
+			html = [HTMLUtil
+				htmlByReplacingMediaURLsInHTML:[self htmlFromData:data]
+				relativePath:relativePath
+				packageUUID:m_package.packageUUID];
+		}
+		else {
+			// Inject script only if this is the first request.  The reason is that for any
+			// given HTML file, we tuck it into an iframe of reader.html.  Once reader.html's
+			// iframe makes a request for the same HTML file, we need to avoid injection
+			// recursion.
+			html = [HTMLUtil htmlByInjectingScriptIntoHTMLAtURL:url.absoluteString];
+		}
 
-		NSString *html = [ScriptInjector htmlByInjectingIntoHTMLAtURL:url.absoluteString];
-		bridge.currentData = [html dataUsingEncoding:NSUTF8StringEncoding];
-		bridge.currentResponse = [[[NSHTTPURLResponse alloc]
-			initWithURL:url
-			statusCode:200
-			HTTPVersion:@"HTTP/1.1"
-			headerFields:nil] autorelease];
+		if (html != nil && html.length > 0) {
+			data = [html dataUsingEncoding:NSUTF8StringEncoding];
+		}
 	}
-	else if (data != nil) {
+
+	if (data != nil) {
 		bridge.currentData = data;
-		bridge.currentResponse = [[[NSHTTPURLResponse alloc]
-			initWithURL:url
-			statusCode:200
-			HTTPVersion:@"HTTP/1.1"
-			headerFields:nil] autorelease];
 	}
 }
 

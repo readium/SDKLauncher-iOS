@@ -153,8 +153,8 @@
 		return nil;
 	}
 
-	RDPackageResource *resource = [[[RDPackageResource alloc] initWithArchiveReader:reader]
-		autorelease];
+	RDPackageResource *resource = [[[RDPackageResource alloc] initWithArchiveReader:reader
+		relativePath:relativePath] autorelease];
 
 	// Determine if the data represents HTML.
 

@@ -51,6 +51,7 @@
 		3462FBEB16BC40F9003C79E1 /* Default.png in Resources */ = {isa = PBXBuildFile; fileRef = 3462FBE416BC40F9003C79E1 /* Default.png */; };
 		3462FBEC16BC40F9003C79E1 /* Default@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 3462FBE516BC40F9003C79E1 /* Default@2x.png */; };
 		347C58C016BC879400A647B0 /* libePub3-iOS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 347C58BB16BC873700A647B0 /* libePub3-iOS.a */; };
+		349AF4B916EA9B1C00253269 /* PackageResourceCache.m in Sources */ = {isa = PBXBuildFile; fileRef = 349AF4B816EA9B1C00253269 /* PackageResourceCache.m */; };
 		34A94D9716C060E000FD4143 /* RDSpineItem.mm in Sources */ = {isa = PBXBuildFile; fileRef = 34A94D9616C060E000FD4143 /* RDSpineItem.mm */; };
 		34B5457C16BCB07800D14838 /* libxml2.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 34B5457B16BCB07800D14838 /* libxml2.dylib */; };
 		34B5457E16BCB08000D14838 /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 34B5457D16BCB08000D14838 /* libz.dylib */; };
@@ -156,6 +157,8 @@
 		3462FBE416BC40F9003C79E1 /* Default.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Default.png; sourceTree = "<group>"; };
 		3462FBE516BC40F9003C79E1 /* Default@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default@2x.png"; sourceTree = "<group>"; };
 		347C58B216BC873700A647B0 /* ePub3.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = ePub3.xcodeproj; path = "../readium-sdk/ePub3.xcodeproj"; sourceTree = "<group>"; };
+		349AF4B716EA9B1C00253269 /* PackageResourceCache.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PackageResourceCache.h; sourceTree = "<group>"; };
+		349AF4B816EA9B1C00253269 /* PackageResourceCache.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PackageResourceCache.m; sourceTree = "<group>"; };
 		34A94D9516C060E000FD4143 /* RDSpineItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RDSpineItem.h; sourceTree = "<group>"; };
 		34A94D9616C060E000FD4143 /* RDSpineItem.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = RDSpineItem.mm; sourceTree = "<group>"; };
 		34B5457B16BCB07800D14838 /* libxml2.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libxml2.dylib; path = usr/lib/libxml2.dylib; sourceTree = SDKROOT; };
@@ -273,6 +276,8 @@
 				3462FBBC16BC3C43003C79E1 /* main.m */,
 				341652A116C2F85700AFDB8B /* PackageMetadataController.h */,
 				341652A216C2F85700AFDB8B /* PackageMetadataController.m */,
+				349AF4B716EA9B1C00253269 /* PackageResourceCache.h */,
+				349AF4B816EA9B1C00253269 /* PackageResourceCache.m */,
 				34C5534216E15D32003A7C23 /* PackageResourceServer.h */,
 				34C5534316E15D32003A7C23 /* PackageResourceServer.m */,
 				3425F8DF16C16A9D001BD464 /* SpineItemController.h */,
@@ -539,6 +544,7 @@
 				34C5533C16E15CCB003A7C23 /* HTMLUtil.m in Sources */,
 				34C5533F16E15CDF003A7C23 /* RDPackageResource.mm in Sources */,
 				34C5534416E15D32003A7C23 /* PackageResourceServer.m in Sources */,
+				349AF4B916EA9B1C00253269 /* PackageResourceCache.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

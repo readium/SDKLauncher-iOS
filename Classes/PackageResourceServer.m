@@ -8,6 +8,7 @@
 
 #import "PackageResourceServer.h"
 #import "AsyncSocket.h"
+#import "PackageResourceCache.h"
 #import "RDPackage.h"
 #import "RDPackageResource.h"
 
@@ -245,6 +246,15 @@
 		}
 	}
 
+	int contentLength = [[PackageResourceCache shared] contentLengthAtRelativePath:
+		request.resource.relativePath];
+
+	if (contentLength == 0) {
+		[[PackageResourceCache shared] addResource:request.resource];
+		contentLength = [[PackageResourceCache shared] contentLengthAtRelativePath:
+			request.resource.relativePath];
+	}
+
 	NSString *commonResponseHeaders = [NSString stringWithFormat:
 		@"Date: %@\r\n"
 		@"Server: PackageResourceServer\r\n"
@@ -293,39 +303,43 @@
 		int p0 = s0.intValue;
 		int p1 = s1.intValue;
 
-		// The Content-Range response header requires the resource's total byte length.  We
-		// need a better way to discover this than retrieving all bytes, but as a temporary
-		// measure this will do.
+		NSData *subdata = [[PackageResourceCache shared] dataAtRelativePath:
+			request.resource.relativePath range:NSMakeRange(p0, p1 + 1 - p0)];
 
-		int totalDataLength = request.resource.data.length;
-
-		if (p0 < 0 || p0 > p1 || p1 >= totalDataLength) {
-			NSLog(@"The requested range is out of bounds!");
+		if (subdata == nil || subdata.length != (p1 + 1 - p0)) {
+			NSLog(@"The subdata is empty or has the wrong length!");
 			[sock disconnect];
 			return;
 		}
-
-		NSData *subdata = [request.resource.data subdataWithRange:NSMakeRange(p0, p1 + 1 - p0)];
 
 		NSMutableString *ms = [NSMutableString stringWithCapacity:512];
 		[ms appendString:@"HTTP/1.1 206 Partial Content\r\n"];
 		[ms appendString:commonResponseHeaders];
 		[ms appendFormat:@"Content-Length: %d\r\n", subdata.length];
-		[ms appendFormat:@"Content-Range: bytes %d-%d/%d\r\n", p0, p1, totalDataLength];
+		[ms appendFormat:@"Content-Range: bytes %d-%d/%d\r\n", p0, p1, contentLength];
 		[ms appendString:@"\r\n"];
 
 		[sock writeData:[ms dataUsingEncoding:NSUTF8StringEncoding] withTimeout:60 tag:0];
 		[sock writeData:subdata withTimeout:60 tag:0];
 	}
 	else {
+		NSData *subdata = [[PackageResourceCache shared] dataAtRelativePath:
+			request.resource.relativePath];
+
+		if (subdata == nil || subdata.length != contentLength) {
+			NSLog(@"The subdata is empty or has the wrong length!");
+			[sock disconnect];
+			return;
+		}
+
 		NSMutableString *ms = [NSMutableString stringWithCapacity:512];
 		[ms appendString:@"HTTP/1.1 200 OK\r\n"];
 		[ms appendString:commonResponseHeaders];
-		[ms appendFormat:@"Content-Length: %d\r\n", data.length];
+		[ms appendFormat:@"Content-Length: %d\r\n", subdata.length];
 		[ms appendString:@"\r\n"];
 
 		[sock writeData:[ms dataUsingEncoding:NSUTF8StringEncoding] withTimeout:60 tag:0];
-		[sock writeData:request.resource.data withTimeout:60 tag:0];
+		[sock writeData:subdata withTimeout:60 tag:0];
 	}
 
 	[sock disconnectAfterWriting];

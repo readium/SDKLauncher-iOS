@@ -156,7 +156,7 @@
 		3462FBE316BC40F9003C79E1 /* Default-Portrait@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-Portrait@2x.png"; sourceTree = "<group>"; };
 		3462FBE416BC40F9003C79E1 /* Default.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Default.png; sourceTree = "<group>"; };
 		3462FBE516BC40F9003C79E1 /* Default@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default@2x.png"; sourceTree = "<group>"; };
-		347C58B216BC873700A647B0 /* ePub3.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = ePub3.xcodeproj; path = "../readium-sdk/ePub3.xcodeproj"; sourceTree = "<group>"; };
+		347C58B216BC873700A647B0 /* ePub3.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = ePub3.xcodeproj; path = "../readium-sdk/Platform/Apple/ePub3.xcodeproj"; sourceTree = "<group>"; };
 		349AF4B716EA9B1C00253269 /* PackageResourceCache.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PackageResourceCache.h; sourceTree = "<group>"; };
 		349AF4B816EA9B1C00253269 /* PackageResourceCache.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PackageResourceCache.m; sourceTree = "<group>"; };
 		34A94D9516C060E000FD4143 /* RDSpineItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RDSpineItem.h; sourceTree = "<group>"; };

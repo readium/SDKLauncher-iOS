@@ -19,12 +19,16 @@
 
 
 @interface PackageRequest : NSObject {
+	@private int m_byteCountWrittenSoFar;
 	@private NSDictionary *m_headers;
+	@private NSRange m_range;
 	@private RDPackageResource *m_resource;
 	@private AsyncSocket *m_socket;
 }
 
+@property (nonatomic, assign) int byteCountWrittenSoFar;
 @property (nonatomic, retain) NSDictionary *headers;
+@property (nonatomic, assign) NSRange range;
 @property (nonatomic, retain) RDPackageResource *resource;
 @property (nonatomic, retain) AsyncSocket *socket;
 
@@ -32,7 +36,9 @@
 
 @implementation PackageRequest
 
+@synthesize byteCountWrittenSoFar = m_byteCountWrittenSoFar;
 @synthesize headers = m_headers;
+@synthesize range = m_range;
 @synthesize resource = m_resource;
 @synthesize socket = m_socket;
 
@@ -54,6 +60,8 @@
 @interface PackageResourceServer()
 
 @property (nonatomic, readonly) NSString *dateString;
+
+- (void)writeNextResponseChunkForRequest:(PackageRequest *)request;
 
 @end
 
@@ -303,50 +311,50 @@
 		int p0 = s0.intValue;
 		int p1 = s1.intValue;
 
-		NSData *subdata = [[PackageResourceCache shared] dataAtRelativePath:
-			request.resource.relativePath range:NSMakeRange(p0, p1 + 1 - p0)];
-
-		if (subdata == nil || subdata.length != (p1 + 1 - p0)) {
-			NSLog(@"The subdata is empty or has the wrong length!");
-			[sock disconnect];
-			return;
-		}
+		request.range = NSMakeRange(p0, p1 + 1 - p0);
 
 		NSMutableString *ms = [NSMutableString stringWithCapacity:512];
 		[ms appendString:@"HTTP/1.1 206 Partial Content\r\n"];
 		[ms appendString:commonResponseHeaders];
-		[ms appendFormat:@"Content-Length: %d\r\n", subdata.length];
+		[ms appendFormat:@"Content-Length: %d\r\n", request.range.length];
 		[ms appendFormat:@"Content-Range: bytes %d-%d/%d\r\n", p0, p1, contentLength];
 		[ms appendString:@"\r\n"];
 
 		[sock writeData:[ms dataUsingEncoding:NSUTF8StringEncoding] withTimeout:60 tag:0];
-		[sock writeData:subdata withTimeout:60 tag:0];
 	}
 	else {
-		NSData *subdata = [[PackageResourceCache shared] dataAtRelativePath:
-			request.resource.relativePath];
-
-		if (subdata == nil || subdata.length != contentLength) {
-			NSLog(@"The subdata is empty or has the wrong length!");
-			[sock disconnect];
-			return;
-		}
+		request.range = NSMakeRange(0, contentLength);
 
 		NSMutableString *ms = [NSMutableString stringWithCapacity:512];
 		[ms appendString:@"HTTP/1.1 200 OK\r\n"];
 		[ms appendString:commonResponseHeaders];
-		[ms appendFormat:@"Content-Length: %d\r\n", subdata.length];
+		[ms appendFormat:@"Content-Length: %d\r\n", request.range.length];
 		[ms appendString:@"\r\n"];
 
 		[sock writeData:[ms dataUsingEncoding:NSUTF8StringEncoding] withTimeout:60 tag:0];
-		[sock writeData:subdata withTimeout:60 tag:0];
 	}
 
-	[sock disconnectAfterWriting];
+	[self writeNextResponseChunkForRequest:request];
 }
 
 
 - (void)onSocket:(AsyncSocket *)sock didWriteDataWithTag:(long)tag {
+	PackageRequest *request = nil;
+
+	for (PackageRequest *currRequest in m_requests) {
+		if (currRequest.socket == sock) {
+			request = currRequest;
+			break;
+		}
+	}
+
+	if (request == nil) {
+		NSLog(@"Could not find our request!");
+		[sock disconnect];
+	}
+	else {
+		[self writeNextResponseChunkForRequest:request];
+	}
 }
 
 
@@ -361,6 +369,35 @@
 			[[sock retain] autorelease];
 			[m_requests removeObject:request];
 			return;
+		}
+	}
+}
+
+
+- (void)writeNextResponseChunkForRequest:(PackageRequest *)request {
+	int p0 = request.range.location + request.byteCountWrittenSoFar;
+	int p1 = MIN((int)NSMaxRange(request.range), p0 + 1024 * 1024);
+
+	if (p0 == p1) {
+		// Done.
+		return;
+	}
+
+	BOOL lastChunk = (p1 == NSMaxRange(request.range));
+
+	NSData *data = [[PackageResourceCache shared] dataAtRelativePath:
+		request.resource.relativePath range:NSMakeRange(p0, p1 - p0)];
+
+	if (data == nil || data.length != p1 - p0) {
+		NSLog(@"The data is empty or has the wrong length!");
+		[request.socket disconnect];
+	}
+	else {
+		request.byteCountWrittenSoFar += (p1 - p0);
+		[request.socket writeData:data withTimeout:60 tag:0];
+
+		if (lastChunk) {
+			[request.socket disconnectAfterWriting];
 		}
 	}
 }

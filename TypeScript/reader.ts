@@ -1,5 +1,5 @@
 
-/// <reference path="jquery.d.ts" />
+///<reference path="jquery.d.ts" />
 ///<reference path='size.ts' />
 ///<reference path='pagination_info.ts' />
 

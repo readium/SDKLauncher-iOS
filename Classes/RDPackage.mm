@@ -7,8 +7,8 @@
 //
 
 #import "RDPackage.h"
-#import "archive.h"
 #import "package.h"
+#import "RDPackageResource.h"
 #import "RDSpineItem.h"
 
 
@@ -22,7 +22,7 @@
 @implementation RDPackage
 
 
-@synthesize packageID = m_packageID;
+@synthesize packageUUID = m_packageUUID;
 @synthesize spineItems = m_spineItems;
 @synthesize subjects = m_subjects;
 
@@ -45,40 +45,10 @@
 }
 
 
-- (NSData *)dataAtRelativePath:(NSString *)relativePath {
-	if (relativePath == nil || relativePath.length == 0) {
-		return nil;
-	}
-
-	NSRange range = [relativePath rangeOfString:@"#" options:NSBackwardsSearch];
-
-	if (range.location != NSNotFound) {
-		relativePath = [relativePath substringToIndex:range.location];
-	}
-
-	const ePub3::string s = ePub3::string(relativePath.UTF8String);
-	ePub3::ArchiveReader *reader = m_package->ReaderForRelativePath(s);
-
-	if (reader == NULL) {
-		NSLog(@"Relative path '%@' does not have an archive reader!", relativePath);
-		return nil;
-	}
-
-	UInt8 buffer[1024];
-	NSMutableData * data = [NSMutableData data];
-	ssize_t readBytes = reader->read(buffer, 1024);
-
-	while (readBytes > 0) {
-		[data appendBytes:buffer length:readBytes];
-		readBytes = reader->read(buffer, 1024);
-	}
-
-	return data;
-}
-
-
 - (void)dealloc {
-	[m_packageID release];
+	[m_packageUUID release];
+	[m_relativePathsThatAreHTML release];
+	[m_relativePathsThatAreNotHTML release];
 	[m_spineItems release];
 	[m_subjects release];
 	[super dealloc];
@@ -99,11 +69,13 @@
 
 	if (self = [super init]) {
 		m_package = (ePub3::Package *)package;
+		m_relativePathsThatAreHTML = [[NSMutableSet alloc] init];
+		m_relativePathsThatAreNotHTML = [[NSMutableSet alloc] init];
 
 		// Package ID.
 
 		CFUUIDRef uuid = CFUUIDCreate(NULL);
-		m_packageID = (NSString *)CFUUIDCreateString(NULL, uuid);
+		m_packageUUID = (NSString *)CFUUIDCreateString(NULL, uuid);
 		CFRelease(uuid);
 
 		// Spine items.
@@ -149,6 +121,70 @@
 - (NSString *)modificationDateString {
 	const ePub3::string s = m_package->ModificationDate();
 	return [NSString stringWithUTF8String:s.c_str()];
+}
+
+
+- (NSString *)packageID {
+	const ePub3::string s = m_package->PackageID();
+	return [NSString stringWithUTF8String:s.c_str()];
+}
+
+
+- (RDPackageResource *)resourceAtRelativePath:(NSString *)relativePath isHTML:(BOOL *)isHTML {
+	if (isHTML != NULL) {
+		*isHTML = NO;
+	}
+
+	if (relativePath == nil || relativePath.length == 0) {
+		return nil;
+	}
+
+	NSRange range = [relativePath rangeOfString:@"#" options:NSBackwardsSearch];
+
+	if (range.location != NSNotFound) {
+		relativePath = [relativePath substringToIndex:range.location];
+	}
+
+	ePub3::string s = ePub3::string(relativePath.UTF8String);
+	ePub3::ArchiveReader *reader = m_package->ReaderForRelativePath(s);
+
+	if (reader == NULL) {
+		NSLog(@"Relative path '%@' does not have an archive reader!", relativePath);
+		return nil;
+	}
+
+	RDPackageResource *resource = [[[RDPackageResource alloc] initWithArchiveReader:reader
+		relativePath:relativePath] autorelease];
+
+	// Determine if the data represents HTML.
+
+	if (isHTML != NULL) {
+		if ([m_relativePathsThatAreHTML containsObject:relativePath]) {
+			*isHTML = YES;
+		}
+		else if (![m_relativePathsThatAreNotHTML containsObject:relativePath]) {
+			ePub3::ManifestTable manifest = m_package->Manifest();
+
+			for (auto i = manifest.begin(); i != manifest.end(); i++) {
+				ePub3::ManifestItem *item = i->second;
+
+				if (item->Href() == s) {
+					if (item->MediaType() == "application/xhtml+xml") {
+						[m_relativePathsThatAreHTML addObject:relativePath];
+						*isHTML = YES;
+					}
+
+					break;
+				}
+			}
+
+			if (*isHTML == NO) {
+				[m_relativePathsThatAreNotHTML addObject:relativePath];
+			}
+		}
+	}
+
+	return resource;
 }
 
 

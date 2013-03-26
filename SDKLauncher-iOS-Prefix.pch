@@ -15,4 +15,6 @@
 	#import "Constants.h"
 	#import "LocStr.h"
 	#import "LocStrError.h"
+
+	#define IS_IPAD (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad)
 #endif

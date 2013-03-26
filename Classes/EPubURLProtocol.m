@@ -15,7 +15,7 @@
 
 + (BOOL)canInitWithRequest:(NSURLRequest *)request {
 	NSString *s = request.URL.scheme;
-	return s != nil && [s isEqualToString:kSDKLauncherWebViewProtocol];
+	return s != nil && [s isEqualToString:kSDKLauncherWebViewSDKProtocol];
 }
 
 
@@ -37,22 +37,32 @@
 
 
 - (void)startLoading {
-	NSURLRequest *request = self.request;
-	NSData *data = nil;
-	NSURLResponse *response = [[EPubURLProtocolBridge shared]
-		responseForURL:request.URL data:&data];
+	NSHTTPURLResponse *response = [[[NSHTTPURLResponse alloc]
+		initWithURL:self.request.URL
+		statusCode:200
+		HTTPVersion:@"HTTP/1.1"
+		headerFields:nil] autorelease];
 
-	if (response == nil || data == nil) {
-		NSError *error = [NSError errorWithDomain:NSURLErrorDomain
-			code:NSURLErrorResourceUnavailable userInfo:nil];
-		[self.client URLProtocol:self didFailWithError:error];
-	}
-	else {
-		[self.client URLProtocol:self didReceiveResponse:response
-			cacheStoragePolicy:NSURLCacheStorageNotAllowed];
-		[self.client URLProtocol:self didLoadData:data];
-		[self.client URLProtocolDidFinishLoading:self];
-	}
+	[self.client URLProtocol:self didReceiveResponse:response
+		cacheStoragePolicy:NSURLCacheStorageAllowed];
+
+	// We get called from various threads.  Dispatch the data retrieval to the main thread to
+	// simplify code downstream.  Someday multi-threaded data retrieval might be nice but
+	// currently causes problems.
+
+	dispatch_async(dispatch_get_main_queue(), ^{
+		NSData *data = [[EPubURLProtocolBridge shared] dataForURL:self.request.URL];
+
+		if (data == nil) {
+			NSError *error = [NSError errorWithDomain:NSURLErrorDomain
+				code:NSURLErrorResourceUnavailable userInfo:nil];
+			[self.client URLProtocol:self didFailWithError:error];
+		}
+		else {
+			[self.client URLProtocol:self didLoadData:data];
+			[self.client URLProtocolDidFinishLoading:self];
+		}
+	});
 }
 
 

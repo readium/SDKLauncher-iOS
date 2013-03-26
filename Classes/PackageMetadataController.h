@@ -17,6 +17,7 @@
 	@private UILabel *m_labelISBN;
 	@private UILabel *m_labelLanguage;
 	@private UILabel *m_labelModificationDate;
+	@private UILabel *m_labelPackageID;
 	@private UILabel *m_labelSource;
 	@private UILabel *m_labelSubjects;
 	@private UILabel *m_labelSubtitle;

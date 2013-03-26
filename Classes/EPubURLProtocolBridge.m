@@ -17,30 +17,19 @@ NSString * const kSDKLauncherEPubURLProtocolBridgeNeedsResponse =
 
 
 @synthesize currentData = m_currentData;
-@synthesize currentResponse = m_currentResponse;
 
 
-- (NSURLResponse *)responseForURL:(NSURL *)url data:(NSData **)data {
-	if (data != nil) {
-		*data = nil;
-	}
-
+- (NSData *)dataForURL:(NSURL *)url {
 	self.currentData = nil;
-	self.currentResponse = nil;
 
 	[[NSNotificationCenter defaultCenter]
 		postNotificationName:kSDKLauncherEPubURLProtocolBridgeNeedsResponse
 		object:self
 		userInfo:@{ @"url" : url }];
 
-	// Someone should respond to the notification by setting our current data and current
-	// response properties.
+	// Someone should respond to the notification by setting our current data.
 
-	if (data != nil) {
-		*data = self.currentData;
-	}
-
-	return self.currentResponse;
+	return self.currentData;
 }
 
 

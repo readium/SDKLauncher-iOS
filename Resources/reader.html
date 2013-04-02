@@ -1,11 +1,28 @@
 <html>
 	<head>
-		<script type="text/javascript" src="{BUNDLE}://jquery-1.8.2.min.js"></script>
-		<script type="text/javascript" src="{BUNDLE}://reader.js"></script>
+		<script type="text/javascript" src="{BUNDLE}://JavaScript/lib/jquery-1.8.2.min.js"></script>
+		<script type="text/javascript" src="{BUNDLE}://JavaScript/lib/underscore.min.js"></script>
+		<script type="text/javascript" src="{BUNDLE}://JavaScript/lib/backbone.min.js"></script>
+		<script type="text/javascript" src="{BUNDLE}://JavaScript/js/readium_sdk.js"></script>
+		<script type="text/javascript" src="{BUNDLE}://JavaScript/js/helpers.js"></script>
+		<script type="text/javascript" src="{BUNDLE}://JavaScript/js/models/trigger.js"></script>
+		<script type="text/javascript" src="{BUNDLE}://JavaScript/lib/epub_cfi.js"></script>
+		<script type="text/javascript" src="{BUNDLE}://JavaScript/js/views/cfi_navigation_logic.js"></script>
+		<script type="text/javascript" src="{BUNDLE}://JavaScript/js/views/reader_view.js"></script>
+		<script type="text/javascript" src="{BUNDLE}://JavaScript/host_app_feedback.js"></script>
+
+		<script type="text/javascript">
+			$(document).ready(function () {
+				"use strict";
+				ReadiumSDK.reader = new ReadiumSDK.Views.ReaderView();
+				ReadiumSDK.hostAppFeedback = new ReadiumSDK.HostAppFeedback(ReadiumSDK.reader);
+			});
+		</script>
+
 		<link type="text/css" rel="stylesheet" href="{BUNDLE}://reader.css" />
 	</head>
 	<body>
-		<div id="key-hole" class="clearfix">
+		<div id="viewport" class="clearfix">
 			<iframe scrolling="no" src="{URL}" id="epubContentIframe"></iframe>
 		</div>
 	</body>

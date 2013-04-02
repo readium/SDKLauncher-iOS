@@ -135,14 +135,12 @@
 
 
 - (void)onClickNext {
-	[m_webView stringByEvaluatingJavaScriptFromString:
-		@"window.ReadiumSdk.Reader.getInstance().moveNextPage()"];
+	[m_webView stringByEvaluatingJavaScriptFromString:@"ReadiumSDK.reader.moveNextPage()"];
 }
 
 
 - (void)onClickPrev {
-	[m_webView stringByEvaluatingJavaScriptFromString:
-		@"window.ReadiumSdk.Reader.getInstance().movePrevPage()"];
+	[m_webView stringByEvaluatingJavaScriptFromString:@"ReadiumSDK.reader.movePrevPage()"];
 }
 
 

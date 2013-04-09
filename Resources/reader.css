@@ -13,7 +13,7 @@ body {
 	-webkit-box-sizing:border-box; /* Safari */
 }
 
-#key-hole {
+#viewport {
 	height: 100%;
 	width: 100%;
 	margin: 0;

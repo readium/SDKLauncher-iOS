@@ -8,6 +8,7 @@
 
 #import "RDPackage.h"
 #import "package.h"
+#import "RDNavigationElement.h"
 #import "RDPackageResource.h"
 #import "RDSpineItem.h"
 
@@ -46,6 +47,11 @@
 
 
 - (void)dealloc {
+	[m_navElemListOfFigures release];
+	[m_navElemListOfIllustrations release];
+	[m_navElemListOfTables release];
+	[m_navElemPageList release];
+	[m_navElemTableOfContents release];
 	[m_packageUUID release];
 	[m_relativePathsThatAreHTML release];
 	[m_relativePathsThatAreNotHTML release];
@@ -118,6 +124,36 @@
 }
 
 
+- (RDNavigationElement *)listOfFigures {
+	if (m_navElemListOfFigures == nil) {
+		m_navElemListOfFigures = [[RDNavigationElement alloc]
+			initWithNavigationElement:(void *)m_package->ListOfFigures()];
+	}
+
+	return m_navElemListOfFigures;
+}
+
+
+- (RDNavigationElement *)listOfIllustrations {
+	if (m_navElemListOfIllustrations == nil) {
+		m_navElemListOfIllustrations = [[RDNavigationElement alloc]
+			initWithNavigationElement:(void *)m_package->ListOfIllustrations()];
+	}
+
+	return m_navElemListOfIllustrations;
+}
+
+
+- (RDNavigationElement *)listOfTables {
+	if (m_navElemListOfTables == nil) {
+		m_navElemListOfTables = [[RDNavigationElement alloc]
+			initWithNavigationElement:(void *)m_package->ListOfTables()];
+	}
+
+	return m_navElemListOfTables;
+}
+
+
 - (NSString *)modificationDateString {
 	const ePub3::string s = m_package->ModificationDate();
 	return [NSString stringWithUTF8String:s.c_str()];
@@ -130,6 +166,16 @@
 }
 
 
+- (RDNavigationElement *)pageList {
+	if (m_navElemPageList == nil) {
+		m_navElemPageList = [[RDNavigationElement alloc]
+			initWithNavigationElement:(void *)m_package->PageList()];
+	}
+
+	return m_navElemPageList;
+}
+
+
 - (RDPackageResource *)resourceAtRelativePath:(NSString *)relativePath isHTML:(BOOL *)isHTML {
 	if (isHTML != NULL) {
 		*isHTML = NO;
@@ -139,7 +185,7 @@
 		return nil;
 	}
 
-	NSRange range = [relativePath rangeOfString:@"#" options:NSBackwardsSearch];
+	NSRange range = [relativePath rangeOfString:@"#"];
 
 	if (range.location != NSNotFound) {
 		relativePath = [relativePath substringToIndex:range.location];
@@ -197,6 +243,16 @@
 - (NSString *)subtitle {
 	const ePub3::string s = m_package->Subtitle();
 	return [NSString stringWithUTF8String:s.c_str()];
+}
+
+
+- (RDNavigationElement *)tableOfContents {
+	if (m_navElemTableOfContents == nil) {
+		m_navElemTableOfContents = [[RDNavigationElement alloc]
+			initWithNavigationElement:(void *)m_package->TableOfContents()];
+	}
+
+	return m_navElemTableOfContents;
 }
 
 

@@ -69,8 +69,10 @@
 	didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
 	RDSpineItem *spineItem = [m_package.spineItems objectAtIndex:indexPath.row];
-	SpineItemController *c = [[[SpineItemController alloc] initWithPackage:m_package
-		spineItem:spineItem] autorelease];
+	SpineItemController *c = [[[SpineItemController alloc]
+		initWithPackage:m_package
+		spineItem:spineItem
+		elementID:nil] autorelease];
 	[self.navigationController pushViewController:c animated:YES];
 }
 

@@ -17,7 +17,9 @@
 
 @interface SpineItemController()
 
+- (void)goToPageIndex:(int)pageIndex;
 - (NSString *)htmlFromData:(NSData *)data;
+- (int)pageIndexForElementID:(NSString *)elementID;
 - (void)updateToolbar;
 
 @end
@@ -33,10 +35,17 @@
 
 
 - (void)dealloc {
+	[m_initialElementID release];
 	[m_package release];
 	[m_resourceServer release];
 	[m_spineItem release];
 	[super dealloc];
+}
+
+
+- (void)goToPageIndex:(int)pageIndex {
+	NSString *s = [NSString stringWithFormat:@"ReadiumSDK.reader.openPage(%d)", pageIndex];
+	[m_webView stringByEvaluatingJavaScriptFromString:s];
 }
 
 
@@ -95,17 +104,21 @@
 }
 
 
-- (id)initWithPackage:(RDPackage *)package spineItem:(RDSpineItem *)spineItem {
+- (id)
+	initWithPackage:(RDPackage *)package
+	spineItem:(RDSpineItem *)spineItem
+	elementID:(NSString *)elementID
+{
 	if (package == nil || spineItem == nil) {
 		[self release];
 		return nil;
 	}
 
 	if (self = [super initWithTitle:spineItem.idref navBarHidden:NO]) {
+		m_initialElementID = [elementID retain];
 		m_package = [package retain];
 		m_resourceServer = [[PackageResourceServer alloc] initWithPackage:package];
 		m_spineItem = [spineItem retain];
-		[self updateToolbar];
 	}
 
 	return self;
@@ -114,6 +127,7 @@
 
 - (void)loadView {
 	self.view = [[[UIView alloc] init] autorelease];
+	self.view.backgroundColor = [UIColor whiteColor];
 
 	[[NSNotificationCenter defaultCenter]
 		addObserver:self
@@ -123,6 +137,7 @@
 
 	m_webView = [[[UIWebView alloc] init] autorelease];
 	m_webView.delegate = self;
+	m_webView.hidden = YES;
 	[self.view addSubview:m_webView];
 
 	NSString *url = [NSString stringWithFormat:@"%@://%@/%@",
@@ -208,7 +223,32 @@
 }
 
 
+- (int)pageIndexForElementID:(NSString *)elementID {
+	if (elementID == nil || elementID.length == 0) {
+		return 0;
+	}
+
+	NSString *request = [NSString stringWithFormat:
+		@"ReadiumSDK.reader.getPageForElementId(\"%@\")",
+		elementID];
+
+	NSString *response = [m_webView stringByEvaluatingJavaScriptFromString:request];
+	return response.intValue;
+}
+
+
+- (void)showContent {
+	m_webView.hidden = NO;
+	[self updateToolbar];
+}
+
+
 - (void)updateToolbar {
+	if (m_webView.hidden) {
+		self.toolbarItems = nil;
+		return;
+	}
+
 	UIBarButtonItem *itemFixed = [[[UIBarButtonItem alloc]
 		initWithBarButtonSystemItem:UIBarButtonSystemItemFixedSpace
 		target:nil
@@ -292,6 +332,19 @@
 				m_currentPageIndex = pageIndex.intValue;
 				m_pageCount = pageCount.intValue;
 				[self updateToolbar];
+
+				if (!m_didFinishLoading && m_pageCount > 0) {
+					m_didFinishLoading = YES;
+
+					if (m_initialElementID != nil && m_initialElementID.length > 0) {
+						int index = [self pageIndexForElementID:m_initialElementID];
+						[self goToPageIndex:index];
+					}
+				}
+
+				if (m_pageCount > 0) {
+					[self performSelector:@selector(showContent) withObject:nil afterDelay:0.1];
+				}
 			}
 		}
 	}

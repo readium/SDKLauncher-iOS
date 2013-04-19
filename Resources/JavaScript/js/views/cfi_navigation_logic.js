@@ -40,7 +40,7 @@ ReadiumSDK.Views.CfiNavigationLogic = Backbone.View.extend({
 
         var viewportRect = new ReadiumSDK.Helpers.Rect(0, 0, this.$viewport.width(), this.$viewport.height());
 
-        $elements = $("body", this.getRootElement()).find(":not(iframe)").filter(function () {
+        $elements = $("body", this.getRootElement()).find(":not(iframe)").contents().filter(function () {
             if (this.nodeType === Node.TEXT_NODE || this.nodeName.toLowerCase() === 'img') {
                 return true;
             } else {

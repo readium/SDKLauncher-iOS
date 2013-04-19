@@ -58,6 +58,8 @@
 		34C5533F16E15CDF003A7C23 /* RDPackageResource.mm in Sources */ = {isa = PBXBuildFile; fileRef = 34C5533E16E15CDF003A7C23 /* RDPackageResource.mm */; };
 		34C5534116E15D08003A7C23 /* CFNetwork.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 34C5534016E15D08003A7C23 /* CFNetwork.framework */; };
 		34C5534416E15D32003A7C23 /* PackageResourceServer.m in Sources */ = {isa = PBXBuildFile; fileRef = 34C5534316E15D32003A7C23 /* PackageResourceServer.m */; };
+		34CE0B1A1720CC0300F55192 /* RDNavigationElement.mm in Sources */ = {isa = PBXBuildFile; fileRef = 34CE0B191720CC0300F55192 /* RDNavigationElement.mm */; };
+		34CE0B1F1720D8FE00F55192 /* NavigationElementController.m in Sources */ = {isa = PBXBuildFile; fileRef = 34CE0B1E1720D8FE00F55192 /* NavigationElementController.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -168,6 +170,10 @@
 		34C5534016E15D08003A7C23 /* CFNetwork.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CFNetwork.framework; path = System/Library/Frameworks/CFNetwork.framework; sourceTree = SDKROOT; };
 		34C5534216E15D32003A7C23 /* PackageResourceServer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PackageResourceServer.h; sourceTree = "<group>"; };
 		34C5534316E15D32003A7C23 /* PackageResourceServer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PackageResourceServer.m; sourceTree = "<group>"; };
+		34CE0B181720CC0300F55192 /* RDNavigationElement.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RDNavigationElement.h; sourceTree = "<group>"; };
+		34CE0B191720CC0300F55192 /* RDNavigationElement.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = RDNavigationElement.mm; sourceTree = "<group>"; };
+		34CE0B1D1720D8FE00F55192 /* NavigationElementController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NavigationElementController.h; sourceTree = "<group>"; };
+		34CE0B1E1720D8FE00F55192 /* NavigationElementController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NavigationElementController.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -267,6 +273,8 @@
 				340535B016BC608900D4A802 /* LocStrError.h */,
 				340535B116BC608900D4A802 /* LocStrError.m */,
 				3462FBBC16BC3C43003C79E1 /* main.m */,
+				34CE0B1D1720D8FE00F55192 /* NavigationElementController.h */,
+				34CE0B1E1720D8FE00F55192 /* NavigationElementController.m */,
 				341652A116C2F85700AFDB8B /* PackageMetadataController.h */,
 				341652A216C2F85700AFDB8B /* PackageMetadataController.m */,
 				349AF4B716EA9B1C00253269 /* PackageResourceCache.h */,
@@ -286,6 +294,8 @@
 			children = (
 				345CA3E316C00F0500B8B56A /* RDContainer.h */,
 				345CA3E416C00F0500B8B56A /* RDContainer.mm */,
+				34CE0B181720CC0300F55192 /* RDNavigationElement.h */,
+				34CE0B191720CC0300F55192 /* RDNavigationElement.mm */,
 				3413980E16C03062000912C1 /* RDPackage.h */,
 				3413980F16C03062000912C1 /* RDPackage.mm */,
 				34C5533D16E15CDF003A7C23 /* RDPackageResource.h */,
@@ -498,28 +508,30 @@
 			buildActionMask = 2147483647;
 			files = (
 				3462FBBD16BC3C43003C79E1 /* AppDelegate.m in Sources */,
+				34C5533916E15C76003A7C23 /* AsyncSocket.m in Sources */,
 				340535AA16BC5DD100D4A802 /* BaseViewController.m in Sources */,
+				3403516D16CE9FF2009E3B88 /* BundleURLProtocol.m in Sources */,
 				345DA0DD16C310F500E7285C /* Constants.m in Sources */,
 				3413980B16C02DE7000912C1 /* ContainerController.m in Sources */,
 				340535B616BC669C00D4A802 /* ContainerList.m in Sources */,
 				340535AD16BC5F4700D4A802 /* ContainerListController.m in Sources */,
 				345DA0E216C3151E00E7285C /* EPubURLProtocol.m in Sources */,
 				345DA0E516C334B300E7285C /* EPubURLProtocolBridge.m in Sources */,
+				34C5533C16E15CCB003A7C23 /* HTMLUtil.m in Sources */,
 				340535B216BC608900D4A802 /* LocStr.m in Sources */,
 				340535B316BC608900D4A802 /* LocStrError.m in Sources */,
 				3462FBBE16BC3C43003C79E1 /* main.m in Sources */,
+				34CE0B1F1720D8FE00F55192 /* NavigationElementController.m in Sources */,
 				341652A316C2F85700AFDB8B /* PackageMetadataController.m in Sources */,
+				349AF4B916EA9B1C00253269 /* PackageResourceCache.m in Sources */,
+				34C5534416E15D32003A7C23 /* PackageResourceServer.m in Sources */,
 				345CA3E516C00F0500B8B56A /* RDContainer.mm in Sources */,
+				34CE0B1A1720CC0300F55192 /* RDNavigationElement.mm in Sources */,
 				3413981016C03062000912C1 /* RDPackage.mm in Sources */,
+				34C5533F16E15CDF003A7C23 /* RDPackageResource.mm in Sources */,
 				34A94D9716C060E000FD4143 /* RDSpineItem.mm in Sources */,
 				3425F8E116C16A9D001BD464 /* SpineItemController.m in Sources */,
 				341652A816C2F9E700AFDB8B /* SpineItemListController.m in Sources */,
-				3403516D16CE9FF2009E3B88 /* BundleURLProtocol.m in Sources */,
-				34C5533916E15C76003A7C23 /* AsyncSocket.m in Sources */,
-				34C5533C16E15CCB003A7C23 /* HTMLUtil.m in Sources */,
-				34C5533F16E15CDF003A7C23 /* RDPackageResource.mm in Sources */,
-				34C5534416E15D32003A7C23 /* PackageResourceServer.m in Sources */,
-				349AF4B916EA9B1C00253269 /* PackageResourceCache.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

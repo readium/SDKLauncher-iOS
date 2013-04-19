@@ -7,6 +7,7 @@
 //
 
 #import "ContainerController.h"
+#import "NavigationElementController.h"
 #import "PackageMetadataController.h"
 #import "RDContainer.h"
 #import "RDPackage.h"
@@ -50,11 +51,16 @@
 - (void)loadView {
 	self.view = [[[UIView alloc] init] autorelease];
 
-	m_table = [[[UITableView alloc] initWithFrame:CGRectZero style:UITableViewStylePlain]
+	m_table = [[[UITableView alloc] initWithFrame:CGRectZero style:UITableViewStyleGrouped]
 		autorelease];
 	m_table.dataSource = self;
 	m_table.delegate = self;
 	[self.view addSubview:m_table];
+}
+
+
+- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
+	return 2;
 }
 
 
@@ -66,11 +72,30 @@
 		reuseIdentifier:nil] autorelease];
 	cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
 
-	if (indexPath.row == 0) {
-		cell.textLabel.text = LocStr(@"METADATA");
+	if (indexPath.section == 0) {
+		if (indexPath.row == 0) {
+			cell.textLabel.text = LocStr(@"METADATA");
+		}
+		else if (indexPath.row == 1) {
+			cell.textLabel.text = LocStr(@"SPINE_ITEMS");
+		}
 	}
-	else if (indexPath.row == 1) {
-		cell.textLabel.text = LocStr(@"SPINE_ITEMS");
+	else if (indexPath.section == 1) {
+		if (indexPath.row == 0) {
+			cell.textLabel.text = LocStr(@"LIST_OF_FIGURES");
+		}
+		else if (indexPath.row == 1) {
+			cell.textLabel.text = LocStr(@"LIST_OF_ILLUSTRATIONS");
+		}
+		else if (indexPath.row == 2) {
+			cell.textLabel.text = LocStr(@"LIST_OF_TABLES");
+		}
+		else if (indexPath.row == 3) {
+			cell.textLabel.text = LocStr(@"PAGE_LIST");
+		}
+		else if (indexPath.row == 4) {
+			cell.textLabel.text = LocStr(@"TABLE_OF_CONTENTS");
+		}
 	}
 
 	return cell;
@@ -81,15 +106,59 @@
 	tableView:(UITableView *)tableView
 	didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-	if (indexPath.row == 0) {
-		PackageMetadataController *c = [[[PackageMetadataController alloc]
-			initWithPackage:m_package] autorelease];
-		[self.navigationController pushViewController:c animated:YES];
+	if (indexPath.section == 0) {
+		if (indexPath.row == 0) {
+			PackageMetadataController *c = [[[PackageMetadataController alloc]
+				initWithPackage:m_package] autorelease];
+			[self.navigationController pushViewController:c animated:YES];
+		}
+		else if (indexPath.row == 1) {
+			SpineItemListController *c = [[[SpineItemListController alloc]
+				initWithPackage:m_package] autorelease];
+			[self.navigationController pushViewController:c animated:YES];
+		}
 	}
-	else if (indexPath.row == 1) {
-		SpineItemListController *c = [[[SpineItemListController alloc]
-			initWithPackage:m_package] autorelease];
-		[self.navigationController pushViewController:c animated:YES];
+	else if (indexPath.section == 1) {
+		NavigationElementController *c = nil;
+		NSString *title = [tableView cellForRowAtIndexPath:indexPath].textLabel.text;
+
+		if (indexPath.row == 0) {
+			c = [[[NavigationElementController alloc]
+				initWithNavigationElement:m_package.listOfFigures
+				package:m_package
+				title:title] autorelease];
+		}
+		else if (indexPath.row == 1) {
+			c = [[[NavigationElementController alloc]
+				initWithNavigationElement:m_package.listOfIllustrations
+				package:m_package
+				title:title] autorelease];
+		}
+		else if (indexPath.row == 2) {
+			c = [[[NavigationElementController alloc]
+				initWithNavigationElement:m_package.listOfTables
+				package:m_package
+				title:title] autorelease];
+		}
+		else if (indexPath.row == 3) {
+			c = [[[NavigationElementController alloc]
+				initWithNavigationElement:m_package.pageList
+				package:m_package
+				title:title] autorelease];
+		}
+		else if (indexPath.row == 4) {
+			c = [[[NavigationElementController alloc]
+				initWithNavigationElement:m_package.tableOfContents
+				package:m_package
+				title:title] autorelease];
+		}
+
+		if (c == nil) {
+			[m_table deselectRowAtIndexPath:indexPath animated:YES];
+		}
+		else {
+			[self.navigationController pushViewController:c animated:YES];
+		}
 	}
 }
 
@@ -98,7 +167,9 @@
 	tableView:(UITableView *)tableView
 	numberOfRowsInSection:(NSInteger)section
 {
-	return 2;
+	return
+		section == 0 ? 2 :
+		section == 1 ? 5 : 0;
 }
 
 

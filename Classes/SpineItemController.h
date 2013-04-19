@@ -14,7 +14,9 @@
 
 @interface SpineItemController : BaseViewController <UIWebViewDelegate> {
 	@private int m_currentPageIndex;
+	@private BOOL m_didFinishLoading;
 	@private BOOL m_didHandleFirstRequest;
+	@private NSString *m_initialElementID;
 	@private RDPackage *m_package;
 	@private int m_pageCount;
 	@private PackageResourceServer *m_resourceServer;
@@ -22,6 +24,9 @@
 	@private UIWebView *m_webView;
 }
 
-- (id)initWithPackage:(RDPackage *)package spineItem:(RDSpineItem *)spineItem;
+- (id)
+	initWithPackage:(RDPackage *)package
+	spineItem:(RDSpineItem *)spineItem
+	elementID:(NSString *)elementID;
 
 @end

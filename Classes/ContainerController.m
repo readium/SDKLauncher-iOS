@@ -7,6 +7,8 @@
 //
 
 #import "ContainerController.h"
+#import "BookmarkDatabase.h"
+#import "BookmarkListController.h"
 #import "NavigationElementController.h"
 #import "PackageMetadataController.h"
 #import "RDContainer.h"
@@ -60,7 +62,7 @@
 
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
-	return 2;
+	return 3;
 }
 
 
@@ -97,6 +99,12 @@
 			cell.textLabel.text = LocStr(@"TABLE_OF_CONTENTS");
 		}
 	}
+	else if (indexPath.section == 2) {
+		if (indexPath.row == 0) {
+			cell.textLabel.text = LocStr(@"BOOKMARKS_WITH_COUNT", [[BookmarkDatabase shared]
+				bookmarksForContainerPath:m_container.path].count);
+		}
+	}
 
 	return cell;
 }
@@ -114,7 +122,7 @@
 		}
 		else if (indexPath.row == 1) {
 			SpineItemListController *c = [[[SpineItemListController alloc]
-				initWithPackage:m_package] autorelease];
+				initWithContainer:m_container package:m_package] autorelease];
 			[self.navigationController pushViewController:c animated:YES];
 		}
 	}
@@ -125,30 +133,35 @@
 		if (indexPath.row == 0) {
 			c = [[[NavigationElementController alloc]
 				initWithNavigationElement:m_package.listOfFigures
+				container:m_container
 				package:m_package
 				title:title] autorelease];
 		}
 		else if (indexPath.row == 1) {
 			c = [[[NavigationElementController alloc]
 				initWithNavigationElement:m_package.listOfIllustrations
+				container:m_container
 				package:m_package
 				title:title] autorelease];
 		}
 		else if (indexPath.row == 2) {
 			c = [[[NavigationElementController alloc]
 				initWithNavigationElement:m_package.listOfTables
+				container:m_container
 				package:m_package
 				title:title] autorelease];
 		}
 		else if (indexPath.row == 3) {
 			c = [[[NavigationElementController alloc]
 				initWithNavigationElement:m_package.pageList
+				container:m_container
 				package:m_package
 				title:title] autorelease];
 		}
 		else if (indexPath.row == 4) {
 			c = [[[NavigationElementController alloc]
 				initWithNavigationElement:m_package.tableOfContents
+				container:m_container
 				package:m_package
 				title:title] autorelease];
 		}
@@ -160,6 +173,16 @@
 			[self.navigationController pushViewController:c animated:YES];
 		}
 	}
+	if (indexPath.section == 2) {
+		if (indexPath.row == 0) {
+			BookmarkListController *c = [[[BookmarkListController alloc]
+				initWithContainer:m_container package:m_package] autorelease];
+
+			if (c != nil) {
+				[self.navigationController pushViewController:c animated:YES];
+			}
+		}
+	}
 }
 
 
@@ -169,7 +192,8 @@
 {
 	return
 		section == 0 ? 2 :
-		section == 1 ? 5 : 0;
+		section == 1 ? 5 :
+		section == 2 ? 1 : 0;
 }
 
 
@@ -183,6 +207,18 @@
 
 	if (m_table.indexPathForSelectedRow != nil) {
 		[m_table deselectRowAtIndexPath:m_table.indexPathForSelectedRow animated:YES];
+	}
+
+	// Bookmarks may have been added since we were last visible, so update the bookmark
+	// count within the cell if needed.
+
+	for (UITableViewCell *cell in m_table.visibleCells) {
+		NSIndexPath *indexPath = [m_table indexPathForCell:cell];
+
+		if (indexPath.section == 2 && indexPath.row == 0) {
+			cell.textLabel.text = LocStr(@"BOOKMARKS_WITH_COUNT", [[BookmarkDatabase shared]
+				bookmarksForContainerPath:m_container.path].count);
+		}
 	}
 }
 

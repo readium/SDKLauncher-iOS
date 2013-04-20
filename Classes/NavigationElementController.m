@@ -7,6 +7,7 @@
 //
 
 #import "NavigationElementController.h"
+#import "RDContainer.h"
 #import "RDNavigationElement.h"
 #import "RDPackage.h"
 #import "RDSpineItem.h"
@@ -22,6 +23,7 @@
 
 
 - (void)dealloc {
+	[m_container release];
 	[m_element release];
 	[m_package release];
 	[super dealloc];
@@ -30,15 +32,17 @@
 
 - (id)
 	initWithNavigationElement:(RDNavigationElement *)element
+	container:(RDContainer *)container
 	package:(RDPackage *)package
 	title:(NSString *)title
 {
-	if (element == nil || package == nil) {
+	if (element == nil || container == nil || package == nil) {
 		[self release];
 		return nil;
 	}
 
 	if (self = [super initWithTitle:title navBarHidden:NO]) {
+		m_container = [container retain];
 		m_element = [element retain];
 		m_package = [package retain];
 	}
@@ -65,7 +69,10 @@
 	RDNavigationElement *element = [m_element.children objectAtIndex:indexPath.row];
 
 	NavigationElementController *c = [[[NavigationElementController alloc]
-		initWithNavigationElement:element package:m_package title:element.title] autorelease];
+		initWithNavigationElement:element
+		container:m_container
+		package:m_package
+		title:element.title] autorelease];
 
 	if (c != nil) {
 		[self.navigationController pushViewController:c animated:YES];
@@ -112,7 +119,8 @@
 		for (RDSpineItem *spineItem in m_package.spineItems) {
 			if ([spineItem.baseHref isEqualToString:baseHref]) {
 				SpineItemController *c = [[[SpineItemController alloc]
-					initWithPackage:m_package
+					initWithContainer:m_container
+					package:m_package
 					spineItem:spineItem
 					elementID:elementID] autorelease];
 				[self.navigationController pushViewController:c animated:YES];

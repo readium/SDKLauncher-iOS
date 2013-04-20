@@ -53,6 +53,11 @@
 		34B53528170B3E60000D384F /* JavaScript in Resources */ = {isa = PBXBuildFile; fileRef = 34B53527170B3E60000D384F /* JavaScript */; };
 		34B5457C16BCB07800D14838 /* libxml2.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 34B5457B16BCB07800D14838 /* libxml2.dylib */; };
 		34B5457E16BCB08000D14838 /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 34B5457D16BCB08000D14838 /* libz.dylib */; };
+		34B56B431722DB2200A5A4B8 /* Bookmark.m in Sources */ = {isa = PBXBuildFile; fileRef = 34B56B421722DB2200A5A4B8 /* Bookmark.m */; };
+		34B56B4C1722DFB700A5A4B8 /* BookmarkDatabase.m in Sources */ = {isa = PBXBuildFile; fileRef = 34B56B4B1722DFB700A5A4B8 /* BookmarkDatabase.m */; };
+		34B56B4F1722E54A00A5A4B8 /* Settings.m in Sources */ = {isa = PBXBuildFile; fileRef = 34B56B4E1722E54A00A5A4B8 /* Settings.m */; };
+		34B56B5C17230FDF00A5A4B8 /* BookmarkListController.m in Sources */ = {isa = PBXBuildFile; fileRef = 34B56B5B17230FDF00A5A4B8 /* BookmarkListController.m */; };
+		34B56B5E1723158E00A5A4B8 /* childrens-literature-20130206.epub in Resources */ = {isa = PBXBuildFile; fileRef = 34B56B5D1723158E00A5A4B8 /* childrens-literature-20130206.epub */; };
 		34C5533916E15C76003A7C23 /* AsyncSocket.m in Sources */ = {isa = PBXBuildFile; fileRef = 34C5533816E15C76003A7C23 /* AsyncSocket.m */; };
 		34C5533C16E15CCB003A7C23 /* HTMLUtil.m in Sources */ = {isa = PBXBuildFile; fileRef = 34C5533B16E15CCB003A7C23 /* HTMLUtil.m */; };
 		34C5533F16E15CDF003A7C23 /* RDPackageResource.mm in Sources */ = {isa = PBXBuildFile; fileRef = 34C5533E16E15CDF003A7C23 /* RDPackageResource.mm */; };
@@ -161,6 +166,15 @@
 		34B53527170B3E60000D384F /* JavaScript */ = {isa = PBXFileReference; lastKnownFileType = folder; path = JavaScript; sourceTree = "<group>"; };
 		34B5457B16BCB07800D14838 /* libxml2.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libxml2.dylib; path = usr/lib/libxml2.dylib; sourceTree = SDKROOT; };
 		34B5457D16BCB08000D14838 /* libz.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libz.dylib; path = usr/lib/libz.dylib; sourceTree = SDKROOT; };
+		34B56B411722DB2200A5A4B8 /* Bookmark.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Bookmark.h; sourceTree = "<group>"; };
+		34B56B421722DB2200A5A4B8 /* Bookmark.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Bookmark.m; sourceTree = "<group>"; };
+		34B56B4A1722DFB700A5A4B8 /* BookmarkDatabase.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BookmarkDatabase.h; sourceTree = "<group>"; };
+		34B56B4B1722DFB700A5A4B8 /* BookmarkDatabase.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BookmarkDatabase.m; sourceTree = "<group>"; };
+		34B56B4D1722E54A00A5A4B8 /* Settings.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Settings.h; sourceTree = "<group>"; };
+		34B56B4E1722E54A00A5A4B8 /* Settings.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Settings.m; sourceTree = "<group>"; };
+		34B56B5A17230FDF00A5A4B8 /* BookmarkListController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BookmarkListController.h; sourceTree = "<group>"; };
+		34B56B5B17230FDF00A5A4B8 /* BookmarkListController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BookmarkListController.m; sourceTree = "<group>"; };
+		34B56B5D1723158E00A5A4B8 /* childrens-literature-20130206.epub */ = {isa = PBXFileReference; lastKnownFileType = file; path = "childrens-literature-20130206.epub"; sourceTree = "<group>"; };
 		34C5533716E15C76003A7C23 /* AsyncSocket.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AsyncSocket.h; sourceTree = "<group>"; };
 		34C5533816E15C76003A7C23 /* AsyncSocket.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AsyncSocket.m; sourceTree = "<group>"; };
 		34C5533A16E15CCB003A7C23 /* HTMLUtil.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HTMLUtil.h; sourceTree = "<group>"; };
@@ -206,6 +220,7 @@
 		340535B716BC728800D4A802 /* EPub */ = {
 			isa = PBXGroup;
 			children = (
+				34B56B5D1723158E00A5A4B8 /* childrens-literature-20130206.epub */,
 				340535B816BC729200D4A802 /* moby-dick-20120118.epub */,
 				340535BA16BC793700D4A802 /* wasteland-20120118.epub */,
 			);
@@ -252,6 +267,12 @@
 				3462FBBB16BC3C43003C79E1 /* AppDelegate.m */,
 				340535A816BC5DD100D4A802 /* BaseViewController.h */,
 				340535A916BC5DD100D4A802 /* BaseViewController.m */,
+				34B56B411722DB2200A5A4B8 /* Bookmark.h */,
+				34B56B421722DB2200A5A4B8 /* Bookmark.m */,
+				34B56B4A1722DFB700A5A4B8 /* BookmarkDatabase.h */,
+				34B56B4B1722DFB700A5A4B8 /* BookmarkDatabase.m */,
+				34B56B5A17230FDF00A5A4B8 /* BookmarkListController.h */,
+				34B56B5B17230FDF00A5A4B8 /* BookmarkListController.m */,
 				3403516B16CE9FF2009E3B88 /* BundleURLProtocol.h */,
 				3403516C16CE9FF2009E3B88 /* BundleURLProtocol.m */,
 				345DA0DB16C310F400E7285C /* Constants.h */,
@@ -281,6 +302,8 @@
 				349AF4B816EA9B1C00253269 /* PackageResourceCache.m */,
 				34C5534216E15D32003A7C23 /* PackageResourceServer.h */,
 				34C5534316E15D32003A7C23 /* PackageResourceServer.m */,
+				34B56B4D1722E54A00A5A4B8 /* Settings.h */,
+				34B56B4E1722E54A00A5A4B8 /* Settings.m */,
 				3425F8DF16C16A9D001BD464 /* SpineItemController.h */,
 				3425F8E016C16A9D001BD464 /* SpineItemController.m */,
 				341652A616C2F9E700AFDB8B /* SpineItemListController.h */,
@@ -476,6 +499,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				34B56B5E1723158E00A5A4B8 /* childrens-literature-20130206.epub in Resources */,
 				3462FBEB16BC40F9003C79E1 /* Default.png in Resources */,
 				3462FBEC16BC40F9003C79E1 /* Default@2x.png in Resources */,
 				3462FBE616BC40F9003C79E1 /* Default-568h@2x.png in Resources */,
@@ -510,6 +534,9 @@
 				3462FBBD16BC3C43003C79E1 /* AppDelegate.m in Sources */,
 				34C5533916E15C76003A7C23 /* AsyncSocket.m in Sources */,
 				340535AA16BC5DD100D4A802 /* BaseViewController.m in Sources */,
+				34B56B431722DB2200A5A4B8 /* Bookmark.m in Sources */,
+				34B56B4C1722DFB700A5A4B8 /* BookmarkDatabase.m in Sources */,
+				34B56B5C17230FDF00A5A4B8 /* BookmarkListController.m in Sources */,
 				3403516D16CE9FF2009E3B88 /* BundleURLProtocol.m in Sources */,
 				345DA0DD16C310F500E7285C /* Constants.m in Sources */,
 				3413980B16C02DE7000912C1 /* ContainerController.m in Sources */,
@@ -530,6 +557,7 @@
 				3413981016C03062000912C1 /* RDPackage.mm in Sources */,
 				34C5533F16E15CDF003A7C23 /* RDPackageResource.mm in Sources */,
 				34A94D9716C060E000FD4143 /* RDSpineItem.mm in Sources */,
+				34B56B4F1722E54A00A5A4B8 /* Settings.m in Sources */,
 				3425F8E116C16A9D001BD464 /* SpineItemController.m in Sources */,
 				341652A816C2F9E700AFDB8B /* SpineItemListController.m in Sources */,
 			);

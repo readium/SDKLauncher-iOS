@@ -7,6 +7,7 @@
 //
 
 #import "SpineItemListController.h"
+#import "RDContainer.h"
 #import "RDPackage.h"
 #import "RDSpineItem.h"
 #import "SpineItemController.h"
@@ -21,18 +22,20 @@
 
 
 - (void)dealloc {
+	[m_container release];
 	[m_package release];
 	[super dealloc];
 }
 
 
-- (id)initWithPackage:(RDPackage *)package {
-	if (package == nil) {
+- (id)initWithContainer:(RDContainer *)container package:(RDPackage *)package {
+	if (container == nil || package == nil) {
 		[self release];
 		return nil;
 	}
 
 	if (self = [super initWithTitle:LocStr(@"SPINE_ITEMS") navBarHidden:NO]) {
+		m_container = [container retain];
 		m_package = [package retain];
 	}
 
@@ -70,7 +73,8 @@
 {
 	RDSpineItem *spineItem = [m_package.spineItems objectAtIndex:indexPath.row];
 	SpineItemController *c = [[[SpineItemController alloc]
-		initWithPackage:m_package
+		initWithContainer:m_container
+		package:m_package
 		spineItem:spineItem
 		elementID:nil] autorelease];
 	[self.navigationController pushViewController:c animated:YES];

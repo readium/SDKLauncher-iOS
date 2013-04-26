@@ -7,8 +7,8 @@
 //
 
 #import "RDContainer.h"
-#import "archive.h"
-#import "container.h"
+#import <ePub3/archive.h>
+#import <ePub3/container.h>
 #import "RDPackage.h"
 
 

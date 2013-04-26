@@ -7,8 +7,8 @@
 //
 
 #import "RDNavigationElement.h"
-#import "nav_element.h"
-#import "nav_point.h"
+#import <ePub3/nav_element.h>
+#import <ePub3/nav_point.h>
 
 
 @interface RDNavigationElement() {

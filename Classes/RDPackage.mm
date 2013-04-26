@@ -7,7 +7,7 @@
 //
 
 #import "RDPackage.h"
-#import "package.h"
+#import <ePub3/package.h>
 #import "RDNavigationElement.h"
 #import "RDPackageResource.h"
 #import "RDSpineItem.h"

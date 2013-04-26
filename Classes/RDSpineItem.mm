@@ -7,8 +7,8 @@
 //
 
 #import "RDSpineItem.h"
-#import "manifest.h"
-#import "spine.h"
+#import <ePub3/manifest.h>
+#import <ePub3/spine.h>
 
 
 @interface RDSpineItem() {

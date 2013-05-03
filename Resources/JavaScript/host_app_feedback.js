@@ -23,7 +23,13 @@ ReadiumSDK.HostAppFeedback = function(reader) {
     }),
 
     reader.on("PaginationReady", function() {
-        window.location.href = "epubobjc:onPaginationScriptingReady";
+
+        // In practice, the following does not work because a PageChanged event happens at
+        // nearly the same time, which prevents the web view from seeing the href update.
+        // A PageChanged event with a non-zero page count serves the same purpose, so that's
+        // what we check for in Objective-C.
+
+        // window.location.href = "epubobjc:onPaginationScriptingReady";
     });
 
 };

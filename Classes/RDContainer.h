@@ -10,9 +10,11 @@
 
 @interface RDContainer : NSObject {
 	@private NSMutableArray *m_packages;
+	@private NSString *m_path;
 }
 
 @property (nonatomic, readonly) NSArray *packages;
+@property (nonatomic, readonly) NSString *path;
 
 - (id)initWithPath:(NSString *)path;
 

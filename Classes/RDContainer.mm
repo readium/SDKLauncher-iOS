@@ -7,8 +7,8 @@
 //
 
 #import "RDContainer.h"
-#import "archive.h"
-#import "container.h"
+#import <ePub3/archive.h>
+#import <ePub3/container.h>
 #import "RDPackage.h"
 
 
@@ -23,11 +23,13 @@
 
 
 @synthesize packages = m_packages;
+@synthesize path = m_path;
 
 
 - (void)dealloc {
 	delete m_container;
 	[m_packages release];
+	[m_path release];
 	[super dealloc];
 }
 
@@ -44,6 +46,7 @@
 	}
 
 	if (self = [super init]) {
+		m_path = [path retain];
 		m_container = new ePub3::Container(path.UTF8String);
 
 		if (m_container == NULL) {

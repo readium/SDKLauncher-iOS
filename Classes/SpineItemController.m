@@ -7,9 +7,12 @@
 //
 
 #import "SpineItemController.h"
+#import "Bookmark.h"
+#import "BookmarkDatabase.h"
 #import "EPubURLProtocolBridge.h"
 #import "HTMLUtil.h"
 #import "PackageResourceServer.h"
+#import "RDContainer.h"
 #import "RDPackage.h"
 #import "RDPackageResource.h"
 #import "RDSpineItem.h"
@@ -17,7 +20,10 @@
 
 @interface SpineItemController()
 
+- (void)goToPageIndex:(int)pageIndex;
 - (NSString *)htmlFromData:(NSData *)data;
+- (int)pageIndexForCFI:(NSString *)cfi;
+- (int)pageIndexForElementID:(NSString *)elementID;
 - (void)updateToolbar;
 
 @end
@@ -26,17 +32,62 @@
 @implementation SpineItemController
 
 
+- (void)alertView:(UIAlertView *)alertView didDismissWithButtonIndex:(NSInteger)buttonIndex {
+	[m_alertAddBookmark autorelease];
+	m_alertAddBookmark = nil;
+
+	if (buttonIndex == 1) {
+		UITextField *textField = [alertView textFieldAtIndex:0];
+
+		NSString *title = [textField.text stringByTrimmingCharactersInSet:
+			[NSCharacterSet whitespaceAndNewlineCharacterSet]];
+
+		NSString *cfi = [m_webView stringByEvaluatingJavaScriptFromString:
+			@"ReadiumSDK.reader.getFirstVisibleElementCfi()"];
+
+		Bookmark *bookmark = [[[Bookmark alloc]
+			initWithCFI:cfi
+			containerPath:m_container.path
+			idref:m_spineItem.idref
+			title:title] autorelease];
+
+		if (bookmark == nil) {
+			NSLog(@"The bookmark is nil!");
+		}
+		else {
+			[[BookmarkDatabase shared] addBookmark:bookmark];
+		}
+	}
+}
+
+
 - (void)cleanUp {
 	[[NSNotificationCenter defaultCenter] removeObserver:self];
 	m_webView = nil;
+
+	if (m_alertAddBookmark != nil) {
+		m_alertAddBookmark.delegate = nil;
+		[m_alertAddBookmark dismissWithClickedButtonIndex:999 animated:NO];
+		[m_alertAddBookmark release];
+		m_alertAddBookmark = nil;
+	}
 }
 
 
 - (void)dealloc {
+	[m_container release];
+	[m_initialCFI release];
+	[m_initialElementID release];
 	[m_package release];
 	[m_resourceServer release];
 	[m_spineItem release];
 	[super dealloc];
+}
+
+
+- (void)goToPageIndex:(int)pageIndex {
+	NSString *s = [NSString stringWithFormat:@"ReadiumSDK.reader.openPage(%d)", pageIndex];
+	[m_webView stringByEvaluatingJavaScriptFromString:s];
 }
 
 
@@ -95,17 +146,61 @@
 }
 
 
-- (id)initWithPackage:(RDPackage *)package spineItem:(RDSpineItem *)spineItem {
-	if (package == nil || spineItem == nil) {
+- (id)
+	initWithContainer:(RDContainer *)container
+	package:(RDPackage *)package
+	bookmark:(Bookmark *)bookmark
+{
+	if (container == nil || package == nil || bookmark == nil) {
+		[self release];
+		return nil;
+	}
+
+	RDSpineItem *spineItem = nil;
+
+	for (RDSpineItem *currSpineItem in package.spineItems) {
+		if ([currSpineItem.idref isEqualToString:bookmark.idref]) {
+			spineItem = currSpineItem;
+			break;
+		}
+	}
+
+	if (spineItem == nil) {
 		[self release];
 		return nil;
 	}
 
 	if (self = [super initWithTitle:spineItem.idref navBarHidden:NO]) {
+		m_container = [container retain];
+		m_initialCFI = [bookmark.cfi retain];
 		m_package = [package retain];
 		m_resourceServer = [[PackageResourceServer alloc] initWithPackage:package];
 		m_spineItem = [spineItem retain];
-		[self updateToolbar];
+	}
+
+	return self;
+
+	return self;
+}
+
+
+- (id)
+	initWithContainer:(RDContainer *)container
+	package:(RDPackage *)package
+	spineItem:(RDSpineItem *)spineItem
+	elementID:(NSString *)elementID
+{
+	if (container == nil || package == nil || spineItem == nil) {
+		[self release];
+		return nil;
+	}
+
+	if (self = [super initWithTitle:spineItem.idref navBarHidden:NO]) {
+		m_container = [container retain];
+		m_initialElementID = [elementID retain];
+		m_package = [package retain];
+		m_resourceServer = [[PackageResourceServer alloc] initWithPackage:package];
+		m_spineItem = [spineItem retain];
 	}
 
 	return self;
@@ -114,6 +209,7 @@
 
 - (void)loadView {
 	self.view = [[[UIView alloc] init] autorelease];
+	self.view.backgroundColor = [UIColor whiteColor];
 
 	[[NSNotificationCenter defaultCenter]
 		addObserver:self
@@ -123,6 +219,8 @@
 
 	m_webView = [[[UIWebView alloc] init] autorelease];
 	m_webView.delegate = self;
+	m_webView.hidden = YES;
+	m_webView.scrollView.bounces = NO;
 	[self.view addSubview:m_webView];
 
 	NSString *url = [NSString stringWithFormat:@"%@://%@/%@",
@@ -131,6 +229,22 @@
 		m_spineItem.baseHref];
 
 	[m_webView loadRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:url]]];
+}
+
+
+- (void)onClickAddBookmark {
+	if (m_alertAddBookmark == nil) {
+		m_alertAddBookmark = [[UIAlertView alloc]
+			initWithTitle:LocStr(@"ADD_BOOKMARK_PROMPT_TITLE")
+			message:nil
+			delegate:self
+			cancelButtonTitle:LocStr(@"GENERIC_CANCEL")
+			otherButtonTitles:LocStr(@"GENERIC_OK"), nil];
+		m_alertAddBookmark.alertViewStyle = UIAlertViewStylePlainTextInput;
+		UITextField *textField = [m_alertAddBookmark textFieldAtIndex:0];
+		textField.placeholder = LocStr(@"ADD_BOOKMARK_PROMPT_PLACEHOLDER");
+		[m_alertAddBookmark show];
+	}
 }
 
 
@@ -208,12 +322,52 @@
 }
 
 
+- (int)pageIndexForCFI:(NSString *)cfi {
+	if (cfi == nil || cfi.length == 0) {
+		return 0;
+	}
+
+	NSString *request = [NSString stringWithFormat:
+		@"ReadiumSDK.reader.getPageForElementCfi(\"%@\")", cfi];
+	NSString *response = [m_webView stringByEvaluatingJavaScriptFromString:request];
+	return response.intValue;
+}
+
+
+- (int)pageIndexForElementID:(NSString *)elementID {
+	if (elementID == nil || elementID.length == 0) {
+		return 0;
+	}
+
+	NSString *request = [NSString stringWithFormat:
+		@"ReadiumSDK.reader.getPageForElementId(\"%@\")", elementID];
+	NSString *response = [m_webView stringByEvaluatingJavaScriptFromString:request];
+	return response.intValue;
+}
+
+
+- (void)showContent {
+	m_webView.hidden = NO;
+	[self updateToolbar];
+}
+
+
 - (void)updateToolbar {
+	if (m_webView.hidden) {
+		self.toolbarItems = nil;
+		return;
+	}
+
 	UIBarButtonItem *itemFixed = [[[UIBarButtonItem alloc]
 		initWithBarButtonSystemItem:UIBarButtonSystemItemFixedSpace
 		target:nil
 		action:nil] autorelease];
-	itemFixed.width = 16;
+	itemFixed.width = 12;
+
+	UIBarButtonItem *itemFlex = [[[UIBarButtonItem alloc]
+		initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace
+		target:nil
+		action:nil] autorelease];
 
 	UIBarButtonItem *itemPrev = [[[UIBarButtonItem alloc]
 		initWithBarButtonSystemItem:UIBarButtonSystemItemRewind
@@ -224,6 +378,11 @@
 		initWithBarButtonSystemItem:UIBarButtonSystemItemFastForward
 		target:self
 		action:@selector(onClickNext)] autorelease];
+
+	UIBarButtonItem *itemAddBookmark = [[[UIBarButtonItem alloc]
+		initWithBarButtonSystemItem:UIBarButtonSystemItemAdd
+		target:self
+		action:@selector(onClickAddBookmark)] autorelease];
 
 	UILabel *label = [[[UILabel alloc] init] autorelease];
 	label.backgroundColor = [UIColor clearColor];
@@ -244,7 +403,14 @@
 	UIBarButtonItem *itemLabel = [[[UIBarButtonItem alloc]
 		initWithCustomView:label] autorelease];
 
-	self.toolbarItems = @[ itemPrev, itemFixed, itemNext, itemFixed, itemLabel ];
+	self.toolbarItems = @[
+		itemPrev,
+		itemFixed,
+		itemNext,
+		itemFixed,
+		itemLabel,
+		itemFlex,
+		itemAddBookmark ];
 }
 
 
@@ -292,6 +458,23 @@
 				m_currentPageIndex = pageIndex.intValue;
 				m_pageCount = pageCount.intValue;
 				[self updateToolbar];
+
+				if (!m_didFinishLoading && m_pageCount > 0) {
+					m_didFinishLoading = YES;
+
+					if (m_initialCFI != nil && m_initialCFI.length > 0) {
+						int index = [self pageIndexForCFI:m_initialCFI];
+						[self goToPageIndex:index];
+					}
+					else if (m_initialElementID != nil && m_initialElementID.length > 0) {
+						int index = [self pageIndexForElementID:m_initialElementID];
+						[self goToPageIndex:index];
+					}
+				}
+
+				if (m_pageCount > 0) {
+					[self performSelector:@selector(showContent) withObject:nil afterDelay:0.1];
+				}
 			}
 		}
 	}

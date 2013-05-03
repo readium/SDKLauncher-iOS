@@ -7,7 +7,7 @@
 //
 
 #import "RDPackageResource.h"
-#import "archive.h"
+#import <ePub3/archive.h>
 
 
 @interface RDPackageResource() {

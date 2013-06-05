@@ -22,7 +22,7 @@
 
 
 - (NSString *)baseHref {
-	const ePub3::ManifestItem *manifestItem = m_spineItem->ManifestItem();
+	std::shared_ptr<ePub3::ManifestItem> manifestItem = m_spineItem->ManifestItem();
 
 	if (manifestItem != NULL) {
 		const ePub3::string s = manifestItem->BaseHref();

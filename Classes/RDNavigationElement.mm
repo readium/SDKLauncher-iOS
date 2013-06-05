@@ -13,6 +13,7 @@
 
 @interface RDNavigationElement() {
 	@private ePub3::NavigationElement *m_element;
+	@private ePub3::NavigationList m_navigationList;
 }
 
 @end
@@ -25,11 +26,11 @@
 	if (m_children == nil) {
 		NSMutableArray *array = [[NSMutableArray alloc] init];
 		m_children = array;
-		const ePub3::NavigationList list = m_element->Children();
+		m_navigationList = m_element->Children();
 
-		for (auto i = list.begin(); i != list.end(); i++) {
+		for (auto i = m_navigationList.begin(); i != m_navigationList.end(); i++) {
 			RDNavigationElement *element = [[RDNavigationElement alloc]
-				initWithNavigationElement:*i];
+				initWithNavigationElement:i->get()];
 			[array addObject:element];
 			[element release];
 		}

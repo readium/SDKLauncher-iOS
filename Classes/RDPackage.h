@@ -7,12 +7,12 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "RDPackageResource.h"
 
 @class RDContainer;
 @class RDNavigationElement;
-@class RDPackageResource;
 
-@interface RDPackage : NSObject {
+@interface RDPackage : NSObject <RDPackageResourceDelegate> {
 	@private RDNavigationElement *m_navElemListOfFigures;
 	@private RDNavigationElement *m_navElemListOfIllustrations;
 	@private RDNavigationElement *m_navElemListOfTables;

@@ -9,11 +9,11 @@
 #import "RDPackage.h"
 #import <ePub3/package.h>
 #import "RDNavigationElement.h"
-#import "RDPackageResource.h"
 #import "RDSpineItem.h"
 
 
 @interface RDPackage() {
+	@private std::vector<std::unique_ptr<ePub3::ArchiveReader>> m_archiveReaderVector;
 	@private ePub3::Package *m_package;
 }
 
@@ -86,13 +86,13 @@
 
 		// Spine items.
 
-		const ePub3::SpineItem *firstSpineItem = m_package->FirstSpineItem();
+		std::shared_ptr<ePub3::SpineItem> firstSpineItem = m_package->FirstSpineItem();
 		size_t count = (firstSpineItem == NULL) ? 0 : firstSpineItem->Count();
 		m_spineItems = [[NSMutableArray alloc] initWithCapacity:(count == 0) ? 1 : count];
 
 		for (size_t i = 0; i < count; i++) {
-			const ePub3::SpineItem *spineItem = m_package->SpineItemAt(i);
-			RDSpineItem *item = [[RDSpineItem alloc] initWithSpineItem:(void *)spineItem];
+			std::shared_ptr<ePub3::SpineItem> spineItem = m_package->SpineItemAt(i);
+			RDSpineItem *item = [[RDSpineItem alloc] initWithSpineItem:spineItem.get()];
 			[m_spineItems addObject:item];
 			[item release];
 		}
@@ -127,7 +127,7 @@
 - (RDNavigationElement *)listOfFigures {
 	if (m_navElemListOfFigures == nil) {
 		m_navElemListOfFigures = [[RDNavigationElement alloc]
-			initWithNavigationElement:(void *)m_package->ListOfFigures()];
+			initWithNavigationElement:(m_package->ListOfFigures()).get()];
 	}
 
 	return m_navElemListOfFigures;
@@ -137,7 +137,7 @@
 - (RDNavigationElement *)listOfIllustrations {
 	if (m_navElemListOfIllustrations == nil) {
 		m_navElemListOfIllustrations = [[RDNavigationElement alloc]
-			initWithNavigationElement:(void *)m_package->ListOfIllustrations()];
+			initWithNavigationElement:(m_package->ListOfIllustrations()).get()];
 	}
 
 	return m_navElemListOfIllustrations;
@@ -147,7 +147,7 @@
 - (RDNavigationElement *)listOfTables {
 	if (m_navElemListOfTables == nil) {
 		m_navElemListOfTables = [[RDNavigationElement alloc]
-			initWithNavigationElement:(void *)m_package->ListOfTables()];
+			initWithNavigationElement:(m_package->ListOfTables()).get()];
 	}
 
 	return m_navElemListOfTables;
@@ -169,10 +169,22 @@
 - (RDNavigationElement *)pageList {
 	if (m_navElemPageList == nil) {
 		m_navElemPageList = [[RDNavigationElement alloc]
-			initWithNavigationElement:(void *)m_package->PageList()];
+			initWithNavigationElement:(m_package->PageList()).get()];
 	}
 
 	return m_navElemPageList;
+}
+
+
+- (void)RDPackageResourceWillDeallocate:(RDPackageResource *)packageResource {
+	for (auto i = m_archiveReaderVector.begin(); i != m_archiveReaderVector.end(); i++) {
+		if (i->get() == packageResource.archiveReader) {
+			m_archiveReaderVector.erase(i);
+			return;
+		}
+	}
+
+	NSLog(@"The archive reader was not found!");
 }
 
 
@@ -192,15 +204,21 @@
 	}
 
 	ePub3::string s = ePub3::string(relativePath.UTF8String);
-	ePub3::ArchiveReader *reader = m_package->ReaderForRelativePath(s);
+	std::unique_ptr<ePub3::ArchiveReader> reader = m_package->ReaderForRelativePath(s);
 
-	if (reader == NULL) {
+	if (reader == nullptr) {
 		NSLog(@"Relative path '%@' does not have an archive reader!", relativePath);
 		return nil;
 	}
 
-	RDPackageResource *resource = [[[RDPackageResource alloc] initWithArchiveReader:reader
+	RDPackageResource *resource = [[[RDPackageResource alloc]
+		initWithDelegate:self
+		archiveReader:reader.get()
 		relativePath:relativePath] autorelease];
+
+	if (resource != nil) {
+		m_archiveReaderVector.push_back(std::move(reader));
+	}
 
 	// Determine if the data represents HTML.
 
@@ -212,7 +230,7 @@
 			ePub3::ManifestTable manifest = m_package->Manifest();
 
 			for (auto i = manifest.begin(); i != manifest.end(); i++) {
-				ePub3::ManifestItem *item = i->second;
+				std::shared_ptr<ePub3::ManifestItem> item = i->second;
 
 				if (item->Href() == s) {
 					if (item->MediaType() == "application/xhtml+xml") {
@@ -249,7 +267,7 @@
 - (RDNavigationElement *)tableOfContents {
 	if (m_navElemTableOfContents == nil) {
 		m_navElemTableOfContents = [[RDNavigationElement alloc]
-			initWithNavigationElement:(void *)m_package->TableOfContents()];
+			initWithNavigationElement:(m_package->TableOfContents()).get()];
 	}
 
 	return m_navElemTableOfContents;

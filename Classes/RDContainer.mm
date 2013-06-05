@@ -13,7 +13,8 @@
 
 
 @interface RDContainer() {
-	@private ePub3::Container *m_container;
+	@private std::shared_ptr<ePub3::Container> m_container;
+	@private ePub3::Container::PackageList m_packageList;
 }
 
 @end
@@ -27,7 +28,6 @@
 
 
 - (void)dealloc {
-	delete m_container;
 	[m_packages release];
 	[m_path release];
 	[super dealloc];
@@ -47,18 +47,18 @@
 
 	if (self = [super init]) {
 		m_path = [path retain];
-		m_container = new ePub3::Container(path.UTF8String);
+		m_container = ePub3::Container::OpenContainer(path.UTF8String);
 
-		if (m_container == NULL) {
+		if (m_container == nullptr) {
 			[self release];
 			return nil;
 		}
 
-		ePub3::Container::PackageList vec = m_container->Packages();
+		m_packageList = m_container->Packages();
 		m_packages = [[NSMutableArray alloc] initWithCapacity:4];
 
-		for (auto i = vec.begin(); i != vec.end(); i++) {
-			RDPackage *package = [[RDPackage alloc] initWithPackage:*i];
+		for (auto i = m_packageList.begin(); i != m_packageList.end(); i++) {
+			RDPackage *package = [[RDPackage alloc] initWithPackage:i->get()];
 			[m_packages addObject:package];
 			[package release];
 		}

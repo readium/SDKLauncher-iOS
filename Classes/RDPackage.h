@@ -28,6 +28,7 @@
 @property (nonatomic, readonly) NSString *authors;
 @property (nonatomic, readonly) NSString *basePath;
 @property (nonatomic, readonly) NSString *copyrightOwner;
+@property (nonatomic, readonly) NSDictionary *dictionary;
 @property (nonatomic, readonly) NSString *fullTitle;
 @property (nonatomic, readonly) NSString *isbn;
 @property (nonatomic, readonly) NSString *language;
@@ -38,6 +39,7 @@
 @property (nonatomic, readonly) NSString *packageID;
 @property (nonatomic, readonly) NSString *packageUUID;
 @property (nonatomic, readonly) RDNavigationElement *pageList;
+@property (nonatomic, readonly) NSString *renditionLayout;
 @property (nonatomic, readonly) NSString *source;
 @property (nonatomic, readonly) NSArray *spineItems;
 @property (nonatomic, readonly) NSArray *subjects;

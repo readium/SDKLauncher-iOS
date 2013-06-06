@@ -12,7 +12,7 @@
 
 @protocol RDPackageResourceDelegate
 
-- (void)RDPackageResourceWillDeallocate:(RDPackageResource *)packageResource;
+- (void)rdpackageResourceWillDeallocate:(RDPackageResource *)packageResource;
 
 @end
 

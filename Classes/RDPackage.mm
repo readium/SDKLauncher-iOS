@@ -7,6 +7,7 @@
 //
 
 #import "RDPackage.h"
+#import <ePub3/nav_table.h>
 #import <ePub3/package.h>
 #import "RDNavigationElement.h"
 #import "RDSpineItem.h"
@@ -15,7 +16,10 @@
 @interface RDPackage() {
 	@private std::vector<std::unique_ptr<ePub3::ArchiveReader>> m_archiveReaderVector;
 	@private ePub3::Package *m_package;
+	@private std::vector<std::shared_ptr<ePub3::SpineItem>> m_spineItemVector;
 }
+
+- (NSString *)sourceHrefForNavigationTable:(ePub3::NavigationTable *)navTable;
 
 @end
 
@@ -61,6 +65,31 @@
 }
 
 
+- (NSDictionary *)dictionary {
+	NSMutableDictionary *dictRoot = [NSMutableDictionary dictionary];
+	[dictRoot setObject:@"" forKey:@"rootUrl"];
+
+	NSString *s = self.renditionLayout;
+
+	if (s != nil) {
+		[dictRoot setObject:s forKey:@"rendition_layout"];
+	}
+
+	NSMutableDictionary *dictSpine = [NSMutableDictionary dictionary];
+	[dictRoot setObject:dictSpine forKey:@"spine"];
+	[dictSpine setObject:@"default" forKey:@"direction"]; // !@# needs to come from the SDK
+
+	NSMutableArray *items = [NSMutableArray arrayWithCapacity:m_spineItems.count];
+	[dictSpine setObject:items forKey:@"items"];
+
+	for (RDSpineItem *spineItem in self.spineItems) {
+		[items addObject:spineItem.dictionary];
+	}
+
+	return dictRoot;
+}
+
+
 - (NSString *)fullTitle {
 	const ePub3::string s = m_package->FullTitle();
 	return [NSString stringWithUTF8String:s.c_str()];
@@ -92,6 +121,7 @@
 
 		for (size_t i = 0; i < count; i++) {
 			std::shared_ptr<ePub3::SpineItem> spineItem = m_package->SpineItemAt(i);
+			m_spineItemVector.push_back(spineItem);
 			RDSpineItem *item = [[RDSpineItem alloc] initWithSpineItem:spineItem.get()];
 			[m_spineItems addObject:item];
 			[item release];
@@ -126,8 +156,10 @@
 
 - (RDNavigationElement *)listOfFigures {
 	if (m_navElemListOfFigures == nil) {
+		ePub3::NavigationTable *navTable = m_package->ListOfFigures().get();
 		m_navElemListOfFigures = [[RDNavigationElement alloc]
-			initWithNavigationElement:(m_package->ListOfFigures()).get()];
+			initWithNavigationElement:navTable
+			sourceHref:[self sourceHrefForNavigationTable:navTable]];
 	}
 
 	return m_navElemListOfFigures;
@@ -136,8 +168,10 @@
 
 - (RDNavigationElement *)listOfIllustrations {
 	if (m_navElemListOfIllustrations == nil) {
+		ePub3::NavigationTable *navTable = m_package->ListOfIllustrations().get();
 		m_navElemListOfIllustrations = [[RDNavigationElement alloc]
-			initWithNavigationElement:(m_package->ListOfIllustrations()).get()];
+			initWithNavigationElement:navTable
+			sourceHref:[self sourceHrefForNavigationTable:navTable]];
 	}
 
 	return m_navElemListOfIllustrations;
@@ -146,8 +180,10 @@
 
 - (RDNavigationElement *)listOfTables {
 	if (m_navElemListOfTables == nil) {
+		ePub3::NavigationTable *navTable = m_package->ListOfTables().get();
 		m_navElemListOfTables = [[RDNavigationElement alloc]
-			initWithNavigationElement:(m_package->ListOfTables()).get()];
+			initWithNavigationElement:navTable
+			sourceHref:[self sourceHrefForNavigationTable:navTable]];
 	}
 
 	return m_navElemListOfTables;
@@ -168,15 +204,17 @@
 
 - (RDNavigationElement *)pageList {
 	if (m_navElemPageList == nil) {
+		ePub3::NavigationTable *navTable = m_package->PageList().get();
 		m_navElemPageList = [[RDNavigationElement alloc]
-			initWithNavigationElement:(m_package->PageList()).get()];
+			initWithNavigationElement:navTable
+			sourceHref:[self sourceHrefForNavigationTable:navTable]];
 	}
 
 	return m_navElemPageList;
 }
 
 
-- (void)RDPackageResourceWillDeallocate:(RDPackageResource *)packageResource {
+- (void)rdpackageResourceWillDeallocate:(RDPackageResource *)packageResource {
 	for (auto i = m_archiveReaderVector.begin(); i != m_archiveReaderVector.end(); i++) {
 		if (i->get() == packageResource.archiveReader) {
 			m_archiveReaderVector.erase(i);
@@ -185,6 +223,20 @@
 	}
 
 	NSLog(@"The archive reader was not found!");
+}
+
+
+- (NSString *)renditionLayout {
+	auto iri = m_package->MakePropertyIRI("layout", "rendition");
+	auto propertyList = m_package->PropertiesMatching(iri);
+
+	if (propertyList.size() > 0) {
+		auto prop = propertyList[0];
+		const ePub3::string s = prop->Value();
+		return [NSString stringWithUTF8String:s.c_str()];
+	}
+
+	return @"reflowable";
 }
 
 
@@ -258,6 +310,16 @@
 }
 
 
+- (NSString *)sourceHrefForNavigationTable:(ePub3::NavigationTable *)navTable {
+	if (navTable == nil) {
+		return nil;
+	}
+
+	const ePub3::string s = navTable->SourceHref();
+	return [NSString stringWithUTF8String:s.c_str()];
+}
+
+
 - (NSString *)subtitle {
 	const ePub3::string s = m_package->Subtitle();
 	return [NSString stringWithUTF8String:s.c_str()];
@@ -266,8 +328,10 @@
 
 - (RDNavigationElement *)tableOfContents {
 	if (m_navElemTableOfContents == nil) {
+		ePub3::NavigationTable *navTable = m_package->TableOfContents().get();
 		m_navElemTableOfContents = [[RDNavigationElement alloc]
-			initWithNavigationElement:(m_package->TableOfContents()).get()];
+			initWithNavigationElement:navTable
+			sourceHref:[self sourceHrefForNavigationTable:navTable]];
 	}
 
 	return m_navElemTableOfContents;

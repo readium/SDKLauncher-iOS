@@ -1,5 +1,3 @@
-//  LauncherOSX
-//
 //  Created by Boris Schneiderman.
 //  Copyright (c) 2012-2013 The Readium Foundation.
 //
@@ -16,13 +14,9 @@
 //  You should have received a copy of the GNU General Public License
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-ReadiumSDK = {
+ReadiumSDK.Models.BookmarkData = function(idref, contentCFI) {
 
-    Models : {},
-    Views : {},
-    Collections: {},
-    Routers: {},
-    Helpers: {},
-    HostAppFeedback: {}
+    this.idref = idref;
+    this.contentCFI = contentCFI;
 
 };

@@ -38,6 +38,37 @@
 }
 
 
+- (NSDictionary *)dictionary {
+	NSMutableDictionary *dict = [NSMutableDictionary dictionary];
+
+	NSString *s = self.baseHref;
+
+	if (s != nil) {
+		[dict setObject:s forKey:@"href"];
+	}
+
+	s = self.idref;
+
+	if (s != nil) {
+		[dict setObject:s forKey:@"idref"];
+	}
+
+	s = self.pageSpread;
+
+	if (s != nil) {
+		[dict setObject:s forKey:@"page_spread"];
+	}
+
+	s = self.renditionLayout;
+
+	if (s != nil) {
+		[dict setObject:s forKey:@"rendition_layout"];
+	}
+
+	return dict;
+}
+
+
 - (NSString *)idref {
 	const ePub3::string s = m_spineItem->Idref();
 	return [NSString stringWithUTF8String:s.c_str()];
@@ -55,6 +86,24 @@
 	}
 
 	return self;
+}
+
+
+- (NSString *)pageSpread  {
+	if (m_spineItem->Spread() == ePub3::PageSpread::Left) {
+		return @"page-spread-left";
+	}
+
+	if (m_spineItem->Spread() == ePub3::PageSpread::Right) {
+		return @"page-spread-right";
+	}
+
+	return @"";
+}
+
+
+- (NSString *)renditionLayout {
+	return @"reflowable"; // !@# needs to come from the SDK
 }
 
 

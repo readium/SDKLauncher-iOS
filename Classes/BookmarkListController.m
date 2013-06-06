@@ -9,9 +9,9 @@
 #import "BookmarkListController.h"
 #import "Bookmark.h"
 #import "BookmarkDatabase.h"
+#import "EPubViewController.h"
 #import "RDContainer.h"
 #import "RDPackage.h"
-#import "SpineItemController.h"
 
 
 @interface BookmarkListController()
@@ -123,7 +123,7 @@
 {
 	Bookmark *bookmark = [m_bookmarks objectAtIndex:indexPath.row];
 
-	SpineItemController *c = [[[SpineItemController alloc]
+	EPubViewController *c = [[[EPubViewController alloc]
 		initWithContainer:m_container
 		package:m_package
 		bookmark:bookmark] autorelease];

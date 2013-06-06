@@ -1,9 +1,9 @@
 //
-//  SpineItemController.h
+//  EPubViewController.h
 //  SDKLauncher-iOS
 //
-//  Created by Shane Meyer on 2/5/13.
-//  Copyright (c) 2012-2013 The Readium Foundation.
+//  Created by Shane Meyer on 6/5/13.
+//  Copyright (c) 2013 The Readium Foundation. All rights reserved.
 //
 
 #import "BaseViewController.h"
@@ -11,10 +11,11 @@
 @class Bookmark;
 @class PackageResourceServer;
 @class RDContainer;
+@class RDNavigationElement;
 @class RDPackage;
 @class RDSpineItem;
 
-@interface SpineItemController : BaseViewController <
+@interface EPubViewController : BaseViewController <
 	UIAlertViewDelegate,
 	UIWebViewDelegate>
 {
@@ -23,8 +24,8 @@
 	@private int m_currentPageIndex;
 	@private BOOL m_didFinishLoading;
 	@private BOOL m_didHandleFirstRequest;
-	@private NSString *m_initialElementID;
 	@private NSString *m_initialCFI;
+	@private RDNavigationElement *m_navElement;
 	@private RDPackage *m_package;
 	@private int m_pageCount;
 	@private PackageResourceServer *m_resourceServer;
@@ -34,13 +35,22 @@
 
 - (id)
 	initWithContainer:(RDContainer *)container
+	package:(RDPackage *)package;
+
+- (id)
+	initWithContainer:(RDContainer *)container
 	package:(RDPackage *)package
 	bookmark:(Bookmark *)bookmark;
 
 - (id)
 	initWithContainer:(RDContainer *)container
 	package:(RDPackage *)package
+	navElement:(RDNavigationElement *)navElement;
+
+- (id)
+	initWithContainer:(RDContainer *)container
+	package:(RDPackage *)package
 	spineItem:(RDSpineItem *)spineItem
-	elementID:(NSString *)elementID;
+	cfi:(NSString *)cfi;
 
 @end

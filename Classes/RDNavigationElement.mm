@@ -22,6 +22,9 @@
 @implementation RDNavigationElement
 
 
+@synthesize sourceHref = m_sourceHref;
+
+
 - (NSArray *)children {
 	if (m_children == nil) {
 		NSMutableArray *array = [[NSMutableArray alloc] init];
@@ -30,7 +33,7 @@
 
 		for (auto i = m_navigationList.begin(); i != m_navigationList.end(); i++) {
 			RDNavigationElement *element = [[RDNavigationElement alloc]
-				initWithNavigationElement:i->get()];
+				initWithNavigationElement:i->get() sourceHref:m_sourceHref];
 			[array addObject:element];
 			[element release];
 		}
@@ -54,11 +57,12 @@
 
 - (void)dealloc {
 	[m_children release];
+	[m_sourceHref release];
 	[super dealloc];
 }
 
 
-- (id)initWithNavigationElement:(void *)element {
+- (id)initWithNavigationElement:(void *)element sourceHref:(NSString *)sourceHref {
 	if (element == nil) {
 		[self release];
 		return nil;
@@ -66,6 +70,7 @@
 
 	if (self = [super init]) {
 		m_element = (ePub3::NavigationElement *)element;
+		m_sourceHref = [sourceHref retain];
 	}
 
 	return self;

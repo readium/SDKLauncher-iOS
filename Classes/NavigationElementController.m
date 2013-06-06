@@ -7,11 +7,11 @@
 //
 
 #import "NavigationElementController.h"
+#import "EPubViewController.h"
 #import "RDContainer.h"
 #import "RDNavigationElement.h"
 #import "RDPackage.h"
 #import "RDSpineItem.h"
-#import "SpineItemController.h"
 
 
 @implementation NavigationElementController
@@ -105,28 +105,14 @@
 	didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
 	RDNavigationElement *element = [m_element.children objectAtIndex:indexPath.row];
-	NSString *baseHref = element.content;
 
-	if (baseHref != nil && baseHref.length > 0) {
-		NSRange range = [baseHref rangeOfString:@"#"];
-		NSString *elementID = nil;
+	EPubViewController *c = [[[EPubViewController alloc]
+		initWithContainer:m_container
+		package:m_package
+		navElement:element] autorelease];
 
-		if (range.location != NSNotFound) {
-			elementID = [baseHref substringFromIndex:NSMaxRange(range)];
-			baseHref = [baseHref substringToIndex:range.location];
-		}
-
-		for (RDSpineItem *spineItem in m_package.spineItems) {
-			if ([spineItem.baseHref isEqualToString:baseHref]) {
-				SpineItemController *c = [[[SpineItemController alloc]
-					initWithContainer:m_container
-					package:m_package
-					spineItem:spineItem
-					elementID:elementID] autorelease];
-				[self.navigationController pushViewController:c animated:YES];
-				return;
-			}
-		}
+	if (c != nil) {
+		[self.navigationController pushViewController:c animated:YES];
 	}
 
 	[tableView deselectRowAtIndexPath:indexPath animated:YES];

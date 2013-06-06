@@ -1,5 +1,3 @@
-//  LauncherOSX
-//
 //  Created by Boris Schneiderman.
 //  Copyright (c) 2012-2013 The Readium Foundation.
 //
@@ -16,13 +14,42 @@
 //  You should have received a copy of the GNU General Public License
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-ReadiumSDK = {
 
-    Models : {},
-    Views : {},
-    Collections: {},
-    Routers: {},
-    Helpers: {},
-    HostAppFeedback: {}
+ReadiumSDK.Models.Package = Backbone.Model.extend({
 
-};
+
+    spine: undefined,
+    rendition_layout: undefined,
+    rootUrl: undefined,
+
+
+    initialize : function() {
+
+        this.reset();
+
+        var packageData = this.get("packageData");
+
+        if(packageData) {
+
+            this.rootUrl = packageData.rootUrl;
+            this.rendition_layout = packageData.rendition_layout;
+            this.spine = new ReadiumSDK.Models.Spine({spineData: packageData.spine, package: this});
+
+        }
+
+    },
+
+    reset: function() {
+        this.spine = undefined;
+        this.rendition_layout = undefined;
+        this.rootUrl = undefined;
+    },
+
+
+    isFixedLayout: function() {
+
+        return this.rendition_layout === "pre-paginated";
+    }
+
+
+});

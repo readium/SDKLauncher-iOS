@@ -54,7 +54,7 @@
 
 
 - (void)dealloc {
-	[m_delegate RDPackageResourceWillDeallocate:self];
+	[m_delegate rdpackageResourceWillDeallocate:self];
 
 	[m_data release];
 	[m_relativePath release];

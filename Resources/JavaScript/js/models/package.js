@@ -33,6 +33,11 @@ ReadiumSDK.Models.Package = Backbone.Model.extend({
 
             this.rootUrl = packageData.rootUrl;
             this.rendition_layout = packageData.rendition_layout;
+
+            if(!this.rendition_layout) {
+                this.rendition_layout = "reflowable";
+            }
+
             this.spine = new ReadiumSDK.Models.Spine({spineData: packageData.spine, package: this});
 
         }
@@ -45,11 +50,11 @@ ReadiumSDK.Models.Package = Backbone.Model.extend({
         this.rootUrl = undefined;
     },
 
-
     isFixedLayout: function() {
-
         return this.rendition_layout === "pre-paginated";
+    },
+
+    isReflowable: function() {
+        return !this.isFixedLayout();
     }
-
-
 });

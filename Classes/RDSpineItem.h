@@ -9,6 +9,7 @@
 #import <Foundation/Foundation.h>
 
 @interface RDSpineItem : NSObject {
+	@private NSString *m_renditionLayout;
 }
 
 @property (nonatomic, readonly) NSString *baseHref;
@@ -17,6 +18,6 @@
 @property (nonatomic, readonly) NSString *pageSpread;
 @property (nonatomic, readonly) NSString *renditionLayout;
 
-- (id)initWithSpineItem:(void *)spineItem;
+- (id)initWithSpineItem:(void *)spineItem renditionLayout:(NSString *)renditionLayout;
 
 @end

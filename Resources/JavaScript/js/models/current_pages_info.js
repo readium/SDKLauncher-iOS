@@ -16,8 +16,9 @@
 
 
 //used to report pagination state back to the host application
-ReadiumSDK.Models.CurrentPagesInfo = function(spineItemCount, isFixedLayout) {
+ReadiumSDK.Models.CurrentPagesInfo = function(spineItemCount, isFixedLayout, pageProgressionDirection) {
 
+    this.pageProgressionDirection = pageProgressionDirection;
     this.isFixedLayout = isFixedLayout;
     this.spineItemCount = spineItemCount;
     this.openPages = [];

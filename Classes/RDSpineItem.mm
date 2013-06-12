@@ -21,6 +21,9 @@
 @implementation RDSpineItem
 
 
+@synthesize renditionLayout = m_renditionLayout;
+
+
 - (NSString *)baseHref {
 	std::shared_ptr<ePub3::ManifestItem> manifestItem = m_spineItem->ManifestItem();
 
@@ -34,6 +37,7 @@
 
 
 - (void)dealloc {
+	[m_renditionLayout release];
 	[super dealloc];
 }
 
@@ -59,10 +63,8 @@
 		[dict setObject:s forKey:@"page_spread"];
 	}
 
-	s = self.renditionLayout;
-
-	if (s != nil) {
-		[dict setObject:s forKey:@"rendition_layout"];
+	if (self.renditionLayout != nil) {
+		[dict setObject:self.renditionLayout forKey:@"rendition_layout"];
 	}
 
 	return dict;
@@ -75,13 +77,14 @@
 }
 
 
-- (id)initWithSpineItem:(void *)spineItem {
+- (id)initWithSpineItem:(void *)spineItem renditionLayout:(NSString *)renditionLayout {
 	if (spineItem == nil) {
 		[self release];
 		return nil;
 	}
 
 	if (self = [super init]) {
+		m_renditionLayout = [renditionLayout retain];
 		m_spineItem = (ePub3::SpineItem *)spineItem;
 	}
 
@@ -99,11 +102,6 @@
 	}
 
 	return @"";
-}
-
-
-- (NSString *)renditionLayout {
-	return @"reflowable"; // !@# needs to come from the SDK
 }
 
 

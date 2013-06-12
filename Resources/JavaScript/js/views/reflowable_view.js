@@ -36,7 +36,7 @@ ReadiumSDK.Views.ReflowableView = Backbone.View.extend({
         visibleColumnCount : 2,
         columnGap : 20,
         spreadCount : 0,
-        currentSpread : 0,
+        currentSpreadIndex : 0,
         columnWidth : undefined,
         pageOffset : 0,
         columnCount: 0
@@ -55,8 +55,13 @@ ReadiumSDK.Views.ReflowableView = Backbone.View.extend({
         this.$viewport = $("#viewport_reflowable", this.$el);
         this.$iframe = $("#epubContentIframe", this.$el);
 
-        //event with namespace for clean unbinding
-        $(window).on("resize.ReadiumSDK.reflowableView", _.bind(this.onViewportResize, this));
+        this.$iframe.css("left", "");
+        this.$iframe.css("right", "");
+        this.$iframe.css(this.spine.isLeftToRight() ? "left" : "right", "0px");
+
+        //We will call onViewportResize after user stopped resizing window
+        var lazyResize = _.debounce(this.onViewportResize, 100);
+        $(window).on("resize.ReadiumSDK.reflowableView", _.bind(lazyResize, this));
 
         return this;
     },
@@ -89,7 +94,7 @@ ReadiumSDK.Views.ReflowableView = Backbone.View.extend({
 
         if(this.currentSpineItem != spineItem) {
 
-            this.paginationInfo.currentSpread = 0;
+            this.paginationInfo.currentSpreadIndex = 0;
             this.currentSpineItem = spineItem;
             this.isWaitingFrameRender = true;
 
@@ -138,7 +143,7 @@ ReadiumSDK.Views.ReflowableView = Backbone.View.extend({
     openDeferredElement: function() {
 
         if(!this.deferredPageRequest) {
-           return;
+            return;
         }
 
         var deferredData = this.deferredPageRequest;
@@ -182,15 +187,17 @@ ReadiumSDK.Views.ReflowableView = Backbone.View.extend({
 
         if(pageIndex !== undefined && pageIndex >= 0 && pageIndex < this.paginationInfo.columnCount) {
 
-            this.paginationInfo.currentSpread = Math.floor(pageIndex / this.paginationInfo.visibleColumnCount) ;
+            this.paginationInfo.currentSpreadIndex = Math.floor(pageIndex / this.paginationInfo.visibleColumnCount) ;
             this.onPaginationChanged();
         }
     },
 
     redraw: function() {
 
-        this.paginationInfo.pageOffset = (this.paginationInfo.columnWidth + this.paginationInfo.columnGap) * this.paginationInfo.visibleColumnCount * this.paginationInfo.currentSpread;
-        this.$epubHtml.css("left", -this.paginationInfo.pageOffset + "px");
+        var offsetVal =  -this.paginationInfo.pageOffset + "px";
+
+        this.$epubHtml.css("left", this.spine.isLeftToRight() ? offsetVal : "");
+        this.$epubHtml.css("right", this.spine.isRightToLeft() ? offsetVal : "");
     },
 
     updateViewportSize: function() {
@@ -255,6 +262,7 @@ ReadiumSDK.Views.ReflowableView = Backbone.View.extend({
 
     onPaginationChanged: function() {
 
+        this.paginationInfo.pageOffset = (this.paginationInfo.columnWidth + this.paginationInfo.columnGap) * this.paginationInfo.visibleColumnCount * this.paginationInfo.currentSpreadIndex;
         this.redraw();
         this.trigger("PaginationChanged");
     },
@@ -265,8 +273,8 @@ ReadiumSDK.Views.ReflowableView = Backbone.View.extend({
             return;
         }
 
-        if(this.paginationInfo.currentSpread > 0) {
-            this.paginationInfo.currentSpread--;
+        if(this.paginationInfo.currentSpreadIndex > 0) {
+            this.paginationInfo.currentSpreadIndex--;
             this.onPaginationChanged();
         }
         else {
@@ -287,8 +295,8 @@ ReadiumSDK.Views.ReflowableView = Backbone.View.extend({
             return;
         }
 
-        if(this.paginationInfo.currentSpread < this.paginationInfo.spreadCount - 1) {
-            this.paginationInfo.currentSpread++;
+        if(this.paginationInfo.currentSpreadIndex < this.paginationInfo.spreadCount - 1) {
+            this.paginationInfo.currentSpreadIndex++;
             this.onPaginationChanged();
         }
         else {
@@ -309,16 +317,21 @@ ReadiumSDK.Views.ReflowableView = Backbone.View.extend({
             return;
         }
 
+        this.$iframe.css("width", this.lastViewPortSize.width + "px");
+        this.$iframe.css("height", this.lastViewPortSize.height + "px");
+
+        this.$epubHtml.css("height", this.lastViewPortSize.height + "px");
+
         this.paginationInfo.columnWidth = (this.lastViewPortSize.width - this.paginationInfo.columnGap * (this.paginationInfo.visibleColumnCount - 1)) / this.paginationInfo.visibleColumnCount;
 
-        //we do this because CSS will floor column with by itself if it is nor round number
+        //we do this because CSS will floor column with by itself if it is not a round number
         this.paginationInfo.columnWidth = Math.floor(this.paginationInfo.columnWidth);
 
-        this.$epubHtml.css("width", this.lastViewPortSize.width);
-        this.$epubHtml.css("-webkit-column-width", this.paginationInfo.columnWidth + "px");
+        this.$epubHtml.css("width", this.paginationInfo.columnWidth);
 
-        //we will render on timer but rendering before gives better visual experience
-        this.redraw();
+        this.shiftBookOfScreen();
+
+        this.$epubHtml.css("-webkit-column-width", this.paginationInfo.columnWidth + "px");
 
         var self = this;
         //TODO it takes time for rendition_layout engine to arrange columns we waite
@@ -326,22 +339,38 @@ ReadiumSDK.Views.ReflowableView = Backbone.View.extend({
         setTimeout(function(){
 
             var columnizedContentWidth = self.$epubHtml[0].scrollWidth;
-            //we do this to prevent css from doing column optimization smarts.
-            self.$iframe.css("width", columnizedContentWidth);
 
             self.paginationInfo.columnCount = Math.round((columnizedContentWidth + self.paginationInfo.columnGap) / (self.paginationInfo.columnWidth + self.paginationInfo.columnGap));
 
             self.paginationInfo.spreadCount =  Math.ceil(self.paginationInfo.columnCount / self.paginationInfo.visibleColumnCount);
 
-            if(self.paginationInfo.currentSpread >= self.paginationInfo.spreadCount) {
-                self.paginationInfo.currentSpread = self.paginationInfo.spreadCount - 1;
+            if(self.paginationInfo.currentSpreadIndex >= self.paginationInfo.spreadCount) {
+                self.paginationInfo.currentSpreadIndex = self.paginationInfo.spreadCount - 1;
             }
 
             self.openDeferredElement();
-            self.onPaginationChanged();
+
+            //We do this to force re-rendering of the document in the iframe.
+            //There is a bug in WebView control with right to left columns layout - after resizing the window html document
+            //is shifted in side the containing div. Hiding and showing the html element puts document in place.
+            self.$epubHtml.hide();
+            setTimeout(function() {
+                self.$epubHtml.show();
+                self.onPaginationChanged();
+            }, 50);
 
         }, 100);
 
+    },
+
+    shiftBookOfScreen: function() {
+
+        if(this.spine.isLeftToRight()) {
+            this.$epubHtml.css("left", (this.lastViewPortSize.width + 1000) + "px");
+        }
+        else {
+            this.$epubHtml.css("right", (this.lastViewPortSize.width + 1000) + "px");
+        }
     },
 
     getFirstVisibleElementCfi: function(){
@@ -355,13 +384,13 @@ ReadiumSDK.Views.ReflowableView = Backbone.View.extend({
 
     getPaginationInfo: function() {
 
-        var paginationInfo = new ReadiumSDK.Models.CurrentPagesInfo(this.spine.items.length, this.spine.package.isFixedLayout());
+        var paginationInfo = new ReadiumSDK.Models.CurrentPagesInfo(this.spine.items.length, this.spine.package.isFixedLayout(), this.spine.direction);
 
         if(!this.currentSpineItem) {
             return paginationInfo;
         }
 
-        var currentPage = this.paginationInfo.currentSpread * this.paginationInfo.visibleColumnCount;
+        var currentPage = this.paginationInfo.currentSpreadIndex * this.paginationInfo.visibleColumnCount;
 
         for(var i = 0; i < this.paginationInfo.visibleColumnCount && (currentPage + i) < this.paginationInfo.columnCount; i++) {
 

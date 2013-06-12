@@ -111,27 +111,6 @@ ReadiumSDK.Models.Spread = function(spine) {
         }
     };
 
-    this.openLeft = function() {
-
-        if(this.spine.isRightToLeft()) {
-            this.openNext();
-        }
-        else {
-            this.openPrev();
-        }
-    };
-
-    this.openRight = function() {
-
-        if(this.spine.isLeftToRight()) {
-            this.openNext();
-        }
-        else {
-            this.openPrev();
-        }
-
-    }
-
     this.validItems = function() {
 
         var arr = [];

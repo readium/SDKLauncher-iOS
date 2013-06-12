@@ -283,12 +283,22 @@
 
 
 - (void)onClickNext {
-	[m_webView stringByEvaluatingJavaScriptFromString:@"ReadiumSDK.reader.openPageRight()"];
+	if (m_currentPageProgressionIsLTR) {
+		[m_webView stringByEvaluatingJavaScriptFromString:@"ReadiumSDK.reader.openPageRight()"];
+	}
+	else {
+		[m_webView stringByEvaluatingJavaScriptFromString:@"ReadiumSDK.reader.openPageLeft()"];
+	}
 }
 
 
 - (void)onClickPrev {
-	[m_webView stringByEvaluatingJavaScriptFromString:@"ReadiumSDK.reader.openPageLeft()"];
+	if (m_currentPageProgressionIsLTR) {
+		[m_webView stringByEvaluatingJavaScriptFromString:@"ReadiumSDK.reader.openPageLeft()"];
+	}
+	else {
+		[m_webView stringByEvaluatingJavaScriptFromString:@"ReadiumSDK.reader.openPageRight()"];
+	}
 }
 
 
@@ -373,15 +383,20 @@
 		target:nil
 		action:nil] autorelease];
 
-	UIBarButtonItem *itemPrev = [[[UIBarButtonItem alloc]
-		initWithBarButtonSystemItem:UIBarButtonSystemItemRewind
-		target:self
-		action:@selector(onClickPrev)] autorelease];
+	static NSString *arrowL = @"\u2190";
+	static NSString *arrowR = @"\u2192";
 
 	UIBarButtonItem *itemNext = [[[UIBarButtonItem alloc]
-		initWithBarButtonSystemItem:UIBarButtonSystemItemFastForward
+		initWithTitle:m_currentPageProgressionIsLTR ? arrowR : arrowL
+		style:UIBarButtonItemStylePlain
 		target:self
 		action:@selector(onClickNext)] autorelease];
+
+	UIBarButtonItem *itemPrev = [[[UIBarButtonItem alloc]
+		initWithTitle:m_currentPageProgressionIsLTR ? arrowL : arrowR
+		style:UIBarButtonItemStylePlain
+		target:self
+		action:@selector(onClickPrev)] autorelease];
 
 	UIBarButtonItem *itemAddBookmark = [[[UIBarButtonItem alloc]
 		initWithBarButtonSystemItem:UIBarButtonSystemItemAdd
@@ -395,11 +410,20 @@
 	label.shadowOffset = CGSizeMake(0, -1);
 	label.textColor = [UIColor whiteColor];
 
-	if (m_pageCount == 0) {
+	if (m_currentPageCount == 0) {
 		label.text = @"";
+		itemNext.enabled = NO;
+		itemPrev.enabled = NO;
 	}
 	else {
-		label.text = LocStr(@"PAGE_X_OF_Y", m_currentPageIndex + 1, m_pageCount);
+		label.text = LocStr(@"PAGE_X_OF_Y", m_currentPageIndex + 1, m_currentPageCount);
+
+		itemNext.enabled = !(
+			(m_currentSpineItemIndex + 1 == m_package.spineItems.count) &&
+			(m_currentPageIndex + m_currentOpenPageCount + 1 >= m_currentPageCount)
+		);
+
+		itemPrev.enabled = !(m_currentSpineItemIndex == 0 && m_currentPageIndex == 0);
 	}
 
 	[label sizeToFit];
@@ -407,14 +431,26 @@
 	UIBarButtonItem *itemLabel = [[[UIBarButtonItem alloc]
 		initWithCustomView:label] autorelease];
 
-	self.toolbarItems = @[
-		itemPrev,
-		itemFixed,
-		itemNext,
-		itemFixed,
-		itemLabel,
-		itemFlex,
-		itemAddBookmark ];
+	if (m_currentPageProgressionIsLTR) {
+		self.toolbarItems = @[
+			itemPrev,
+			itemFixed,
+			itemNext,
+			itemFixed,
+			itemLabel,
+			itemFlex,
+			itemAddBookmark ];
+	}
+	else {
+		self.toolbarItems = @[
+			itemNext,
+			itemFixed,
+			itemPrev,
+			itemFixed,
+			itemLabel,
+			itemFlex,
+			itemAddBookmark ];
+	}
 }
 
 
@@ -465,12 +501,28 @@
 			NSDictionary *dict = [NSJSONSerialization JSONObjectWithData:data
 				options:0 error:&error];
 
+			NSString *direction = [dict objectForKey:@"pageProgressionDirection"];
+
+			if ([direction isKindOfClass:[NSString class]]) {
+				m_currentPageProgressionIsLTR = ![direction isEqualToString:@"rtl"];
+			}
+			else {
+				m_currentPageProgressionIsLTR = YES;
+			}
+
+			m_currentOpenPageCount = 0;
+
 			for (NSDictionary *pageDict in [dict objectForKey:@"openPages"]) {
+				m_currentOpenPageCount++;
+
 				NSNumber *number = [pageDict objectForKey:@"spineItemPageCount"];
-				m_pageCount = number.intValue;
+				m_currentPageCount = number.intValue;
 
 				number = [pageDict objectForKey:@"spineItemPageIndex"];
 				m_currentPageIndex = number.intValue;
+
+				number = [pageDict objectForKey:@"spineItemIndex"];
+				m_currentSpineItemIndex = number.intValue;
 
 				break;
 			}

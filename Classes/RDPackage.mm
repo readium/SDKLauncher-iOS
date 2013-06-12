@@ -77,7 +77,18 @@
 
 	NSMutableDictionary *dictSpine = [NSMutableDictionary dictionary];
 	[dictRoot setObject:dictSpine forKey:@"spine"];
-	[dictSpine setObject:@"default" forKey:@"direction"]; // !@# needs to come from the SDK
+
+	NSString *direction = @"default";
+	ePub3::PageProgression pageProgression = m_package->PageProgressionDirection();
+
+	if (pageProgression == ePub3::PageProgression::LeftToRight) {
+		direction = @"ltr";
+	}
+	else if (pageProgression == ePub3::PageProgression::RightToLeft) {
+		direction = @"rtl";
+	}
+
+	[dictSpine setObject:direction forKey:@"direction"];
 
 	NSMutableArray *items = [NSMutableArray arrayWithCapacity:m_spineItems.count];
 	[dictSpine setObject:items forKey:@"items"];
@@ -122,7 +133,9 @@
 		for (size_t i = 0; i < count; i++) {
 			std::shared_ptr<ePub3::SpineItem> spineItem = m_package->SpineItemAt(i);
 			m_spineItemVector.push_back(spineItem);
-			RDSpineItem *item = [[RDSpineItem alloc] initWithSpineItem:spineItem.get()];
+			RDSpineItem *item = [[RDSpineItem alloc]
+				initWithSpineItem:spineItem.get()
+				renditionLayout:self.renditionLayout];
 			[m_spineItems addObject:item];
 			[item release];
 		}
@@ -236,7 +249,7 @@
 		return [NSString stringWithUTF8String:s.c_str()];
 	}
 
-	return @"reflowable";
+	return @"";
 }
 
 

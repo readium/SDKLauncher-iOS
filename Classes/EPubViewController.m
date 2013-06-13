@@ -348,11 +348,8 @@
 				packageUUID:m_package.packageUUID];
 		}
 		else {
-			// Inject script only if this is the first request.  The reason is that for any
-			// given HTML file, we tuck it into an iframe of reader.html.  Once reader.html's
-			// iframe makes a request for the same HTML file, we need to avoid injection
-			// recursion.
-			html = [HTMLUtil htmlByInjectingScriptIntoHTMLAtURL:url.absoluteString];
+			// Return reader.html, which in turn will load the intended HTML.
+			html = [HTMLUtil readerHTML];
 		}
 
 		if (html != nil && html.length > 0) {

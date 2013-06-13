@@ -22,26 +22,6 @@
 @implementation HTMLUtil
 
 
-+ (NSString *)htmlByInjectingScriptIntoHTMLAtURL:(NSString *)url {
-	if (url == nil || url.length == 0) {
-		return nil;
-	}
-
-	static NSString *template = nil;
-
-	if (template == nil) {
-		NSString *path = [[NSBundle mainBundle] pathForResource:@"reader.html" ofType:nil];
-		template = [NSString stringWithContentsOfFile:path
-			encoding:NSUTF8StringEncoding error:nil];
-		template = [template stringByReplacingOccurrencesOfString:@"{BUNDLE}"
-			withString:kSDKLauncherWebViewBundleProtocol];
-		template = [template retain];
-	}
-
-	return [template stringByReplacingOccurrencesOfString:@"{URL}" withString:url];
-}
-
-
 + (NSString *)
 	htmlByReplacingMediaURLsInHTML:(NSString *)html
 	relativePath:(NSString *)relativePath
@@ -131,6 +111,21 @@
 	}
 
 	return html;
+}
+
+
++ (NSString *)readerHTML {
+	static NSString *s = nil;
+
+	if (s == nil) {
+		NSString *path = [[NSBundle mainBundle] pathForResource:@"reader.html" ofType:nil];
+		s = [NSString stringWithContentsOfFile:path encoding:NSUTF8StringEncoding error:nil];
+		s = [s stringByReplacingOccurrencesOfString:@"{BUNDLE}"
+			withString:kSDKLauncherWebViewBundleProtocol];
+		s = [s retain];
+	}
+
+	return s;
 }
 
 

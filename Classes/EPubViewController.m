@@ -283,22 +283,12 @@
 
 
 - (void)onClickNext {
-	if (m_currentPageProgressionIsLTR) {
-		[m_webView stringByEvaluatingJavaScriptFromString:@"ReadiumSDK.reader.openPageRight()"];
-	}
-	else {
-		[m_webView stringByEvaluatingJavaScriptFromString:@"ReadiumSDK.reader.openPageLeft()"];
-	}
+	[m_webView stringByEvaluatingJavaScriptFromString:@"ReadiumSDK.reader.openPageNext()"];
 }
 
 
 - (void)onClickPrev {
-	if (m_currentPageProgressionIsLTR) {
-		[m_webView stringByEvaluatingJavaScriptFromString:@"ReadiumSDK.reader.openPageLeft()"];
-	}
-	else {
-		[m_webView stringByEvaluatingJavaScriptFromString:@"ReadiumSDK.reader.openPageRight()"];
-	}
+	[m_webView stringByEvaluatingJavaScriptFromString:@"ReadiumSDK.reader.openPagePrev()"];
 }
 
 

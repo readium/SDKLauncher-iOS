@@ -73,7 +73,13 @@ ReadiumSDK.Models.Spine = Backbone.Model.extend({
     getItemUrl: function(item) {
 
         if(this.package.rootUrl) {
-            return this.package.rootUrl + "/" + item.href;
+
+            if(ReadiumSDK.Helpers.EndsWith(this.package.rootUrl, "/")){
+                return this.package.rootUrl + item.href;
+            }
+            else {
+                return this.package.rootUrl + "/" + item.href;
+            }
         }
 
         return item.href;

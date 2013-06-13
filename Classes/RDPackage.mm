@@ -67,7 +67,7 @@
 
 - (NSDictionary *)dictionary {
 	NSMutableDictionary *dictRoot = [NSMutableDictionary dictionary];
-	[dictRoot setObject:@"" forKey:@"rootUrl"];
+	[dictRoot setObject:@"/" forKey:@"rootUrl"];
 
 	NSString *s = self.renditionLayout;
 

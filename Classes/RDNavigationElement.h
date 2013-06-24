@@ -10,12 +10,14 @@
 
 @interface RDNavigationElement : NSObject {
 	@private NSArray *m_children;
+	@private NSString *m_sourceHref;
 }
 
 @property (nonatomic, readonly) NSArray *children;
 @property (nonatomic, readonly) NSString *content;
+@property (nonatomic, readonly) NSString *sourceHref;
 @property (nonatomic, readonly) NSString *title;
 
-- (id)initWithNavigationElement:(void *)element;
+- (id)initWithNavigationElement:(void *)element sourceHref:(NSString *)sourceHref;
 
 @end

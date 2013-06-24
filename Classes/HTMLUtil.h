@@ -10,11 +10,11 @@
 
 @interface HTMLUtil : NSObject
 
-+ (NSString *)htmlByInjectingScriptIntoHTMLAtURL:(NSString *)url;
-
 + (NSString *)
 	htmlByReplacingMediaURLsInHTML:(NSString *)html
 	relativePath:(NSString *)relativePath
 	packageUUID:(NSString *)packageUUID;
+
++ (NSString *)readerHTML;
 
 @end

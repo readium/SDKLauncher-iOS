@@ -1,35 +1,33 @@
 //
-//  SpineItemController.m
+//  EPubViewController.m
 //  SDKLauncher-iOS
 //
-//  Created by Shane Meyer on 2/5/13.
-//  Copyright (c) 2012-2013 The Readium Foundation.
+//  Created by Shane Meyer on 6/5/13.
+//  Copyright (c) 2013 The Readium Foundation. All rights reserved.
 //
 
-#import "SpineItemController.h"
+#import "EPubViewController.h"
 #import "Bookmark.h"
 #import "BookmarkDatabase.h"
 #import "EPubURLProtocolBridge.h"
 #import "HTMLUtil.h"
 #import "PackageResourceServer.h"
 #import "RDContainer.h"
+#import "RDNavigationElement.h"
 #import "RDPackage.h"
 #import "RDPackageResource.h"
 #import "RDSpineItem.h"
 
 
-@interface SpineItemController()
+@interface EPubViewController()
 
-- (void)goToPageIndex:(int)pageIndex;
 - (NSString *)htmlFromData:(NSData *)data;
-- (int)pageIndexForCFI:(NSString *)cfi;
-- (int)pageIndexForElementID:(NSString *)elementID;
 - (void)updateToolbar;
 
 @end
 
 
-@implementation SpineItemController
+@implementation EPubViewController
 
 
 - (void)alertView:(UIAlertView *)alertView didDismissWithButtonIndex:(NSInteger)buttonIndex {
@@ -42,20 +40,28 @@
 		NSString *title = [textField.text stringByTrimmingCharactersInSet:
 			[NSCharacterSet whitespaceAndNewlineCharacterSet]];
 
-		NSString *cfi = [m_webView stringByEvaluatingJavaScriptFromString:
-			@"ReadiumSDK.reader.getFirstVisibleElementCfi()"];
+		NSString *response = [m_webView stringByEvaluatingJavaScriptFromString:
+			@"ReadiumSDK.reader.bookmarkCurrentPage()"];
 
-		Bookmark *bookmark = [[[Bookmark alloc]
-			initWithCFI:cfi
-			containerPath:m_container.path
-			idref:m_spineItem.idref
-			title:title] autorelease];
+		if (response != nil && response.length > 0) {
+			NSData *data = [response dataUsingEncoding:NSUTF8StringEncoding];
+			NSError *error;
 
-		if (bookmark == nil) {
-			NSLog(@"The bookmark is nil!");
-		}
-		else {
-			[[BookmarkDatabase shared] addBookmark:bookmark];
+			NSDictionary *dict = [NSJSONSerialization JSONObjectWithData:data
+				options:0 error:&error];
+
+			Bookmark *bookmark = [[[Bookmark alloc]
+				initWithCFI:[dict objectForKey:@"contentCFI"]
+				containerPath:m_container.path
+				idref:[dict objectForKey:@"idref"]
+				title:title] autorelease];
+
+			if (bookmark == nil) {
+				NSLog(@"The bookmark is nil!");
+			}
+			else {
+				[[BookmarkDatabase shared] addBookmark:bookmark];
+			}
 		}
 	}
 }
@@ -76,18 +82,12 @@
 
 - (void)dealloc {
 	[m_container release];
+	[m_navElement release];
 	[m_initialCFI release];
-	[m_initialElementID release];
 	[m_package release];
 	[m_resourceServer release];
 	[m_spineItem release];
 	[super dealloc];
-}
-
-
-- (void)goToPageIndex:(int)pageIndex {
-	NSString *s = [NSString stringWithFormat:@"ReadiumSDK.reader.openPage(%d)", pageIndex];
-	[m_webView stringByEvaluatingJavaScriptFromString:s];
 }
 
 
@@ -149,13 +149,16 @@
 - (id)
 	initWithContainer:(RDContainer *)container
 	package:(RDPackage *)package
+{
+	return [self initWithContainer:container package:package spineItem:nil cfi:nil];
+}
+
+
+- (id)
+	initWithContainer:(RDContainer *)container
+	package:(RDPackage *)package
 	bookmark:(Bookmark *)bookmark
 {
-	if (container == nil || package == nil || bookmark == nil) {
-		[self release];
-		return nil;
-	}
-
 	RDSpineItem *spineItem = nil;
 
 	for (RDSpineItem *currSpineItem in package.spineItems) {
@@ -165,20 +168,42 @@
 		}
 	}
 
+	return [self
+		initWithContainer:container
+		package:package
+		spineItem:spineItem
+		cfi:bookmark.cfi];
+}
+
+
+- (id)
+	initWithContainer:(RDContainer *)container
+	package:(RDPackage *)package
+	navElement:(RDNavigationElement *)navElement
+{
+	if (container == nil || package == nil) {
+		[self release];
+		return nil;
+	}
+
+	RDSpineItem *spineItem = nil;
+
+	if (package.spineItems.count > 0) {
+		spineItem = [package.spineItems objectAtIndex:0];
+	}
+
 	if (spineItem == nil) {
 		[self release];
 		return nil;
 	}
 
-	if (self = [super initWithTitle:spineItem.idref navBarHidden:NO]) {
+	if (self = [super initWithTitle:package.title navBarHidden:NO]) {
 		m_container = [container retain];
-		m_initialCFI = [bookmark.cfi retain];
+		m_navElement = [navElement retain];
 		m_package = [package retain];
-		m_resourceServer = [[PackageResourceServer alloc] initWithPackage:package];
 		m_spineItem = [spineItem retain];
+		m_resourceServer = [[PackageResourceServer alloc] initWithPackage:package];
 	}
-
-	return self;
 
 	return self;
 }
@@ -188,16 +213,25 @@
 	initWithContainer:(RDContainer *)container
 	package:(RDPackage *)package
 	spineItem:(RDSpineItem *)spineItem
-	elementID:(NSString *)elementID
+	cfi:(NSString *)cfi
 {
-	if (container == nil || package == nil || spineItem == nil) {
+	if (container == nil || package == nil) {
 		[self release];
 		return nil;
 	}
 
-	if (self = [super initWithTitle:spineItem.idref navBarHidden:NO]) {
+	if (spineItem == nil && package.spineItems.count > 0) {
+		spineItem = [package.spineItems objectAtIndex:0];
+	}
+
+	if (spineItem == nil) {
+		[self release];
+		return nil;
+	}
+
+	if (self = [super initWithTitle:package.title navBarHidden:NO]) {
 		m_container = [container retain];
-		m_initialElementID = [elementID retain];
+		m_initialCFI = [cfi retain];
 		m_package = [package retain];
 		m_resourceServer = [[PackageResourceServer alloc] initWithPackage:package];
 		m_spineItem = [spineItem retain];
@@ -249,12 +283,12 @@
 
 
 - (void)onClickNext {
-	[m_webView stringByEvaluatingJavaScriptFromString:@"ReadiumSDK.reader.moveNextPage()"];
+	[m_webView stringByEvaluatingJavaScriptFromString:@"ReadiumSDK.reader.openPageNext()"];
 }
 
 
 - (void)onClickPrev {
-	[m_webView stringByEvaluatingJavaScriptFromString:@"ReadiumSDK.reader.movePrevPage()"];
+	[m_webView stringByEvaluatingJavaScriptFromString:@"ReadiumSDK.reader.openPagePrev()"];
 }
 
 
@@ -304,11 +338,8 @@
 				packageUUID:m_package.packageUUID];
 		}
 		else {
-			// Inject script only if this is the first request.  The reason is that for any
-			// given HTML file, we tuck it into an iframe of reader.html.  Once reader.html's
-			// iframe makes a request for the same HTML file, we need to avoid injection
-			// recursion.
-			html = [HTMLUtil htmlByInjectingScriptIntoHTMLAtURL:url.absoluteString];
+			// Return reader.html, which in turn will load the intended HTML.
+			html = [HTMLUtil readerHTML];
 		}
 
 		if (html != nil && html.length > 0) {
@@ -319,36 +350,6 @@
 	if (data != nil) {
 		bridge.currentData = data;
 	}
-}
-
-
-- (int)pageIndexForCFI:(NSString *)cfi {
-	if (cfi == nil || cfi.length == 0) {
-		return 0;
-	}
-
-	NSString *request = [NSString stringWithFormat:
-		@"ReadiumSDK.reader.getPageForElementCfi(\"%@\")", cfi];
-	NSString *response = [m_webView stringByEvaluatingJavaScriptFromString:request];
-	return response.intValue;
-}
-
-
-- (int)pageIndexForElementID:(NSString *)elementID {
-	if (elementID == nil || elementID.length == 0) {
-		return 0;
-	}
-
-	NSString *request = [NSString stringWithFormat:
-		@"ReadiumSDK.reader.getPageForElementId(\"%@\")", elementID];
-	NSString *response = [m_webView stringByEvaluatingJavaScriptFromString:request];
-	return response.intValue;
-}
-
-
-- (void)showContent {
-	m_webView.hidden = NO;
-	[self updateToolbar];
 }
 
 
@@ -369,15 +370,20 @@
 		target:nil
 		action:nil] autorelease];
 
-	UIBarButtonItem *itemPrev = [[[UIBarButtonItem alloc]
-		initWithBarButtonSystemItem:UIBarButtonSystemItemRewind
-		target:self
-		action:@selector(onClickPrev)] autorelease];
+	static NSString *arrowL = @"\u2190";
+	static NSString *arrowR = @"\u2192";
 
 	UIBarButtonItem *itemNext = [[[UIBarButtonItem alloc]
-		initWithBarButtonSystemItem:UIBarButtonSystemItemFastForward
+		initWithTitle:m_currentPageProgressionIsLTR ? arrowR : arrowL
+		style:UIBarButtonItemStylePlain
 		target:self
 		action:@selector(onClickNext)] autorelease];
+
+	UIBarButtonItem *itemPrev = [[[UIBarButtonItem alloc]
+		initWithTitle:m_currentPageProgressionIsLTR ? arrowL : arrowR
+		style:UIBarButtonItemStylePlain
+		target:self
+		action:@selector(onClickPrev)] autorelease];
 
 	UIBarButtonItem *itemAddBookmark = [[[UIBarButtonItem alloc]
 		initWithBarButtonSystemItem:UIBarButtonSystemItemAdd
@@ -391,11 +397,20 @@
 	label.shadowOffset = CGSizeMake(0, -1);
 	label.textColor = [UIColor whiteColor];
 
-	if (m_pageCount == 0) {
+	if (m_currentPageCount == 0) {
 		label.text = @"";
+		itemNext.enabled = NO;
+		itemPrev.enabled = NO;
 	}
 	else {
-		label.text = LocStr(@"PAGE_X_OF_Y", m_currentPageIndex + 1, m_pageCount);
+		label.text = LocStr(@"PAGE_X_OF_Y", m_currentPageIndex + 1, m_currentPageCount);
+
+		itemNext.enabled = !(
+			(m_currentSpineItemIndex + 1 == m_package.spineItems.count) &&
+			(m_currentPageIndex + m_currentOpenPageCount + 1 >= m_currentPageCount)
+		);
+
+		itemPrev.enabled = !(m_currentSpineItemIndex == 0 && m_currentPageIndex == 0);
 	}
 
 	[label sizeToFit];
@@ -403,14 +418,26 @@
 	UIBarButtonItem *itemLabel = [[[UIBarButtonItem alloc]
 		initWithCustomView:label] autorelease];
 
-	self.toolbarItems = @[
-		itemPrev,
-		itemFixed,
-		itemNext,
-		itemFixed,
-		itemLabel,
-		itemFlex,
-		itemAddBookmark ];
+	if (m_currentPageProgressionIsLTR) {
+		self.toolbarItems = @[
+			itemPrev,
+			itemFixed,
+			itemNext,
+			itemFixed,
+			itemLabel,
+			itemFlex,
+			itemAddBookmark ];
+	}
+	else {
+		self.toolbarItems = @[
+			itemNext,
+			itemFixed,
+			itemPrev,
+			itemFixed,
+			itemLabel,
+			itemFlex,
+			itemAddBookmark ];
+	}
 }
 
 
@@ -444,42 +471,121 @@
 {
 	BOOL shouldLoad = YES;
 	NSString *url = request.URL.absoluteString;
+	NSString *s = @"epubobjc:";
 
-	if ([url hasPrefix:@"epubobjc:"]) {
-		url = [url substringFromIndex:9];
+	if ([url hasPrefix:s]) {
+		url = [url substringFromIndex:s.length];
 		shouldLoad = NO;
+		s = @"pageDidChange?q=";
 
-		if ([url hasPrefix:@"setPageIndexAndPageCount/"]) {
-			NSArray *components = [url componentsSeparatedByString:@"/"];
+		if ([url hasPrefix:s]) {
+			s = [url substringFromIndex:s.length];
+			s = [s stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
 
-			if (components.count == 3) {
-				NSString *pageIndex = [components objectAtIndex:1];
-				NSString *pageCount = [components objectAtIndex:2];
-				m_currentPageIndex = pageIndex.intValue;
-				m_pageCount = pageCount.intValue;
-				[self updateToolbar];
+			NSData *data = [s dataUsingEncoding:NSUTF8StringEncoding];
+			NSError *error;
 
-				if (!m_didFinishLoading && m_pageCount > 0) {
-					m_didFinishLoading = YES;
+			NSDictionary *dict = [NSJSONSerialization JSONObjectWithData:data
+				options:0 error:&error];
 
-					if (m_initialCFI != nil && m_initialCFI.length > 0) {
-						int index = [self pageIndexForCFI:m_initialCFI];
-						[self goToPageIndex:index];
-					}
-					else if (m_initialElementID != nil && m_initialElementID.length > 0) {
-						int index = [self pageIndexForElementID:m_initialElementID];
-						[self goToPageIndex:index];
-					}
-				}
+			NSString *direction = [dict objectForKey:@"pageProgressionDirection"];
 
-				if (m_pageCount > 0) {
-					[self performSelector:@selector(showContent) withObject:nil afterDelay:0.1];
-				}
+			if ([direction isKindOfClass:[NSString class]]) {
+				m_currentPageProgressionIsLTR = ![direction isEqualToString:@"rtl"];
 			}
+			else {
+				m_currentPageProgressionIsLTR = YES;
+			}
+
+			m_currentOpenPageCount = 0;
+
+			for (NSDictionary *pageDict in [dict objectForKey:@"openPages"]) {
+				m_currentOpenPageCount++;
+
+				NSNumber *number = [pageDict objectForKey:@"spineItemPageCount"];
+				m_currentPageCount = number.intValue;
+
+				number = [pageDict objectForKey:@"spineItemPageIndex"];
+				m_currentPageIndex = number.intValue;
+
+				number = [pageDict objectForKey:@"spineItemIndex"];
+				m_currentSpineItemIndex = number.intValue;
+
+				break;
+			}
+
+			m_webView.hidden = NO;
+			[self updateToolbar];
 		}
 	}
 
 	return shouldLoad;
+}
+
+
+- (void)webViewDidFinishLoad:(UIWebView *)webView {
+	if (m_didFinishLoading) {
+		return;
+	}
+
+	m_didFinishLoading = YES;
+
+	NSData *data = [NSJSONSerialization dataWithJSONObject:m_package.dictionary
+		options:0 error:nil];
+
+	if (data == nil) {
+		return;
+	}
+
+	NSString *packageString = [[[NSString alloc] initWithData:data
+		encoding:NSUTF8StringEncoding] autorelease];
+
+	if (packageString == nil || packageString.length == 0) {
+		return;
+	}
+
+	if (m_spineItem == nil) {
+		[m_webView stringByEvaluatingJavaScriptFromString:[NSString stringWithFormat:
+			@"ReadiumSDK.reader.openBook(%@)", packageString]];
+	}
+	else if (m_initialCFI != nil && m_initialCFI.length > 0) {
+		NSDictionary *dict = @{
+			@"idref" : m_spineItem.idref,
+			@"elementCfi" : m_initialCFI
+		};
+
+		NSString *arg = [[[NSString alloc]
+			initWithData:[NSJSONSerialization dataWithJSONObject:dict options:0 error:nil]
+			encoding:NSUTF8StringEncoding] autorelease];
+
+		[m_webView stringByEvaluatingJavaScriptFromString:[NSString stringWithFormat:
+			@"ReadiumSDK.reader.openBook(%@, %@)", packageString, arg]];
+	}
+	else if (m_navElement.content != nil && m_navElement.content.length > 0) {
+		NSDictionary *dict = @{
+			@"contentRefUrl" : m_navElement.content,
+			@"sourceFileHref" : (m_navElement.sourceHref == nil ? @"" : m_navElement.sourceHref)
+		};
+
+		NSString *arg = [[[NSString alloc]
+			initWithData:[NSJSONSerialization dataWithJSONObject:dict options:0 error:nil]
+			encoding:NSUTF8StringEncoding] autorelease];
+
+		[m_webView stringByEvaluatingJavaScriptFromString:[NSString stringWithFormat:
+			@"ReadiumSDK.reader.openBook(%@, %@)", packageString, arg]];
+	}
+	else {
+		NSDictionary *dict = @{
+			@"idref" : m_spineItem.idref
+		};
+
+		NSString *arg = [[[NSString alloc]
+			initWithData:[NSJSONSerialization dataWithJSONObject:dict options:0 error:nil]
+			encoding:NSUTF8StringEncoding] autorelease];
+
+		[m_webView stringByEvaluatingJavaScriptFromString:[NSString stringWithFormat:
+			@"ReadiumSDK.reader.openBook(%@, %@)", packageString, arg]];
+	}
 }
 
 

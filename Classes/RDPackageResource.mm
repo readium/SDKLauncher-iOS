@@ -20,6 +20,7 @@
 @implementation RDPackageResource
 
 
+@synthesize archiveReader = m_archiveReader;
 @synthesize relativePath = m_relativePath;
 
 
@@ -53,13 +54,20 @@
 
 
 - (void)dealloc {
+	[m_delegate rdpackageResourceWillDeallocate:self];
+
 	[m_data release];
 	[m_relativePath release];
+
 	[super dealloc];
 }
 
 
-- (id)initWithArchiveReader:(void *)archiveReader relativePath:(NSString *)relativePath {
+- (id)
+	initWithDelegate:(id <RDPackageResourceDelegate>)delegate
+	archiveReader:(void *)archiveReader
+	relativePath:(NSString *)relativePath
+{
 	if (archiveReader == nil || relativePath == nil || relativePath.length == 0) {
 		[self release];
 		return nil;
@@ -67,6 +75,7 @@
 
 	if (self = [super init]) {
 		m_archiveReader = (ePub3::ArchiveReader *)archiveReader;
+		m_delegate = delegate;
 		m_relativePath = [relativePath retain];
 	}
 

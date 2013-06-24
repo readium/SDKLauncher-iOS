@@ -16,20 +16,7 @@
 //  You should have received a copy of the GNU General Public License
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-ReadiumSDK.HostAppFeedback = function(reader) {
-
-    reader.on("PageChanged", function(pageIx, pageCount){
-        window.location.href = "epubobjc:setPageIndexAndPageCount/" + pageIx + "/" + pageCount;
-    }),
-
-    reader.on("PaginationReady", function() {
-
-        // In practice, the following does not work because a PageChanged event happens at
-        // nearly the same time, which prevents the web view from seeing the href update.
-        // A PageChanged event with a non-zero page count serves the same purpose, so that's
-        // what we check for in Objective-C.
-
-        // window.location.href = "epubobjc:onPaginationScriptingReady";
-    });
-
+ReadiumSDK.HostAppFeedback.ReportPageChanged = function (currentPagesInfo) {
+	window.location.href = "epubobjc:pageDidChange?q=" +
+		encodeURIComponent(JSON.stringify(currentPagesInfo));
 };

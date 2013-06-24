@@ -21,8 +21,11 @@
 @implementation RDSpineItem
 
 
+@synthesize renditionLayout = m_renditionLayout;
+
+
 - (NSString *)baseHref {
-	const ePub3::ManifestItem *manifestItem = m_spineItem->ManifestItem();
+	std::shared_ptr<ePub3::ManifestItem> manifestItem = m_spineItem->ManifestItem();
 
 	if (manifestItem != NULL) {
 		const ePub3::string s = manifestItem->BaseHref();
@@ -34,7 +37,37 @@
 
 
 - (void)dealloc {
+	[m_renditionLayout release];
 	[super dealloc];
+}
+
+
+- (NSDictionary *)dictionary {
+	NSMutableDictionary *dict = [NSMutableDictionary dictionary];
+
+	NSString *s = self.baseHref;
+
+	if (s != nil) {
+		[dict setObject:s forKey:@"href"];
+	}
+
+	s = self.idref;
+
+	if (s != nil) {
+		[dict setObject:s forKey:@"idref"];
+	}
+
+	s = self.pageSpread;
+
+	if (s != nil) {
+		[dict setObject:s forKey:@"page_spread"];
+	}
+
+	if (self.renditionLayout != nil) {
+		[dict setObject:self.renditionLayout forKey:@"rendition_layout"];
+	}
+
+	return dict;
 }
 
 
@@ -44,17 +77,31 @@
 }
 
 
-- (id)initWithSpineItem:(void *)spineItem {
+- (id)initWithSpineItem:(void *)spineItem renditionLayout:(NSString *)renditionLayout {
 	if (spineItem == nil) {
 		[self release];
 		return nil;
 	}
 
 	if (self = [super init]) {
+		m_renditionLayout = [renditionLayout retain];
 		m_spineItem = (ePub3::SpineItem *)spineItem;
 	}
 
 	return self;
+}
+
+
+- (NSString *)pageSpread  {
+	if (m_spineItem->Spread() == ePub3::PageSpread::Left) {
+		return @"page-spread-left";
+	}
+
+	if (m_spineItem->Spread() == ePub3::PageSpread::Right) {
+		return @"page-spread-right";
+	}
+
+	return @"";
 }
 
 

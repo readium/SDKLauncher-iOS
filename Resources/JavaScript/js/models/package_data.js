@@ -21,14 +21,22 @@
  *
  * Provided for reference only
  *
- * @type {{rootUrl: string, rendering_layout: string, spine: {direction: string, items: Array}}}
+ *@class ReadiumSDK.Models.PackageData
  */
 
 ReadiumSDK.Models.PackageData = {
 
-    /** {string} Url of the package file*/
+    /**
+     * @property rootUrl Url of the package file
+     * @type {string}
+     *
+     */
     rootUrl: "",
-    /** {string} "reflowable"|"pre-paginated" */
+    /**
+     *
+     * @property rendering_layout expected values "reflowable"|rendering_layout="pre-paginated"
+     * @type {string}
+     */
     rendering_layout: "",
 
     spine: {

@@ -18,6 +18,6 @@
 @property (nonatomic, readonly) NSString *pageSpread;
 @property (nonatomic, readonly) NSString *renditionLayout;
 
-- (id)initWithSpineItem:(void *)spineItem renditionLayout:(NSString *)renditionLayout;
+- (id)initWithSpineItem:(void *)spineItem;
 
 @end

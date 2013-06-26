@@ -14,11 +14,17 @@
 //  You should have received a copy of the GNU General Public License
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+/*
+ *
+ * @class ReadiumSDK.Models.Package
+ */
 
 ReadiumSDK.Models.Package = Backbone.Model.extend({
 
 
     spine: undefined,
+
+
     rendition_layout: undefined,
     rootUrl: undefined,
 

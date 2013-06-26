@@ -14,6 +14,14 @@
 //  You should have received a copy of the GNU General Public License
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+/*
+ *
+ *
+ *
+ * @param {ReadiumSDK.Models.Spine} spine
+ * @constructor
+ */
+
 ReadiumSDK.Models.Spread = function(spine) {
 
     this.spine = spine;

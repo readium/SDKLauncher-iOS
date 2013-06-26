@@ -14,12 +14,33 @@
 //  You should have received a copy of the GNU General Public License
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-//wrapper of the spine object received from hosting application
+/*
+ *  Wrapper of the spine object received from hosting application
+ *
+ *  @class  ReadiumSDK.Models.Spine
+ */
+
 ReadiumSDK.Models.Spine = Backbone.Model.extend({
 
+    /*
+     * Collection of spine items
+     * @property items
+     * @type {Array}
+     */
     items: [],
+
+    /*
+     * Page progression direction ltr|rtl|default
+     * @property direction
+     * @type {string}
+     */
     direction: undefined,
-    layout: undefined,
+
+    /*
+     * @property package
+     * @type {ReadiumSDK.Models.Package}
+     *
+     */
     package: undefined,
 
     initialize : function() {
@@ -48,7 +69,6 @@ ReadiumSDK.Models.Spine = Backbone.Model.extend({
     reset: function() {
         this.items = [];
         this.direction = undefined;
-        this.layout = undefined;
         this.package = undefined;
     },
 
@@ -83,6 +103,7 @@ ReadiumSDK.Models.Spine = Backbone.Model.extend({
         }
 
         return item.href;
+
     },
 
     isValidIndex: function(index) {

@@ -14,9 +14,20 @@
 //  You should have received a copy of the GNU General Public License
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+/*
+Used to report pagination state back to the host application
 
-//used to report pagination state back to the host application
+@class ReadiumSDK.Models.CurrentPagesInfo
+
+@constructor
+
+@param {Number} spineItemCount Number of spine items
+@param {boolean} isFixedLayout is fixed or reflowable spine item
+@param {string} pageProgressionDirection ltr | rtl
+*/
+
 ReadiumSDK.Models.CurrentPagesInfo = function(spineItemCount, isFixedLayout, pageProgressionDirection) {
+
 
     this.pageProgressionDirection = pageProgressionDirection;
     this.isFixedLayout = isFixedLayout;

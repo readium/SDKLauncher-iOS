@@ -133,9 +133,7 @@
 		for (size_t i = 0; i < count; i++) {
 			std::shared_ptr<ePub3::SpineItem> spineItem = m_package->SpineItemAt(i);
 			m_spineItemVector.push_back(spineItem);
-			RDSpineItem *item = [[RDSpineItem alloc]
-				initWithSpineItem:spineItem.get()
-				renditionLayout:self.renditionLayout];
+			RDSpineItem *item = [[RDSpineItem alloc] initWithSpineItem:spineItem.get()];
 			[m_spineItems addObject:item];
 			[item release];
 		}
@@ -240,16 +238,8 @@
 
 
 - (NSString *)renditionLayout {
-	auto iri = m_package->MakePropertyIRI("layout", "rendition");
-	auto propertyList = m_package->PropertiesMatching(iri);
-
-	if (propertyList.size() > 0) {
-		auto prop = propertyList[0];
-		const ePub3::string s = prop->Value();
-		return [NSString stringWithUTF8String:s.c_str()];
-	}
-
-	return @"";
+	ePub3::PropertyPtr prop = m_package->PropertyMatching("layout", "rendition");
+	return (prop == nullptr) ? @"" : [NSString stringWithUTF8String:prop->Value().c_str()];
 }
 
 

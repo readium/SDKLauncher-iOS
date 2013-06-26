@@ -16,6 +16,14 @@
 //  You should have received a copy of the GNU General Public License
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+/*
+ * CFI navigation helper class
+ *
+ * @param $viewport
+ * @param $iframe
+ * @constructor
+ */
+
 ReadiumSDK.Views.CfiNavigationLogic = function($viewport, $iframe){
 
     this.$viewport = $viewport;

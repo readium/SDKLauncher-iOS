@@ -24,11 +24,6 @@
 }
 
 
-- (void)dealloc {
-	[m_container release];
-	[m_package release];
-	[super dealloc];
-}
 
 
 - (id)initWithPath:(NSString *)path {
@@ -36,11 +31,10 @@
 		m_container = [[RDContainer alloc] initWithPath:path];
 
 		if (m_container == nil || m_container.packages.count == 0) {
-			[self release];
 			return nil;
 		}
 
-		m_package = [[m_container.packages objectAtIndex:0] retain];
+		m_package = [m_container.packages objectAtIndex:0];
 
 		NSArray *components = path.pathComponents;
 		self.title = (components == nil || components.count == 0) ? @"" : components.lastObject;
@@ -51,10 +45,9 @@
 
 
 - (void)loadView {
-	self.view = [[[UIView alloc] init] autorelease];
+	self.view = [[UIView alloc] init];
 
-	m_table = [[[UITableView alloc] initWithFrame:CGRectZero style:UITableViewStyleGrouped]
-		autorelease];
+	m_table = [[UITableView alloc] initWithFrame:CGRectZero style:UITableViewStyleGrouped];
 	m_table.dataSource = self;
 	m_table.delegate = self;
 	[self.view addSubview:m_table];
@@ -70,8 +63,8 @@
 	tableView:(UITableView *)tableView
 	cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-	UITableViewCell *cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault
-		reuseIdentifier:nil] autorelease];
+	UITableViewCell *cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault
+		reuseIdentifier:nil];
 	cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
 
 	if (indexPath.section == 0) {
@@ -116,13 +109,13 @@
 {
 	if (indexPath.section == 0) {
 		if (indexPath.row == 0) {
-			PackageMetadataController *c = [[[PackageMetadataController alloc]
-				initWithPackage:m_package] autorelease];
+			PackageMetadataController *c = [[PackageMetadataController alloc]
+				initWithPackage:m_package];
 			[self.navigationController pushViewController:c animated:YES];
 		}
 		else if (indexPath.row == 1) {
-			SpineItemListController *c = [[[SpineItemListController alloc]
-				initWithContainer:m_container package:m_package] autorelease];
+			SpineItemListController *c = [[SpineItemListController alloc]
+				initWithContainer:m_container package:m_package];
 			[self.navigationController pushViewController:c animated:YES];
 		}
 	}
@@ -131,39 +124,39 @@
 		NSString *title = [tableView cellForRowAtIndexPath:indexPath].textLabel.text;
 
 		if (indexPath.row == 0) {
-			c = [[[NavigationElementController alloc]
+			c = [[NavigationElementController alloc]
 				initWithNavigationElement:m_package.listOfFigures
 				container:m_container
 				package:m_package
-				title:title] autorelease];
+				title:title];
 		}
 		else if (indexPath.row == 1) {
-			c = [[[NavigationElementController alloc]
+			c = [[NavigationElementController alloc]
 				initWithNavigationElement:m_package.listOfIllustrations
 				container:m_container
 				package:m_package
-				title:title] autorelease];
+				title:title];
 		}
 		else if (indexPath.row == 2) {
-			c = [[[NavigationElementController alloc]
+			c = [[NavigationElementController alloc]
 				initWithNavigationElement:m_package.listOfTables
 				container:m_container
 				package:m_package
-				title:title] autorelease];
+				title:title];
 		}
 		else if (indexPath.row == 3) {
-			c = [[[NavigationElementController alloc]
+			c = [[NavigationElementController alloc]
 				initWithNavigationElement:m_package.pageList
 				container:m_container
 				package:m_package
-				title:title] autorelease];
+				title:title];
 		}
 		else if (indexPath.row == 4) {
-			c = [[[NavigationElementController alloc]
+			c = [[NavigationElementController alloc]
 				initWithNavigationElement:m_package.tableOfContents
 				container:m_container
 				package:m_package
-				title:title] autorelease];
+				title:title];
 		}
 
 		if (c == nil) {
@@ -175,8 +168,8 @@
 	}
 	if (indexPath.section == 2) {
 		if (indexPath.row == 0) {
-			BookmarkListController *c = [[[BookmarkListController alloc]
-				initWithContainer:m_container package:m_package] autorelease];
+			BookmarkListController *c = [[BookmarkListController alloc]
+				initWithContainer:m_container package:m_package];
 
 			if (c != nil) {
 				[self.navigationController pushViewController:c animated:YES];

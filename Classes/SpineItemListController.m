@@ -21,22 +21,16 @@
 }
 
 
-- (void)dealloc {
-	[m_container release];
-	[m_package release];
-	[super dealloc];
-}
 
 
 - (id)initWithContainer:(RDContainer *)container package:(RDPackage *)package {
 	if (container == nil || package == nil) {
-		[self release];
 		return nil;
 	}
 
 	if (self = [super initWithTitle:LocStr(@"SPINE_ITEMS") navBarHidden:NO]) {
-		m_container = [container retain];
-		m_package = [package retain];
+		m_container = container;
+		m_package = package;
 	}
 
 	return self;
@@ -44,10 +38,9 @@
 
 
 - (void)loadView {
-	self.view = [[[UIView alloc] init] autorelease];
+	self.view = [[UIView alloc] init];
 
-	m_table = [[[UITableView alloc] initWithFrame:CGRectZero style:UITableViewStylePlain]
-		autorelease];
+	m_table = [[UITableView alloc] initWithFrame:CGRectZero style:UITableViewStylePlain];
 	m_table.dataSource = self;
 	m_table.delegate = self;
 	[self.view addSubview:m_table];
@@ -58,8 +51,8 @@
 	tableView:(UITableView *)tableView
 	cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-	UITableViewCell *cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault
-		reuseIdentifier:nil] autorelease];
+	UITableViewCell *cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault
+		reuseIdentifier:nil];
 	cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
 	RDSpineItem *spineItem = [m_package.spineItems objectAtIndex:indexPath.row];
 	cell.textLabel.text = spineItem.idref;
@@ -72,11 +65,11 @@
 	didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
 	RDSpineItem *spineItem = [m_package.spineItems objectAtIndex:indexPath.row];
-	EPubViewController *c = [[[EPubViewController alloc]
+	EPubViewController *c = [[EPubViewController alloc]
 		initWithContainer:m_container
 		package:m_package
 		spineItem:spineItem
-		cfi:nil] autorelease];
+		cfi:nil];
 	[self.navigationController pushViewController:c animated:YES];
 }
 

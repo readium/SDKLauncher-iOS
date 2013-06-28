@@ -21,14 +21,12 @@
 
 - (void)dealloc {
 	[[NSNotificationCenter defaultCenter] removeObserver:self];
-	[m_paths release];
-	[super dealloc];
 }
 
 
 - (id)init {
 	if (self = [super initWithTitle:LocStr(@"CONTAINER_LIST_TITLE") navBarHidden:NO]) {
-		m_paths = [[ContainerList shared].paths retain];
+		m_paths = [ContainerList shared].paths;
 
 		[[NSNotificationCenter defaultCenter] addObserver:self
 			selector:@selector(onContainerListDidChange)
@@ -40,10 +38,9 @@
 
 
 - (void)loadView {
-	self.view = [[[UIView alloc] init] autorelease];
+	self.view = [[UIView alloc] init];
 
-	m_table = [[[UITableView alloc] initWithFrame:CGRectZero style:UITableViewStylePlain]
-		autorelease];
+	m_table = [[UITableView alloc] initWithFrame:CGRectZero style:UITableViewStylePlain];
 	m_table.dataSource = self;
 	m_table.delegate = self;
 	[self.view addSubview:m_table];
@@ -51,8 +48,7 @@
 
 
 - (void)onContainerListDidChange {
-	[m_paths release];
-	m_paths = [[ContainerList shared].paths retain];
+	m_paths = [ContainerList shared].paths;
 	[m_table reloadData];
 }
 
@@ -61,8 +57,8 @@
 	tableView:(UITableView *)tableView
 	cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-	UITableViewCell *cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault
-		reuseIdentifier:nil] autorelease];
+	UITableViewCell *cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault
+		reuseIdentifier:nil];
 	cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
 	NSString *path = [m_paths objectAtIndex:indexPath.row];
 	NSArray *components = path.pathComponents;
@@ -78,7 +74,7 @@
 {
 	[tableView deselectRowAtIndexPath:indexPath animated:YES];
 	NSString *path = [m_paths objectAtIndex:indexPath.row];
-	ContainerController *c = [[[ContainerController alloc] initWithPath:path] autorelease];
+	ContainerController *c = [[ContainerController alloc] initWithPath:path];
 
 	if (c != nil) {
 		[self.navigationController pushViewController:c animated:YES];

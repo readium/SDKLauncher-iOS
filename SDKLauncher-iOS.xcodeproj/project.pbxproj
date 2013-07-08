@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		28487F8D177DEF0900B53BB7 /* ReaderViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 28487F8C177DEF0900B53BB7 /* ReaderViewController.m */; };
 		3403516516CE93F2009E3B88 /* reader.css in Resources */ = {isa = PBXBuildFile; fileRef = 3403516116CE93F2009E3B88 /* reader.css */; };
 		3403516616CE93F2009E3B88 /* reader.html in Resources */ = {isa = PBXBuildFile; fileRef = 3403516216CE93F2009E3B88 /* reader.html */; };
 		3403516D16CE9FF2009E3B88 /* BundleURLProtocol.m in Sources */ = {isa = PBXBuildFile; fileRef = 3403516C16CE9FF2009E3B88 /* BundleURLProtocol.m */; };
@@ -99,6 +100,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		28487F8B177DEF0900B53BB7 /* ReaderViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ReaderViewController.h; sourceTree = "<group>"; };
+		28487F8C177DEF0900B53BB7 /* ReaderViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ReaderViewController.m; sourceTree = "<group>"; };
 		3403516116CE93F2009E3B88 /* reader.css */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.css; path = reader.css; sourceTree = "<group>"; };
 		3403516216CE93F2009E3B88 /* reader.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = reader.html; sourceTree = "<group>"; };
 		3403516B16CE9FF2009E3B88 /* BundleURLProtocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BundleURLProtocol.h; sourceTree = "<group>"; };
@@ -308,6 +311,8 @@
 				34B56B4E1722E54A00A5A4B8 /* Settings.m */,
 				341652A616C2F9E700AFDB8B /* SpineItemListController.h */,
 				341652A716C2F9E700AFDB8B /* SpineItemListController.m */,
+				28487F8B177DEF0900B53BB7 /* ReaderViewController.h */,
+				28487F8C177DEF0900B53BB7 /* ReaderViewController.m */,
 			);
 			name = Main;
 			sourceTree = "<group>";
@@ -560,6 +565,7 @@
 				34B56B4F1722E54A00A5A4B8 /* Settings.m in Sources */,
 				341652A816C2F9E700AFDB8B /* SpineItemListController.m in Sources */,
 				3411DF03175FACC000FCE6D9 /* EPubViewController.m in Sources */,
+				28487F8D177DEF0900B53BB7 /* ReaderViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

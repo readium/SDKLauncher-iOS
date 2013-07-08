@@ -7,6 +7,7 @@
 //
 
 #import "SpineItemListController.h"
+#import "ReaderViewController.h"
 #import "EPubViewController.h"
 #import "RDContainer.h"
 #import "RDPackage.h"
@@ -72,11 +73,11 @@
 	didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
 	RDSpineItem *spineItem = [m_package.spineItems objectAtIndex:indexPath.row];
-	EPubViewController *c = [[[EPubViewController alloc]
+	ReaderViewController *c = [[[ReaderViewController alloc]
 		initWithContainer:m_container
 		package:m_package
-		spineItem:spineItem
-		cfi:nil] autorelease];
+		spineItem:spineItem] autorelease];
+
 	[self.navigationController pushViewController:c animated:YES];
 }
 

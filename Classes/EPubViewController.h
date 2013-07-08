@@ -15,6 +15,25 @@
 @class RDPackage;
 @class RDSpineItem;
 
+@class EPubViewController;
+
+@protocol EPubViewControllerDelegate <NSObject>
+
+- (void) epubViewController:(EPubViewController*)spineItemController
+            didReachEndOfSpineItem:(RDSpineItem *)spineItem;
+
+- (void) epubViewController:(EPubViewController*)spineItemController
+            didReachBeginingOfSpineItem:(RDSpineItem *)spineItem;
+
+- (void) epubViewController:(EPubViewController*)spineItemController
+            didDisplayPage:(int)pageIndex
+            totalPage:(int)pageCount
+            inItem:(RDSpineItem *)spineItem
+            atItemIndex:(int)spineItemIndex;
+
+
+@end
+
 @interface EPubViewController : BaseViewController <
 	UIAlertViewDelegate,
 	UIWebViewDelegate>
@@ -36,6 +55,9 @@
 	@private UIWebView *m_webView;
 }
 
+@property (nonatomic, assign) id<EPubViewControllerDelegate> delegate;
+
+
 - (id)
 	initWithContainer:(RDContainer *)container
 	package:(RDPackage *)package;
@@ -55,5 +77,10 @@
 	package:(RDPackage *)package
 	spineItem:(RDSpineItem *)spineItem
 	cfi:(NSString *)cfi;
+
+
+- (void)openNextPage;
+- (void)openPrevPage;
+- (void)addBookmark;
 
 @end

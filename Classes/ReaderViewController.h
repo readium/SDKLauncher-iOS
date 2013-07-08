@@ -13,6 +13,7 @@
 @class RDNavigationElement;
 @class RDPackage;
 @class RDSpineItem;
+@class Bookmark;
 
 
 @interface ReaderViewController : UIViewController <EPubViewControllerDelegate> {
@@ -21,6 +22,7 @@
     @private RDPackage *m_package;
     @private RDSpineItem *m_spineItem;
     @private EPubViewController *m_epubViewController;
+    @private Bookmark *m_bookmark;
 }
 
 - (id)
@@ -28,5 +30,9 @@ initWithContainer:(RDContainer *)container
 package:(RDPackage *)package
 spineItem:(RDSpineItem *)spineItem;
 
+- (id)
+initWithContainer:(RDContainer *)container
+package:(RDPackage *)package
+bookmark:(Bookmark *)bookmark;
 
 @end

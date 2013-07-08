@@ -12,6 +12,7 @@
 #import "EPubViewController.h"
 #import "RDContainer.h"
 #import "RDPackage.h"
+#import "ReaderViewController.h"
 
 
 @interface BookmarkListController()
@@ -123,14 +124,18 @@
 {
 	Bookmark *bookmark = [m_bookmarks objectAtIndex:indexPath.row];
 
-	EPubViewController *c = [[[EPubViewController alloc]
+	/*EPubViewController *c = [[[EPubViewController alloc]
 		initWithContainer:m_container
 		package:m_package
-		bookmark:bookmark] autorelease];
+		bookmark:bookmark] autorelease];*/
+    
+    ReaderViewController *c = [[ReaderViewController alloc]
+                                initWithContainer:m_container
+                                package:m_package
+                                bookmark:bookmark];
 
-	if (c != nil) {
-		[self.navigationController pushViewController:c animated:YES];
-	}
+    [self.navigationController pushViewController:c animated:YES];
+    [c release];
 }
 
 

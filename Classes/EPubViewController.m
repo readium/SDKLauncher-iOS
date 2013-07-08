@@ -8,7 +8,6 @@
 
 #import "EPubViewController.h"
 #import "Bookmark.h"
-#import "BookmarkDatabase.h"
 #import "EPubURLProtocolBridge.h"
 #import "HTMLUtil.h"
 #import "PackageResourceServer.h"
@@ -23,61 +22,18 @@
 @interface EPubViewController()
 
 - (NSString *)htmlFromData:(NSData *)data;
-- (void)updateToolbar;
 
 @end
 
 
 @implementation EPubViewController
 
-
-- (void)alertView:(UIAlertView *)alertView didDismissWithButtonIndex:(NSInteger)buttonIndex {
-	[m_alertAddBookmark autorelease];
-	m_alertAddBookmark = nil;
-
-	if (buttonIndex == 1) {
-		UITextField *textField = [alertView textFieldAtIndex:0];
-
-		NSString *title = [textField.text stringByTrimmingCharactersInSet:
-			[NSCharacterSet whitespaceAndNewlineCharacterSet]];
-
-		NSString *response = [m_webView stringByEvaluatingJavaScriptFromString:
-			@"ReadiumSDK.reader.bookmarkCurrentPage()"];
-
-		if (response != nil && response.length > 0) {
-			NSData *data = [response dataUsingEncoding:NSUTF8StringEncoding];
-			NSError *error;
-
-			NSDictionary *dict = [NSJSONSerialization JSONObjectWithData:data
-				options:0 error:&error];
-
-			Bookmark *bookmark = [[[Bookmark alloc]
-				initWithCFI:[dict objectForKey:@"contentCFI"]
-				containerPath:m_container.path
-				idref:[dict objectForKey:@"idref"]
-				title:title] autorelease];
-
-			if (bookmark == nil) {
-				NSLog(@"The bookmark is nil!");
-			}
-			else {
-				[[BookmarkDatabase shared] addBookmark:bookmark];
-			}
-		}
-	}
-}
+@synthesize delegate;
 
 
 - (void)cleanUp {
 	[[NSNotificationCenter defaultCenter] removeObserver:self];
 	m_webView = nil;
-
-	if (m_alertAddBookmark != nil) {
-		m_alertAddBookmark.delegate = nil;
-		[m_alertAddBookmark dismissWithClickedButtonIndex:999 animated:NO];
-		[m_alertAddBookmark release];
-		m_alertAddBookmark = nil;
-	}
 }
 
 
@@ -244,19 +200,19 @@
 
 
 
-- (void)addBookmark {
-	if (m_alertAddBookmark == nil) {
-		m_alertAddBookmark = [[UIAlertView alloc]
-			initWithTitle:LocStr(@"ADD_BOOKMARK_PROMPT_TITLE")
-			message:nil
-			delegate:self
-			cancelButtonTitle:LocStr(@"GENERIC_CANCEL")
-			otherButtonTitles:LocStr(@"GENERIC_OK"), nil];
-		m_alertAddBookmark.alertViewStyle = UIAlertViewStylePlainTextInput;
-		UITextField *textField = [m_alertAddBookmark textFieldAtIndex:0];
-		textField.placeholder = LocStr(@"ADD_BOOKMARK_PROMPT_PLACEHOLDER");
-		[m_alertAddBookmark show];
-	}
+- (NSDictionary*)bookmarkDict {
+	NSString *response = [m_webView stringByEvaluatingJavaScriptFromString:
+                          @"ReadiumSDK.reader.bookmarkCurrentPage()"];
+    NSDictionary *dict = nil;
+    
+    if (response != nil && response.length > 0) {
+        NSData *data = [response dataUsingEncoding:NSUTF8StringEncoding];
+        NSError *error;
+        
+        dict = [NSJSONSerialization JSONObjectWithData:data options:0 error:&error];
+    }
+    
+    return dict;
 }
 
 

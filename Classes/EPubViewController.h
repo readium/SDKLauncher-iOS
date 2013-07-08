@@ -30,15 +30,15 @@
             totalPage:(int)pageCount
             inItem:(RDSpineItem *)spineItem
             atItemIndex:(int)spineItemIndex;
+- (void) epubViewController:(EPubViewController*)spineItemController
+         shouldSaveBookMark:(Bookmark*)bookMark;
 
 
 @end
 
 @interface EPubViewController : BaseViewController <
-	UIAlertViewDelegate,
 	UIWebViewDelegate>
 {
-	@private UIAlertView *m_alertAddBookmark;
 	@private RDContainer *m_container;
 	@private int m_currentOpenPageCount;
 	@private int m_currentPageCount;
@@ -81,6 +81,6 @@
 
 - (void)openNextPage;
 - (void)openPrevPage;
-- (void)addBookmark;
+- (NSDictionary*)bookmarkDict;
 
 @end

@@ -9,6 +9,11 @@
 #import "ReaderViewController.h"
 #import "EPubViewController.h"
 #import "RDPackage.h"
+#import "RDContainer.h"
+#import "RDSpineItem.h"
+#import "Bookmark.h"
+#import "BookmarkDatabase.h"
+
 
 @implementation ReaderViewController
 
@@ -31,22 +36,48 @@ spineItem:(RDSpineItem *)spineItem
 }
 
 
+- (id)
+initWithContainer:(RDContainer *)container
+package:(RDPackage *)package
+bookmark:(Bookmark *)bookmark
+{
+    self = [super init];
+    if (self) {
+        m_container = [container retain];
+        m_package = [package retain];
+        m_bookmark = [bookmark retain];
+    }
+    return self;
+
+}
+
 
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-	[self loadEpub];
+    
+    NSString *cfi = nil;
+    if(m_bookmark) {
+        m_spineItem = [self spineItemFromBookmark];
+        cfi = m_bookmark.cfi;
+    }
+
+    
+    
+	[self loadEpubAtCfi:cfi];
 }
 
 
 #pragma mark - Load epub controller
 
 
-- (void) loadEpub {
-    m_epubViewController = [[EPubViewController alloc] initWithContainer:m_container
-                                                                                   package:m_package
-                                                                                 spineItem:m_spineItem
-                                                                                       cfi:nil];
+- (void) loadEpubAtCfi:(NSString *)cfi {
+    m_epubViewController = [[EPubViewController alloc]
+                            initWithContainer:m_container
+                            package:m_package
+                            spineItem:m_spineItem
+                            cfi:cfi];
+    
     m_epubViewController.delegate = self;
     [self addChildViewController:m_epubViewController];
     m_epubViewController.view.frame = self.view.bounds;
@@ -130,6 +161,10 @@ spineItem:(RDSpineItem *)spineItem
 }
 
 
+
+
+#pragma mark - Toolbar actions
+
 - (void)onClickNext {
 	[m_epubViewController openNextPage];
 }
@@ -141,8 +176,61 @@ spineItem:(RDSpineItem *)spineItem
 
 
 - (void)onClickAddBookmark {
-    [m_epubViewController addBookmark];
+    UIAlertView *alertAddBookmark = [[UIAlertView alloc]
+                                     initWithTitle:LocStr(@"ADD_BOOKMARK_PROMPT_TITLE")
+                                     message:nil
+                                     delegate:self
+                                     cancelButtonTitle:LocStr(@"GENERIC_CANCEL")
+                                     otherButtonTitles:LocStr(@"GENERIC_OK"), nil];
+    alertAddBookmark.alertViewStyle = UIAlertViewStylePlainTextInput;
+    UITextField *textField = [alertAddBookmark textFieldAtIndex:0];
+    textField.placeholder = LocStr(@"ADD_BOOKMARK_PROMPT_PLACEHOLDER");
+    [alertAddBookmark show];
 }
+
+
+
+#pragma mark - Bookmark managment
+
+
+- (RDSpineItem*) spineItemFromBookmark {
+    RDSpineItem *spineItem = nil;
+    
+	for (RDSpineItem *currSpineItem in m_package.spineItems) {
+		if ([currSpineItem.idref isEqualToString:m_bookmark.idref]) {
+			spineItem = currSpineItem;
+			break;
+		}
+	}
+    
+	return spineItem;
+}
+
+- (void)alertView:(UIAlertView *)alertView didDismissWithButtonIndex:(NSInteger)buttonIndex {
+
+	if (buttonIndex == 1) {
+		UITextField *textField = [alertView textFieldAtIndex:0];
+        
+		NSString *title = [textField.text stringByTrimmingCharactersInSet:
+                           [NSCharacterSet whitespaceAndNewlineCharacterSet]];
+        
+		NSDictionary *bookmarkDict = [m_epubViewController bookmarkDict];
+        
+        Bookmark *bookmark = [[[Bookmark alloc]
+                               initWithCFI:[bookmarkDict objectForKey:@"contentCFI"]
+                               containerPath:m_container.path
+                               idref:[bookmarkDict objectForKey:@"idref"]
+                               title:title] autorelease];
+        
+        if (bookmark == nil) {
+            NSLog(@"The bookmark is nil!");
+        }
+        else {
+            [[BookmarkDatabase shared] addBookmark:bookmark];
+        }
+	}
+}
+
 
 
 

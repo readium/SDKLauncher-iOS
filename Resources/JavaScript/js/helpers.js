@@ -116,9 +116,8 @@ ReadiumSDK.Helpers.ResolveContentRef = function(contentRef, sourceFileHref) {
 
     var combined = sourceParts.concat(pathComponents);
 
-    var result = combined.join("/");
-    
-    return result;
+    return combined.join("/");
+
 };
 
 /**
@@ -127,3 +126,4 @@ ReadiumSDK.Helpers.ResolveContentRef = function(contentRef, sourceFileHref) {
 ReadiumSDK.Helpers.EndsWith = function (str, suffix) {
     return str.indexOf(suffix, str.length - suffix.length) !== -1;
 };
+

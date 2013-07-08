@@ -14,7 +14,19 @@
 //  You should have received a copy of the GNU General Public License
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-
+/*
+ * Representation of opening page request
+ * Provides the spine item to be opened and one of the following properties:
+ *  spineItemPageIndex {Number},
+ *  elementId {String},
+ *  elementCfi {String},
+ *  firstPage {bool},
+ *  lastPage {bool}
+ *
+ * @param {ReadiumSDK.Models.SpineItem} spineItem
+ *
+ * @constructor
+ */
 ReadiumSDK.Models.PageOpenRequest = function(spineItem) {
 
     this.spineItem = spineItem;

@@ -77,15 +77,22 @@
 }
 
 
-- (id)initWithSpineItem:(void *)spineItem renditionLayout:(NSString *)renditionLayout {
+- (id)initWithSpineItem:(void *)spineItem {
 	if (spineItem == nil) {
 		[self release];
 		return nil;
 	}
 
 	if (self = [super init]) {
-		m_renditionLayout = [renditionLayout retain];
 		m_spineItem = (ePub3::SpineItem *)spineItem;
+		ePub3::PropertyPtr prop = m_spineItem->PropertyMatching("layout", "rendition");
+
+		if (prop == nullptr) {
+			m_renditionLayout = [[NSString alloc] initWithString:@""];
+		}
+		else {
+			m_renditionLayout = [[NSString alloc] initWithUTF8String:prop->Value().c_str()];
+		}
 	}
 
 	return self;

@@ -32,9 +32,9 @@
 	[self configureAppearance];
 
 	m_window = [[UIWindow alloc] initWithFrame:[UIScreen mainScreen].bounds];
-	ContainerListController *c = [[[ContainerListController alloc] init] autorelease];
-	m_window.rootViewController = [[[UINavigationController alloc]
-		initWithRootViewController:c] autorelease];
+	ContainerListController *c = [[ContainerListController alloc] init];
+	m_window.rootViewController = [[UINavigationController alloc]
+		initWithRootViewController:c];
 	[m_window makeKeyAndVisible];
 
 	return YES;
@@ -79,10 +79,6 @@
 }
 
 
-- (void)dealloc {
-	[m_window release];
-	[super dealloc];
-}
 
 
 @end

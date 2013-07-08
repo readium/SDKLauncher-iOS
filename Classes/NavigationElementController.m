@@ -22,12 +22,6 @@
 }
 
 
-- (void)dealloc {
-	[m_container release];
-	[m_element release];
-	[m_package release];
-	[super dealloc];
-}
 
 
 - (id)
@@ -37,14 +31,13 @@
 	title:(NSString *)title
 {
 	if (element == nil || container == nil || package == nil) {
-		[self release];
 		return nil;
 	}
 
 	if (self = [super initWithTitle:title navBarHidden:NO]) {
-		m_container = [container retain];
-		m_element = [element retain];
-		m_package = [package retain];
+		m_container = container;
+		m_element = element;
+		m_package = package;
 	}
 
 	return self;
@@ -52,10 +45,9 @@
 
 
 - (void)loadView {
-	self.view = [[[UIView alloc] init] autorelease];
+	self.view = [[UIView alloc] init];
 
-	m_table = [[[UITableView alloc] initWithFrame:CGRectZero style:UITableViewStylePlain]
-		autorelease];
+	m_table = [[UITableView alloc] initWithFrame:CGRectZero style:UITableViewStylePlain];
 	m_table.dataSource = self;
 	m_table.delegate = self;
 	[self.view addSubview:m_table];
@@ -68,11 +60,11 @@
 {
 	RDNavigationElement *element = [m_element.children objectAtIndex:indexPath.row];
 
-	NavigationElementController *c = [[[NavigationElementController alloc]
+	NavigationElementController *c = [[NavigationElementController alloc]
 		initWithNavigationElement:element
 		container:m_container
 		package:m_package
-		title:element.title] autorelease];
+		title:element.title];
 
 	if (c != nil) {
 		[self.navigationController pushViewController:c animated:YES];
@@ -84,8 +76,8 @@
 	tableView:(UITableView *)tableView
 	cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-	UITableViewCell *cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault
-		reuseIdentifier:nil] autorelease];
+	UITableViewCell *cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault
+		reuseIdentifier:nil];
 	RDNavigationElement *element = [m_element.children objectAtIndex:indexPath.row];
 
 	if (element.children.count > 0) {
@@ -106,10 +98,10 @@
 {
 	RDNavigationElement *element = [m_element.children objectAtIndex:indexPath.row];
 
-	EPubViewController *c = [[[EPubViewController alloc]
+	EPubViewController *c = [[EPubViewController alloc]
 		initWithContainer:m_container
 		package:m_package
-		navElement:element] autorelease];
+		navElement:element];
 
 	if (c != nil) {
 		[self.navigationController pushViewController:c animated:YES];

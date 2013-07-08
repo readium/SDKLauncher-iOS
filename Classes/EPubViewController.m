@@ -31,7 +31,6 @@
 
 
 - (void)alertView:(UIAlertView *)alertView didDismissWithButtonIndex:(NSInteger)buttonIndex {
-	[m_alertAddBookmark autorelease];
 	m_alertAddBookmark = nil;
 
 	if (buttonIndex == 1) {
@@ -50,11 +49,11 @@
 			NSDictionary *dict = [NSJSONSerialization JSONObjectWithData:data
 				options:0 error:&error];
 
-			Bookmark *bookmark = [[[Bookmark alloc]
+			Bookmark *bookmark = [[Bookmark alloc]
 				initWithCFI:[dict objectForKey:@"contentCFI"]
 				containerPath:m_container.path
 				idref:[dict objectForKey:@"idref"]
-				title:title] autorelease];
+				title:title];
 
 			if (bookmark == nil) {
 				NSLog(@"The bookmark is nil!");
@@ -74,21 +73,12 @@
 	if (m_alertAddBookmark != nil) {
 		m_alertAddBookmark.delegate = nil;
 		[m_alertAddBookmark dismissWithClickedButtonIndex:999 animated:NO];
-		[m_alertAddBookmark release];
 		m_alertAddBookmark = nil;
 	}
 }
 
 
-- (void)dealloc {
-	[m_container release];
-	[m_navElement release];
-	[m_initialCFI release];
-	[m_package release];
-	[m_resourceServer release];
-	[m_spineItem release];
-	[super dealloc];
-}
+
 
 
 //
@@ -142,7 +132,7 @@
 		}
 	}
 
-	return [html autorelease];
+	return html;
 }
 
 
@@ -182,7 +172,6 @@
 	navElement:(RDNavigationElement *)navElement
 {
 	if (container == nil || package == nil) {
-		[self release];
 		return nil;
 	}
 
@@ -193,15 +182,14 @@
 	}
 
 	if (spineItem == nil) {
-		[self release];
 		return nil;
 	}
 
 	if (self = [super initWithTitle:package.title navBarHidden:NO]) {
-		m_container = [container retain];
-		m_navElement = [navElement retain];
-		m_package = [package retain];
-		m_spineItem = [spineItem retain];
+		m_container = container;
+		m_navElement = navElement;
+		m_package = package;
+		m_spineItem = spineItem;
 		m_resourceServer = [[PackageResourceServer alloc] initWithPackage:package];
 	}
 
@@ -216,7 +204,6 @@
 	cfi:(NSString *)cfi
 {
 	if (container == nil || package == nil) {
-		[self release];
 		return nil;
 	}
 
@@ -225,16 +212,15 @@
 	}
 
 	if (spineItem == nil) {
-		[self release];
 		return nil;
 	}
 
 	if (self = [super initWithTitle:package.title navBarHidden:NO]) {
-		m_container = [container retain];
-		m_initialCFI = [cfi retain];
-		m_package = [package retain];
+		m_container = container;
+		m_initialCFI = cfi;
+		m_package = package;
 		m_resourceServer = [[PackageResourceServer alloc] initWithPackage:package];
-		m_spineItem = [spineItem retain];
+		m_spineItem = spineItem;
 	}
 
 	return self;
@@ -242,7 +228,7 @@
 
 
 - (void)loadView {
-	self.view = [[[UIView alloc] init] autorelease];
+	self.view = [[UIView alloc] init];
 	self.view.backgroundColor = [UIColor whiteColor];
 
 	[[NSNotificationCenter defaultCenter]
@@ -251,7 +237,7 @@
 		name:kSDKLauncherEPubURLProtocolBridgeNeedsResponse
 		object:nil];
 
-	m_webView = [[[UIWebView alloc] init] autorelease];
+	m_webView = [[UIWebView alloc] init];
 	m_webView.delegate = self;
 	m_webView.hidden = YES;
 	m_webView.scrollView.bounces = NO;
@@ -359,38 +345,38 @@
 		return;
 	}
 
-	UIBarButtonItem *itemFixed = [[[UIBarButtonItem alloc]
+	UIBarButtonItem *itemFixed = [[UIBarButtonItem alloc]
 		initWithBarButtonSystemItem:UIBarButtonSystemItemFixedSpace
 		target:nil
-		action:nil] autorelease];
+		action:nil];
 	itemFixed.width = 12;
 
-	UIBarButtonItem *itemFlex = [[[UIBarButtonItem alloc]
+	UIBarButtonItem *itemFlex = [[UIBarButtonItem alloc]
 		initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace
 		target:nil
-		action:nil] autorelease];
+		action:nil];
 
 	static NSString *arrowL = @"\u2190";
 	static NSString *arrowR = @"\u2192";
 
-	UIBarButtonItem *itemNext = [[[UIBarButtonItem alloc]
+	UIBarButtonItem *itemNext = [[UIBarButtonItem alloc]
 		initWithTitle:m_currentPageProgressionIsLTR ? arrowR : arrowL
 		style:UIBarButtonItemStylePlain
 		target:self
-		action:@selector(onClickNext)] autorelease];
+		action:@selector(onClickNext)];
 
-	UIBarButtonItem *itemPrev = [[[UIBarButtonItem alloc]
+	UIBarButtonItem *itemPrev = [[UIBarButtonItem alloc]
 		initWithTitle:m_currentPageProgressionIsLTR ? arrowL : arrowR
 		style:UIBarButtonItemStylePlain
 		target:self
-		action:@selector(onClickPrev)] autorelease];
+		action:@selector(onClickPrev)];
 
-	UIBarButtonItem *itemAddBookmark = [[[UIBarButtonItem alloc]
+	UIBarButtonItem *itemAddBookmark = [[UIBarButtonItem alloc]
 		initWithBarButtonSystemItem:UIBarButtonSystemItemAdd
 		target:self
-		action:@selector(onClickAddBookmark)] autorelease];
+		action:@selector(onClickAddBookmark)];
 
-	UILabel *label = [[[UILabel alloc] init] autorelease];
+	UILabel *label = [[UILabel alloc] init];
 	label.backgroundColor = [UIColor clearColor];
 	label.font = [UIFont boldSystemFontOfSize:16];
 	label.shadowColor = [UIColor colorWithWhite:0 alpha:0.5];
@@ -415,8 +401,8 @@
 
 	[label sizeToFit];
 
-	UIBarButtonItem *itemLabel = [[[UIBarButtonItem alloc]
-		initWithCustomView:label] autorelease];
+	UIBarButtonItem *itemLabel = [[UIBarButtonItem alloc]
+		initWithCustomView:label];
 
 	if (m_currentPageProgressionIsLTR) {
 		self.toolbarItems = @[
@@ -537,8 +523,8 @@
 		return;
 	}
 
-	NSString *packageString = [[[NSString alloc] initWithData:data
-		encoding:NSUTF8StringEncoding] autorelease];
+	NSString *packageString = [[NSString alloc] initWithData:data
+		encoding:NSUTF8StringEncoding];
 
 	if (packageString == nil || packageString.length == 0) {
 		return;
@@ -554,9 +540,9 @@
 			@"elementCfi" : m_initialCFI
 		};
 
-		NSString *arg = [[[NSString alloc]
+		NSString *arg = [[NSString alloc]
 			initWithData:[NSJSONSerialization dataWithJSONObject:dict options:0 error:nil]
-			encoding:NSUTF8StringEncoding] autorelease];
+			encoding:NSUTF8StringEncoding];
 
 		[m_webView stringByEvaluatingJavaScriptFromString:[NSString stringWithFormat:
 			@"ReadiumSDK.reader.openBook(%@, %@)", packageString, arg]];
@@ -567,9 +553,9 @@
 			@"sourceFileHref" : (m_navElement.sourceHref == nil ? @"" : m_navElement.sourceHref)
 		};
 
-		NSString *arg = [[[NSString alloc]
+		NSString *arg = [[NSString alloc]
 			initWithData:[NSJSONSerialization dataWithJSONObject:dict options:0 error:nil]
-			encoding:NSUTF8StringEncoding] autorelease];
+			encoding:NSUTF8StringEncoding];
 
 		[m_webView stringByEvaluatingJavaScriptFromString:[NSString stringWithFormat:
 			@"ReadiumSDK.reader.openBook(%@, %@)", packageString, arg]];
@@ -579,9 +565,9 @@
 			@"idref" : m_spineItem.idref
 		};
 
-		NSString *arg = [[[NSString alloc]
+		NSString *arg = [[NSString alloc]
 			initWithData:[NSJSONSerialization dataWithJSONObject:dict options:0 error:nil]
-			encoding:NSUTF8StringEncoding] autorelease];
+			encoding:NSUTF8StringEncoding];
 
 		[m_webView stringByEvaluatingJavaScriptFromString:[NSString stringWithFormat:
 			@"ReadiumSDK.reader.openBook(%@, %@)", packageString, arg]];

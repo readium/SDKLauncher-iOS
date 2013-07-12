@@ -1,25 +1,25 @@
 <html>
     <head>
-        <script src="{BUNDLE}://JavaScript/lib/jquery-1.8.2.min.js" type="text/javascript"></script>
-        <script src="{BUNDLE}://JavaScript/lib/underscore.min.js" type="text/javascript"></script>
-        <script src="{BUNDLE}://JavaScript/lib/backbone.min.js" type="text/javascript"></script>
-        <script src="{BUNDLE}://JavaScript/js/readium_sdk.js" type="text/javascript"></script>
-        <script src="{BUNDLE}://JavaScript/js/helpers.js" type="text/javascript"></script>
-        <script src="{BUNDLE}://JavaScript/js/models/trigger.js" type="text/javascript"></script>
-        <script src="{BUNDLE}://JavaScript/js/models/bookmark_data.js" type="text/javascript"></script>
-        <script src="{BUNDLE}://JavaScript/js/models/spine_item.js" type="text/javascript"></script>
-        <script src="{BUNDLE}://JavaScript/js/models/spine.js" type="text/javascript"></script>
-        <script src="{BUNDLE}://JavaScript/js/models/fixed_page_spread.js" type="text/javascript"></script>
-        <script src="{BUNDLE}://JavaScript/js/models/package.js" type="text/javascript"></script>
-        <script src="{BUNDLE}://JavaScript/js/models/current_pages_info.js" type="text/javascript"></script>
-        <script src="{BUNDLE}://JavaScript/js/models/page_open_request.js" type="text/javascript"></script>
-        <script src="{BUNDLE}://JavaScript/lib/epub_cfi.js" type="text/javascript"></script>
-        <script src="{BUNDLE}://JavaScript/js/views/cfi_navigation_logic.js" type="text/javascript"></script>
-        <script src="{BUNDLE}://JavaScript/js/views/reflowable_view.js" type="text/javascript"></script>
-        <script src="{BUNDLE}://JavaScript/js/views/one_page_view.js" type="text/javascript"></script>
-        <script src="{BUNDLE}://JavaScript/js/views/fixed_view.js" type="text/javascript"></script>
-        <script src="{BUNDLE}://JavaScript/js/views/reader_view.js" type="text/javascript"></script>
-        <script src="{BUNDLE}://JavaScript/host_app_feedback.js" type="text/javascript"></script>
+        <script src="{BUNDLE}://readium-shared-js/lib/jquery-1.8.2.min.js" type="text/javascript"></script>
+        <script src="{BUNDLE}://readium-shared-js/lib/underscore.min.js" type="text/javascript"></script>
+        <script src="{BUNDLE}://readium-shared-js/lib/backbone.min.js" type="text/javascript"></script>
+        <script src="{BUNDLE}://readium-shared-js/js/readium_sdk.js" type="text/javascript"></script>
+        <script src="{BUNDLE}://readium-shared-js/js/helpers.js" type="text/javascript"></script>
+        <script src="{BUNDLE}://readium-shared-js/js/models/trigger.js" type="text/javascript"></script>
+        <script src="{BUNDLE}://readium-shared-js/js/models/bookmark_data.js" type="text/javascript"></script>
+        <script src="{BUNDLE}://readium-shared-js/js/models/spine_item.js" type="text/javascript"></script>
+        <script src="{BUNDLE}://readium-shared-js/js/models/spine.js" type="text/javascript"></script>
+        <script src="{BUNDLE}://readium-shared-js/js/models/fixed_page_spread.js" type="text/javascript"></script>
+        <script src="{BUNDLE}://readium-shared-js/js/models/package.js" type="text/javascript"></script>
+        <script src="{BUNDLE}://readium-shared-js/js/models/current_pages_info.js" type="text/javascript"></script>
+        <script src="{BUNDLE}://readium-shared-js/js/models/page_open_request.js" type="text/javascript"></script>
+        <script src="{BUNDLE}://readium-shared-js/lib/epub_cfi.js" type="text/javascript"></script>
+        <script src="{BUNDLE}://readium-shared-js/js/views/cfi_navigation_logic.js" type="text/javascript"></script>
+        <script src="{BUNDLE}://readium-shared-js/js/views/reflowable_view.js" type="text/javascript"></script>
+        <script src="{BUNDLE}://readium-shared-js/js/views/one_page_view.js" type="text/javascript"></script>
+        <script src="{BUNDLE}://readium-shared-js/js/views/fixed_view.js" type="text/javascript"></script>
+        <script src="{BUNDLE}://readium-shared-js/js/views/reader_view.js" type="text/javascript"></script>
+        <script src="{BUNDLE}://host_app_feedback.js" type="text/javascript"></script>
 
         <!--reflowable view-->
         <script type="text/html" id="template-reflowable-view">
@@ -49,6 +49,7 @@
                 "use strict";
 
                 ReadiumSDK.reader = new ReadiumSDK.Views.ReaderView();
+                ReadiumSDK.trigger("ReaderInitialized");
 
                 ///////////////////////////////////
                 //DEBUGGING CODE

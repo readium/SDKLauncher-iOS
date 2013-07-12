@@ -1,3 +1,5 @@
+//  LauncherOSX
+//
 //  Created by Boris Schneiderman.
 //  Copyright (c) 2012-2013 The Readium Foundation.
 //
@@ -14,24 +16,13 @@
 //  You should have received a copy of the GNU General Public License
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+ReadiumSDK.HostAppFeedback = function() {
+	ReadiumSDK.on("ReaderInitialized", function() {
+		ReadiumSDK.reader.on("PaginationChanged", this.onPaginationChanged, this);
+	}, this);
 
-/**
- @class ReadiumSDK.Models.BookmarkData
- */
-ReadiumSDK.Models.BookmarkData = function(idref, contentCFI) {
-
-    /**
-     * spine item idref
-     * @property idref
-     * @type {string}
-     */
-    this.idref = idref;
-
-    /**
-     * cfi of the first visible element
-     * @property contentCFI
-     * @type {string}
-     */
-    this.contentCFI = contentCFI;
-
-};
+	this.onPaginationChanged = function(paginationInfo) {
+		window.location.href = "epubobjc:pageDidChange?q=" +
+			encodeURIComponent(JSON.stringify(paginationInfo));
+	};
+}();

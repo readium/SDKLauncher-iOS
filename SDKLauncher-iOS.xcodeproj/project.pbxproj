@@ -25,6 +25,7 @@
 		3413981016C03062000912C1 /* RDPackage.mm in Sources */ = {isa = PBXBuildFile; fileRef = 3413980F16C03062000912C1 /* RDPackage.mm */; };
 		341652A316C2F85700AFDB8B /* PackageMetadataController.m in Sources */ = {isa = PBXBuildFile; fileRef = 341652A216C2F85700AFDB8B /* PackageMetadataController.m */; };
 		341652A816C2F9E700AFDB8B /* SpineItemListController.m in Sources */ = {isa = PBXBuildFile; fileRef = 341652A716C2F9E700AFDB8B /* SpineItemListController.m */; };
+		3436EB2A1790C3F300246925 /* host_app_feedback.js in Resources */ = {isa = PBXBuildFile; fileRef = 341A1F701790BC6800E603C4 /* host_app_feedback.js */; };
 		345CA3E516C00F0500B8B56A /* RDContainer.mm in Sources */ = {isa = PBXBuildFile; fileRef = 345CA3E416C00F0500B8B56A /* RDContainer.mm */; };
 		345DA0DD16C310F500E7285C /* Constants.m in Sources */ = {isa = PBXBuildFile; fileRef = 345DA0DC16C310F400E7285C /* Constants.m */; };
 		345DA0E216C3151E00E7285C /* EPubURLProtocol.m in Sources */ = {isa = PBXBuildFile; fileRef = 345DA0E116C3151E00E7285C /* EPubURLProtocol.m */; };
@@ -50,7 +51,7 @@
 		347C58C016BC879400A647B0 /* libePub3-iOS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 347C58BB16BC873700A647B0 /* libePub3-iOS.a */; };
 		349AF4B916EA9B1C00253269 /* PackageResourceCache.m in Sources */ = {isa = PBXBuildFile; fileRef = 349AF4B816EA9B1C00253269 /* PackageResourceCache.m */; };
 		34A94D9716C060E000FD4143 /* RDSpineItem.mm in Sources */ = {isa = PBXBuildFile; fileRef = 34A94D9616C060E000FD4143 /* RDSpineItem.mm */; };
-		34B53528170B3E60000D384F /* JavaScript in Resources */ = {isa = PBXBuildFile; fileRef = 34B53527170B3E60000D384F /* JavaScript */; };
+		34B53528170B3E60000D384F /* readium-shared-js in Resources */ = {isa = PBXBuildFile; fileRef = 34B53527170B3E60000D384F /* readium-shared-js */; };
 		34B5457C16BCB07800D14838 /* libxml2.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 34B5457B16BCB07800D14838 /* libxml2.dylib */; };
 		34B5457E16BCB08000D14838 /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 34B5457D16BCB08000D14838 /* libz.dylib */; };
 		34B56B431722DB2200A5A4B8 /* Bookmark.m in Sources */ = {isa = PBXBuildFile; fileRef = 34B56B421722DB2200A5A4B8 /* Bookmark.m */; };
@@ -129,6 +130,7 @@
 		341652A216C2F85700AFDB8B /* PackageMetadataController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PackageMetadataController.m; sourceTree = "<group>"; };
 		341652A616C2F9E700AFDB8B /* SpineItemListController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SpineItemListController.h; sourceTree = "<group>"; };
 		341652A716C2F9E700AFDB8B /* SpineItemListController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SpineItemListController.m; sourceTree = "<group>"; };
+		341A1F701790BC6800E603C4 /* host_app_feedback.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = host_app_feedback.js; sourceTree = "<group>"; };
 		345CA3E316C00F0500B8B56A /* RDContainer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RDContainer.h; sourceTree = "<group>"; };
 		345CA3E416C00F0500B8B56A /* RDContainer.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = RDContainer.mm; sourceTree = "<group>"; };
 		345DA0DB16C310F400E7285C /* Constants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Constants.h; sourceTree = "<group>"; };
@@ -163,7 +165,7 @@
 		349AF4B816EA9B1C00253269 /* PackageResourceCache.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PackageResourceCache.m; sourceTree = "<group>"; };
 		34A94D9516C060E000FD4143 /* RDSpineItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RDSpineItem.h; sourceTree = "<group>"; };
 		34A94D9616C060E000FD4143 /* RDSpineItem.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = RDSpineItem.mm; sourceTree = "<group>"; };
-		34B53527170B3E60000D384F /* JavaScript */ = {isa = PBXFileReference; lastKnownFileType = folder; path = JavaScript; sourceTree = "<group>"; };
+		34B53527170B3E60000D384F /* readium-shared-js */ = {isa = PBXFileReference; lastKnownFileType = folder; path = "readium-shared-js"; sourceTree = "<group>"; };
 		34B5457B16BCB07800D14838 /* libxml2.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libxml2.dylib; path = usr/lib/libxml2.dylib; sourceTree = SDKROOT; };
 		34B5457D16BCB08000D14838 /* libz.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libz.dylib; path = usr/lib/libz.dylib; sourceTree = SDKROOT; };
 		34B56B411722DB2200A5A4B8 /* Bookmark.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Bookmark.h; sourceTree = "<group>"; };
@@ -211,6 +213,7 @@
 		3403515F16CE9362009E3B88 /* Injection */ = {
 			isa = PBXGroup;
 			children = (
+				341A1F701790BC6800E603C4 /* host_app_feedback.js */,
 				3403516116CE93F2009E3B88 /* reader.css */,
 				3403516216CE93F2009E3B88 /* reader.html */,
 			);
@@ -346,7 +349,7 @@
 				340535B716BC728800D4A802 /* EPub */,
 				3462FBDD16BC4031003C79E1 /* Icon */,
 				3403515F16CE9362009E3B88 /* Injection */,
-				34B53527170B3E60000D384F /* JavaScript */,
+				34B53527170B3E60000D384F /* readium-shared-js */,
 				3462FBC316BC3C8F003C79E1 /* Localizable.strings */,
 			);
 			path = Resources;
@@ -507,6 +510,7 @@
 				3462FBE816BC40F9003C79E1 /* Default-Landscape@2x.png in Resources */,
 				3462FBE916BC40F9003C79E1 /* Default-Portrait.png in Resources */,
 				3462FBEA16BC40F9003C79E1 /* Default-Portrait@2x.png in Resources */,
+				3436EB2A1790C3F300246925 /* host_app_feedback.js in Resources */,
 				3462FBD516BC402E003C79E1 /* Icon-72.png in Resources */,
 				3462FBD616BC402E003C79E1 /* Icon-72@2x.png in Resources */,
 				3462FBD716BC402E003C79E1 /* Icon-Small-50.png in Resources */,
@@ -520,7 +524,7 @@
 				3403516516CE93F2009E3B88 /* reader.css in Resources */,
 				3403516616CE93F2009E3B88 /* reader.html in Resources */,
 				340535BB16BC793700D4A802 /* wasteland-20120118.epub in Resources */,
-				34B53528170B3E60000D384F /* JavaScript in Resources */,
+				34B53528170B3E60000D384F /* readium-shared-js in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -542,6 +546,7 @@
 				3413980B16C02DE7000912C1 /* ContainerController.m in Sources */,
 				340535B616BC669C00D4A802 /* ContainerList.m in Sources */,
 				340535AD16BC5F4700D4A802 /* ContainerListController.m in Sources */,
+				3411DF03175FACC000FCE6D9 /* EPubViewController.m in Sources */,
 				345DA0E216C3151E00E7285C /* EPubURLProtocol.m in Sources */,
 				345DA0E516C334B300E7285C /* EPubURLProtocolBridge.m in Sources */,
 				34C5533C16E15CCB003A7C23 /* HTMLUtil.m in Sources */,
@@ -559,7 +564,6 @@
 				34A94D9716C060E000FD4143 /* RDSpineItem.mm in Sources */,
 				34B56B4F1722E54A00A5A4B8 /* Settings.m in Sources */,
 				341652A816C2F9E700AFDB8B /* SpineItemListController.m in Sources */,
-				3411DF03175FACC000FCE6D9 /* EPubViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

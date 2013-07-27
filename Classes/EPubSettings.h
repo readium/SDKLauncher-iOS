@@ -1,20 +1,22 @@
 //
-//  Settings.h
+//  EPubSettings.h
 //  SDKLauncher-iOS
 //
-//  Created by Shane Meyer on 4/20/13.
+//  Created by Shane Meyer on 7/27/13.
 //  Copyright (c) 2013 The Readium Foundation. All rights reserved.
 //
 
 #import <Foundation/Foundation.h>
 
-@interface Settings : NSObject
+extern NSString * const kSDKLauncherEPubSettingsDidChange;
 
-@property (nonatomic, retain) NSDictionary *bookmarks;
+@interface EPubSettings : NSObject
+
 @property (nonatomic, assign) CGFloat columnGap;
+@property (nonatomic, readonly) NSDictionary *dictionary;
 @property (nonatomic, assign) CGFloat fontScale;
 @property (nonatomic, assign) BOOL isSyntheticSpread;
 
-+ (Settings *)shared;
++ (EPubSettings *)shared;
 
 @end

@@ -17,4 +17,5 @@
 	#import "LocStrError.h"
 
 	#define IS_IPAD (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad)
+	#define SCREEN_SIZE ([UIScreen mainScreen].bounds.size)
 #endif

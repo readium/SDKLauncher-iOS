@@ -59,6 +59,8 @@
 		34B56B4F1722E54A00A5A4B8 /* Settings.m in Sources */ = {isa = PBXBuildFile; fileRef = 34B56B4E1722E54A00A5A4B8 /* Settings.m */; };
 		34B56B5C17230FDF00A5A4B8 /* BookmarkListController.m in Sources */ = {isa = PBXBuildFile; fileRef = 34B56B5B17230FDF00A5A4B8 /* BookmarkListController.m */; };
 		34B56B5E1723158E00A5A4B8 /* childrens-literature-20130206.epub in Resources */ = {isa = PBXBuildFile; fileRef = 34B56B5D1723158E00A5A4B8 /* childrens-literature-20130206.epub */; };
+		34C4064317A43A1700354C33 /* EPubSettingsController.m in Sources */ = {isa = PBXBuildFile; fileRef = 34C4064217A43A1700354C33 /* EPubSettingsController.m */; };
+		34C4064817A451D100354C33 /* EPubSettings.m in Sources */ = {isa = PBXBuildFile; fileRef = 34C4064717A451D100354C33 /* EPubSettings.m */; };
 		34C5533916E15C76003A7C23 /* AsyncSocket.m in Sources */ = {isa = PBXBuildFile; fileRef = 34C5533816E15C76003A7C23 /* AsyncSocket.m */; };
 		34C5533C16E15CCB003A7C23 /* HTMLUtil.m in Sources */ = {isa = PBXBuildFile; fileRef = 34C5533B16E15CCB003A7C23 /* HTMLUtil.m */; };
 		34C5533F16E15CDF003A7C23 /* RDPackageResource.mm in Sources */ = {isa = PBXBuildFile; fileRef = 34C5533E16E15CDF003A7C23 /* RDPackageResource.mm */; };
@@ -177,6 +179,10 @@
 		34B56B5A17230FDF00A5A4B8 /* BookmarkListController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BookmarkListController.h; sourceTree = "<group>"; };
 		34B56B5B17230FDF00A5A4B8 /* BookmarkListController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BookmarkListController.m; sourceTree = "<group>"; };
 		34B56B5D1723158E00A5A4B8 /* childrens-literature-20130206.epub */ = {isa = PBXFileReference; lastKnownFileType = file; path = "childrens-literature-20130206.epub"; sourceTree = "<group>"; };
+		34C4064117A43A1700354C33 /* EPubSettingsController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EPubSettingsController.h; sourceTree = "<group>"; };
+		34C4064217A43A1700354C33 /* EPubSettingsController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EPubSettingsController.m; sourceTree = "<group>"; };
+		34C4064617A451D000354C33 /* EPubSettings.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EPubSettings.h; sourceTree = "<group>"; };
+		34C4064717A451D100354C33 /* EPubSettings.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EPubSettings.m; sourceTree = "<group>"; };
 		34C5533716E15C76003A7C23 /* AsyncSocket.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AsyncSocket.h; sourceTree = "<group>"; };
 		34C5533816E15C76003A7C23 /* AsyncSocket.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AsyncSocket.m; sourceTree = "<group>"; };
 		34C5533A16E15CCB003A7C23 /* HTMLUtil.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HTMLUtil.h; sourceTree = "<group>"; };
@@ -286,6 +292,10 @@
 				340535B516BC669C00D4A802 /* ContainerList.m */,
 				340535AB16BC5F4700D4A802 /* ContainerListController.h */,
 				340535AC16BC5F4700D4A802 /* ContainerListController.m */,
+				34C4064617A451D000354C33 /* EPubSettings.h */,
+				34C4064717A451D100354C33 /* EPubSettings.m */,
+				34C4064117A43A1700354C33 /* EPubSettingsController.h */,
+				34C4064217A43A1700354C33 /* EPubSettingsController.m */,
 				345DA0E016C3151E00E7285C /* EPubURLProtocol.h */,
 				345DA0E116C3151E00E7285C /* EPubURLProtocol.m */,
 				345DA0E316C334B300E7285C /* EPubURLProtocolBridge.h */,
@@ -546,6 +556,8 @@
 				3413980B16C02DE7000912C1 /* ContainerController.m in Sources */,
 				340535B616BC669C00D4A802 /* ContainerList.m in Sources */,
 				340535AD16BC5F4700D4A802 /* ContainerListController.m in Sources */,
+				34C4064817A451D100354C33 /* EPubSettings.m in Sources */,
+				34C4064317A43A1700354C33 /* EPubSettingsController.m in Sources */,
 				3411DF03175FACC000FCE6D9 /* EPubViewController.m in Sources */,
 				345DA0E216C3151E00E7285C /* EPubURLProtocol.m in Sources */,
 				345DA0E516C334B300E7285C /* EPubURLProtocolBridge.m in Sources */,

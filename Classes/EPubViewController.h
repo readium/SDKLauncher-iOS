@@ -17,6 +17,7 @@
 
 @interface EPubViewController : BaseViewController <
 	UIAlertViewDelegate,
+	UIPopoverControllerDelegate,
 	UIWebViewDelegate>
 {
 	@private UIAlertView *m_alertAddBookmark;
@@ -31,6 +32,7 @@
 	@private NSString *m_initialCFI;
 	@private RDNavigationElement *m_navElement;
 	@private RDPackage *m_package;
+	@private UIPopoverController *m_popover;
 	@private PackageResourceServer *m_resourceServer;
 	@private RDSpineItem *m_spineItem;
 	@private UIWebView *m_webView;

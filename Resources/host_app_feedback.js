@@ -19,11 +19,16 @@
 ReadiumSDK.HostAppFeedback = function() {
 	ReadiumSDK.on("ReaderInitialized", function() {
 		ReadiumSDK.reader.on("PaginationChanged", this.onPaginationChanged, this);
+		ReadiumSDK.reader.on("SettingsApplied", this.onSettingsApplied, this);
 		window.location.href = "epubobjc:readerDidInitialize";
 	}, this);
 
 	this.onPaginationChanged = function(paginationInfo) {
 		window.location.href = "epubobjc:pageDidChange?q=" +
 			encodeURIComponent(JSON.stringify(paginationInfo));
+	};
+
+	this.onSettingsApplied = function(paginationInfo) {
+		window.location.href = "epubobjc:settingsDidApply";
 	};
 }();

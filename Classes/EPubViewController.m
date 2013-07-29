@@ -559,6 +559,70 @@
 		if ([url isEqualToString:@"readerDidInitialize"]) {
 			[self passSettingsToJavaScript];
 		}
+		else if ([url isEqualToString:@"settingsDidApply"]) {
+			if (m_didApplyInitialSettings) {
+				return shouldLoad;
+			}
+
+			m_didApplyInitialSettings = YES;
+
+			NSData *data = [NSJSONSerialization dataWithJSONObject:m_package.dictionary
+				options:0 error:nil];
+
+			if (data == nil) {
+				return shouldLoad;
+			}
+
+			NSString *packageString = [[[NSString alloc] initWithData:data
+				encoding:NSUTF8StringEncoding] autorelease];
+
+			if (packageString == nil || packageString.length == 0) {
+				return shouldLoad;
+			}
+
+			if (m_spineItem == nil) {
+				[m_webView stringByEvaluatingJavaScriptFromString:[NSString stringWithFormat:
+					@"ReadiumSDK.reader.openBook(%@)", packageString]];
+			}
+			else if (m_initialCFI != nil && m_initialCFI.length > 0) {
+				NSDictionary *dict = @{
+					@"idref" : m_spineItem.idref,
+					@"elementCfi" : m_initialCFI
+				};
+
+				NSString *arg = [[[NSString alloc]
+					initWithData:[NSJSONSerialization dataWithJSONObject:dict options:0 error:nil]
+					encoding:NSUTF8StringEncoding] autorelease];
+
+				[m_webView stringByEvaluatingJavaScriptFromString:[NSString stringWithFormat:
+					@"ReadiumSDK.reader.openBook(%@, %@)", packageString, arg]];
+			}
+			else if (m_navElement.content != nil && m_navElement.content.length > 0) {
+				NSDictionary *dict = @{
+					@"contentRefUrl" : m_navElement.content,
+					@"sourceFileHref" : (m_navElement.sourceHref == nil ? @"" : m_navElement.sourceHref)
+				};
+
+				NSString *arg = [[[NSString alloc]
+					initWithData:[NSJSONSerialization dataWithJSONObject:dict options:0 error:nil]
+					encoding:NSUTF8StringEncoding] autorelease];
+
+				[m_webView stringByEvaluatingJavaScriptFromString:[NSString stringWithFormat:
+					@"ReadiumSDK.reader.openBook(%@, %@)", packageString, arg]];
+			}
+			else {
+				NSDictionary *dict = @{
+					@"idref" : m_spineItem.idref
+				};
+
+				NSString *arg = [[[NSString alloc]
+					initWithData:[NSJSONSerialization dataWithJSONObject:dict options:0 error:nil]
+					encoding:NSUTF8StringEncoding] autorelease];
+
+				[m_webView stringByEvaluatingJavaScriptFromString:[NSString stringWithFormat:
+					@"ReadiumSDK.reader.openBook(%@, %@)", packageString, arg]];
+			}
+		}
 		else if ([url hasPrefix:s]) {
 			s = [url substringFromIndex:s.length];
 			s = [s stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
@@ -601,72 +665,6 @@
 	}
 
 	return shouldLoad;
-}
-
-
-- (void)webViewDidFinishLoad:(UIWebView *)webView {
-	if (m_didFinishLoading) {
-		return;
-	}
-
-	m_didFinishLoading = YES;
-
-	NSData *data = [NSJSONSerialization dataWithJSONObject:m_package.dictionary
-		options:0 error:nil];
-
-	if (data == nil) {
-		return;
-	}
-
-	NSString *packageString = [[[NSString alloc] initWithData:data
-		encoding:NSUTF8StringEncoding] autorelease];
-
-	if (packageString == nil || packageString.length == 0) {
-		return;
-	}
-
-	if (m_spineItem == nil) {
-		[m_webView stringByEvaluatingJavaScriptFromString:[NSString stringWithFormat:
-			@"ReadiumSDK.reader.openBook(%@)", packageString]];
-	}
-	else if (m_initialCFI != nil && m_initialCFI.length > 0) {
-		NSDictionary *dict = @{
-			@"idref" : m_spineItem.idref,
-			@"elementCfi" : m_initialCFI
-		};
-
-		NSString *arg = [[[NSString alloc]
-			initWithData:[NSJSONSerialization dataWithJSONObject:dict options:0 error:nil]
-			encoding:NSUTF8StringEncoding] autorelease];
-
-		[m_webView stringByEvaluatingJavaScriptFromString:[NSString stringWithFormat:
-			@"ReadiumSDK.reader.openBook(%@, %@)", packageString, arg]];
-	}
-	else if (m_navElement.content != nil && m_navElement.content.length > 0) {
-		NSDictionary *dict = @{
-			@"contentRefUrl" : m_navElement.content,
-			@"sourceFileHref" : (m_navElement.sourceHref == nil ? @"" : m_navElement.sourceHref)
-		};
-
-		NSString *arg = [[[NSString alloc]
-			initWithData:[NSJSONSerialization dataWithJSONObject:dict options:0 error:nil]
-			encoding:NSUTF8StringEncoding] autorelease];
-
-		[m_webView stringByEvaluatingJavaScriptFromString:[NSString stringWithFormat:
-			@"ReadiumSDK.reader.openBook(%@, %@)", packageString, arg]];
-	}
-	else {
-		NSDictionary *dict = @{
-			@"idref" : m_spineItem.idref
-		};
-
-		NSString *arg = [[[NSString alloc]
-			initWithData:[NSJSONSerialization dataWithJSONObject:dict options:0 error:nil]
-			encoding:NSUTF8StringEncoding] autorelease];
-
-		[m_webView stringByEvaluatingJavaScriptFromString:[NSString stringWithFormat:
-			@"ReadiumSDK.reader.openBook(%@, %@)", packageString, arg]];
-	}
 }
 
 

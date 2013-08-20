@@ -37,32 +37,74 @@
 
 
 - (void)startLoading {
-	NSHTTPURLResponse *response = [[[NSHTTPURLResponse alloc]
-		initWithURL:self.request.URL
-		statusCode:200
-		HTTPVersion:@"HTTP/1.1"
-		headerFields:nil] autorelease];
+	NSString *s = self.request.URL.absoluteString;
 
-	[self.client URLProtocol:self didReceiveResponse:response
-		cacheStoragePolicy:NSURLCacheStorageAllowed];
+	if (s == nil || s.length == 0) {
+		return;
+	}
 
-	// We get called from various threads.  Dispatch the data retrieval to the main thread to
-	// simplify code downstream.  Someday multi-threaded data retrieval might be nice but
-	// currently causes problems.
+	NSRange range = [s rangeOfString:@"__app_bundle__/"];
 
-	dispatch_async(dispatch_get_main_queue(), ^{
-		NSData *data = [[EPubURLProtocolBridge shared] dataForURL:self.request.URL];
+	if (range.location != NSNotFound) {
 
-		if (data == nil) {
+		// Extract the resource from the application bundle.
+
+		s = [s substringFromIndex:NSMaxRange(range)];
+		s = [[NSBundle mainBundle] pathForResource:s ofType:nil];
+		NSData *data = [NSData dataWithContentsOfFile:s];
+		NSURLResponse *response = nil;
+
+		if (data != nil) {
+			response = [[[NSHTTPURLResponse alloc]
+				initWithURL:[NSURL fileURLWithPath:s]
+				statusCode:200
+				HTTPVersion:@"HTTP/1.1"
+				headerFields:nil] autorelease];
+		}
+
+		if (data == nil || response == nil) {
 			NSError *error = [NSError errorWithDomain:NSURLErrorDomain
 				code:NSURLErrorResourceUnavailable userInfo:nil];
 			[self.client URLProtocol:self didFailWithError:error];
 		}
 		else {
+			[self.client URLProtocol:self didReceiveResponse:response
+				cacheStoragePolicy:NSURLCacheStorageAllowed];
 			[self.client URLProtocol:self didLoadData:data];
 			[self.client URLProtocolDidFinishLoading:self];
 		}
-	});
+	}
+	else {
+
+		// Extract the resource from the EPUB.
+
+		NSHTTPURLResponse *response = [[[NSHTTPURLResponse alloc]
+			initWithURL:self.request.URL
+			statusCode:200
+			HTTPVersion:@"HTTP/1.1"
+			headerFields:nil] autorelease];
+
+		[self.client URLProtocol:self didReceiveResponse:response
+			cacheStoragePolicy:NSURLCacheStorageAllowed];
+
+		// We get called from various threads.  Dispatch the data retrieval to the main thread
+		// to simplify code downstream.  Someday multi-threaded data retrieval might be nice but
+		// currently causes problems.
+
+		dispatch_async(dispatch_get_main_queue(), ^{
+			NSData *data = [[EPubURLProtocolBridge shared] dataForURL:self.request.URL];
+
+			if (data == nil) {
+				NSError *error = [NSError errorWithDomain:NSURLErrorDomain
+					code:NSURLErrorResourceUnavailable userInfo:nil];
+				[self.client URLProtocol:self didFailWithError:error];
+			}
+			else {
+				[self.client URLProtocol:self didLoadData:data];
+				[self.client URLProtocolDidFinishLoading:self];
+			}
+		});
+	}
 }
 
 

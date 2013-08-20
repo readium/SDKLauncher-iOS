@@ -115,17 +115,8 @@
 
 
 + (NSString *)readerHTML {
-	static NSString *s = nil;
-
-	if (s == nil) {
-		NSString *path = [[NSBundle mainBundle] pathForResource:@"reader.html" ofType:nil];
-		s = [NSString stringWithContentsOfFile:path encoding:NSUTF8StringEncoding error:nil];
-		s = [s stringByReplacingOccurrencesOfString:@"{BUNDLE}"
-			withString:kSDKLauncherWebViewBundleProtocol];
-		s = [s retain];
-	}
-
-	return s;
+	NSString *path = [[NSBundle mainBundle] pathForResource:@"reader.html" ofType:nil];
+	return [NSString stringWithContentsOfFile:path encoding:NSUTF8StringEncoding error:nil];
 }
 
 

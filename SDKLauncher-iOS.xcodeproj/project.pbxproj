@@ -9,7 +9,6 @@
 /* Begin PBXBuildFile section */
 		3403516516CE93F2009E3B88 /* reader.css in Resources */ = {isa = PBXBuildFile; fileRef = 3403516116CE93F2009E3B88 /* reader.css */; };
 		3403516616CE93F2009E3B88 /* reader.html in Resources */ = {isa = PBXBuildFile; fileRef = 3403516216CE93F2009E3B88 /* reader.html */; };
-		3403516D16CE9FF2009E3B88 /* BundleURLProtocol.m in Sources */ = {isa = PBXBuildFile; fileRef = 3403516C16CE9FF2009E3B88 /* BundleURLProtocol.m */; };
 		340535AA16BC5DD100D4A802 /* BaseViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 340535A916BC5DD100D4A802 /* BaseViewController.m */; };
 		340535AD16BC5F4700D4A802 /* ContainerListController.m in Sources */ = {isa = PBXBuildFile; fileRef = 340535AC16BC5F4700D4A802 /* ContainerListController.m */; };
 		340535B216BC608900D4A802 /* LocStr.m in Sources */ = {isa = PBXBuildFile; fileRef = 340535AF16BC608900D4A802 /* LocStr.m */; };
@@ -104,8 +103,6 @@
 /* Begin PBXFileReference section */
 		3403516116CE93F2009E3B88 /* reader.css */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.css; path = reader.css; sourceTree = "<group>"; };
 		3403516216CE93F2009E3B88 /* reader.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = reader.html; sourceTree = "<group>"; };
-		3403516B16CE9FF2009E3B88 /* BundleURLProtocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BundleURLProtocol.h; sourceTree = "<group>"; };
-		3403516C16CE9FF2009E3B88 /* BundleURLProtocol.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BundleURLProtocol.m; sourceTree = "<group>"; };
 		340535A816BC5DD100D4A802 /* BaseViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BaseViewController.h; sourceTree = "<group>"; };
 		340535A916BC5DD100D4A802 /* BaseViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BaseViewController.m; sourceTree = "<group>"; };
 		340535AB16BC5F4700D4A802 /* ContainerListController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ContainerListController.h; sourceTree = "<group>"; };
@@ -282,8 +279,6 @@
 				34B56B4B1722DFB700A5A4B8 /* BookmarkDatabase.m */,
 				34B56B5A17230FDF00A5A4B8 /* BookmarkListController.h */,
 				34B56B5B17230FDF00A5A4B8 /* BookmarkListController.m */,
-				3403516B16CE9FF2009E3B88 /* BundleURLProtocol.h */,
-				3403516C16CE9FF2009E3B88 /* BundleURLProtocol.m */,
 				345DA0DB16C310F400E7285C /* Constants.h */,
 				345DA0DC16C310F400E7285C /* Constants.m */,
 				3413980916C02DE7000912C1 /* ContainerController.h */,
@@ -551,7 +546,6 @@
 				34B56B431722DB2200A5A4B8 /* Bookmark.m in Sources */,
 				34B56B4C1722DFB700A5A4B8 /* BookmarkDatabase.m in Sources */,
 				34B56B5C17230FDF00A5A4B8 /* BookmarkListController.m in Sources */,
-				3403516D16CE9FF2009E3B88 /* BundleURLProtocol.m in Sources */,
 				345DA0DD16C310F500E7285C /* Constants.m in Sources */,
 				3413980B16C02DE7000912C1 /* ContainerController.m in Sources */,
 				340535B616BC669C00D4A802 /* ContainerList.m in Sources */,

@@ -68,6 +68,7 @@
 - (NSDictionary *)dictionary {
 	NSMutableDictionary *dictRoot = [NSMutableDictionary dictionary];
 	[dictRoot setObject:@"/" forKey:@"rootUrl"];
+	[dictRoot setObject:[NSArray array] forKey:@"mediaOverlays"];
 
 	NSString *s = self.renditionLayout;
 

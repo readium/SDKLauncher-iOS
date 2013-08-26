@@ -9,6 +9,8 @@
 #import "EPubViewController.h"
 #import "Bookmark.h"
 #import "BookmarkDatabase.h"
+#import "EPubSettings.h"
+#import "EPubSettingsController.h"
 #import "EPubURLProtocolBridge.h"
 #import "HTMLUtil.h"
 #import "PackageResourceServer.h"
@@ -19,9 +21,11 @@
 #import "RDSpineItem.h"
 
 
-@interface EPubViewController()
+@interface EPubViewController ()
 
 - (NSString *)htmlFromData:(NSData *)data;
+- (void)passSettingsToJavaScript;
+- (void)updateNavigationItems;
 - (void)updateToolbar;
 
 @end
@@ -76,6 +80,12 @@
 		[m_alertAddBookmark dismissWithClickedButtonIndex:999 animated:NO];
 		[m_alertAddBookmark release];
 		m_alertAddBookmark = nil;
+	}
+
+	if (m_popover != nil) {
+		[m_popover dismissPopoverAnimated:NO];
+		[m_popover release];
+		m_popover = nil;
 	}
 }
 
@@ -203,6 +213,7 @@
 		m_package = [package retain];
 		m_spineItem = [spineItem retain];
 		m_resourceServer = [[PackageResourceServer alloc] initWithPackage:package];
+		[self updateNavigationItems];
 	}
 
 	return self;
@@ -235,6 +246,7 @@
 		m_package = [package retain];
 		m_resourceServer = [[PackageResourceServer alloc] initWithPackage:package];
 		m_spineItem = [spineItem retain];
+		[self updateNavigationItems];
 	}
 
 	return self;
@@ -245,11 +257,17 @@
 	self.view = [[[UIView alloc] init] autorelease];
 	self.view.backgroundColor = [UIColor whiteColor];
 
-	[[NSNotificationCenter defaultCenter]
-		addObserver:self
-		selector:@selector(onProtocolBridgeNeedsResponse:)
-		name:kSDKLauncherEPubURLProtocolBridgeNeedsResponse
-		object:nil];
+	// Notifications
+
+	NSNotificationCenter *nc = [NSNotificationCenter defaultCenter];
+
+	[nc addObserver:self selector:@selector(onEPubSettingsDidChange:)
+		name:kSDKLauncherEPubSettingsDidChange object:nil];
+
+	[nc addObserver:self selector:@selector(onProtocolBridgeNeedsResponse:)
+		name:kSDKLauncherEPubURLProtocolBridgeNeedsResponse object:nil];
+
+	// Web view
 
 	m_webView = [[[UIWebView alloc] init] autorelease];
 	m_webView.delegate = self;
@@ -289,6 +307,31 @@
 
 - (void)onClickPrev {
 	[m_webView stringByEvaluatingJavaScriptFromString:@"ReadiumSDK.reader.openPagePrev()"];
+}
+
+
+- (void)onClickSettings {
+	EPubSettingsController *c = [[[EPubSettingsController alloc] init] autorelease];
+
+	UINavigationController *nav = [[[UINavigationController alloc]
+		initWithRootViewController:c] autorelease];
+
+	if (IS_IPAD) {
+		if (m_popover == nil) {
+			m_popover = [[UIPopoverController alloc] initWithContentViewController:nav];
+			m_popover.delegate = self;
+			[m_popover presentPopoverFromBarButtonItem:self.navigationItem.rightBarButtonItem
+				permittedArrowDirections:UIPopoverArrowDirectionAny animated:YES];
+		}
+	}
+	else {
+		[self presentViewController:nav animated:YES completion:nil];
+	}
+}
+
+
+- (void)onEPubSettingsDidChange:(NSNotification *)notification {
+	[self passSettingsToJavaScript];
 }
 
 
@@ -350,6 +393,39 @@
 	if (data != nil) {
 		bridge.currentData = data;
 	}
+}
+
+
+- (void)passSettingsToJavaScript {
+	NSData *data = [NSJSONSerialization dataWithJSONObject:[EPubSettings shared].dictionary
+		options:0 error:nil];
+
+	if (data == nil) {
+		return;
+	}
+
+	NSString *s = [[[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding] autorelease];
+
+	if (s == nil || s.length == 0) {
+		return;
+	}
+
+	[m_webView stringByEvaluatingJavaScriptFromString:[NSString stringWithFormat:
+		@"ReadiumSDK.reader.updateSettings(%@)", s]];
+}
+
+
+- (void)popoverControllerDidDismissPopover:(UIPopoverController *)popoverController {
+	[m_popover release];
+	m_popover = nil;
+}
+
+
+- (void)updateNavigationItems {
+	self.navigationItem.rightBarButtonItem = [[[UIBarButtonItem alloc]
+		initWithBarButtonSystemItem:UIBarButtonSystemItemAction
+		target:self
+		action:@selector(onClickSettings)] autorelease];
 }
 
 
@@ -426,7 +502,8 @@
 			itemFixed,
 			itemLabel,
 			itemFlex,
-			itemAddBookmark ];
+			itemAddBookmark
+		];
 	}
 	else {
 		self.toolbarItems = @[
@@ -436,7 +513,8 @@
 			itemFixed,
 			itemLabel,
 			itemFlex,
-			itemAddBookmark ];
+			itemAddBookmark
+		];
 	}
 }
 
@@ -478,7 +556,49 @@
 		shouldLoad = NO;
 		s = @"pageDidChange?q=";
 
-		if ([url hasPrefix:s]) {
+		if ([url isEqualToString:@"readerDidInitialize"]) {
+			NSMutableDictionary *dict = [NSMutableDictionary dictionary];
+			[dict setObject:m_package.dictionary forKey:@"package"];
+			[dict setObject:[EPubSettings shared].dictionary forKey:@"settings"];
+
+			NSDictionary *pageDict = nil;
+
+			if (m_spineItem == nil) {
+			}
+			else if (m_initialCFI != nil && m_initialCFI.length > 0) {
+				pageDict = @{
+					@"idref" : m_spineItem.idref,
+					@"elementCfi" : m_initialCFI
+				};
+			}
+			else if (m_navElement.content != nil && m_navElement.content.length > 0) {
+				pageDict = @{
+					@"contentRefUrl" : m_navElement.content,
+					@"sourceFileHref" : (m_navElement.sourceHref == nil ?
+						@"" : m_navElement.sourceHref)
+				};
+			}
+			else {
+				pageDict = @{
+					@"idref" : m_spineItem.idref
+				};
+			}
+
+			if (pageDict != nil) {
+				[dict setObject:pageDict forKey:@"openPageRequest"];
+			}
+
+			NSData *data = [NSJSONSerialization dataWithJSONObject:dict options:0 error:nil];
+
+			if (data != nil) {
+				NSString *arg = [[[NSString alloc] initWithData:data
+					encoding:NSUTF8StringEncoding] autorelease];
+
+				[m_webView stringByEvaluatingJavaScriptFromString:[NSString stringWithFormat:
+					@"ReadiumSDK.reader.openBook(%@)", arg]];
+			}
+		}
+		else if ([url hasPrefix:s]) {
 			s = [url substringFromIndex:s.length];
 			s = [s stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
 
@@ -520,72 +640,6 @@
 	}
 
 	return shouldLoad;
-}
-
-
-- (void)webViewDidFinishLoad:(UIWebView *)webView {
-	if (m_didFinishLoading) {
-		return;
-	}
-
-	m_didFinishLoading = YES;
-
-	NSData *data = [NSJSONSerialization dataWithJSONObject:m_package.dictionary
-		options:0 error:nil];
-
-	if (data == nil) {
-		return;
-	}
-
-	NSString *packageString = [[[NSString alloc] initWithData:data
-		encoding:NSUTF8StringEncoding] autorelease];
-
-	if (packageString == nil || packageString.length == 0) {
-		return;
-	}
-
-	if (m_spineItem == nil) {
-		[m_webView stringByEvaluatingJavaScriptFromString:[NSString stringWithFormat:
-			@"ReadiumSDK.reader.openBook(%@)", packageString]];
-	}
-	else if (m_initialCFI != nil && m_initialCFI.length > 0) {
-		NSDictionary *dict = @{
-			@"idref" : m_spineItem.idref,
-			@"elementCfi" : m_initialCFI
-		};
-
-		NSString *arg = [[[NSString alloc]
-			initWithData:[NSJSONSerialization dataWithJSONObject:dict options:0 error:nil]
-			encoding:NSUTF8StringEncoding] autorelease];
-
-		[m_webView stringByEvaluatingJavaScriptFromString:[NSString stringWithFormat:
-			@"ReadiumSDK.reader.openBook(%@, %@)", packageString, arg]];
-	}
-	else if (m_navElement.content != nil && m_navElement.content.length > 0) {
-		NSDictionary *dict = @{
-			@"contentRefUrl" : m_navElement.content,
-			@"sourceFileHref" : (m_navElement.sourceHref == nil ? @"" : m_navElement.sourceHref)
-		};
-
-		NSString *arg = [[[NSString alloc]
-			initWithData:[NSJSONSerialization dataWithJSONObject:dict options:0 error:nil]
-			encoding:NSUTF8StringEncoding] autorelease];
-
-		[m_webView stringByEvaluatingJavaScriptFromString:[NSString stringWithFormat:
-			@"ReadiumSDK.reader.openBook(%@, %@)", packageString, arg]];
-	}
-	else {
-		NSDictionary *dict = @{
-			@"idref" : m_spineItem.idref
-		};
-
-		NSString *arg = [[[NSString alloc]
-			initWithData:[NSJSONSerialization dataWithJSONObject:dict options:0 error:nil]
-			encoding:NSUTF8StringEncoding] autorelease];
-
-		[m_webView stringByEvaluatingJavaScriptFromString:[NSString stringWithFormat:
-			@"ReadiumSDK.reader.openBook(%@, %@)", packageString, arg]];
-	}
 }
 
 

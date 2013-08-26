@@ -7,7 +7,6 @@
 //
 
 #import "AppDelegate.h"
-#import "BundleURLProtocol.h"
 #import "ContainerListController.h"
 #import "EPubURLProtocol.h"
 
@@ -26,7 +25,6 @@
 	application:(UIApplication *)application
 	didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
-	[NSURLProtocol registerClass:[BundleURLProtocol class]];
 	[NSURLProtocol registerClass:[EPubURLProtocol class]];
 
 	[self configureAppearance];

@@ -10,7 +10,6 @@
 
 #define kSDKLauncherPackageResourceBufferSize 4096
 #define kSDKLauncherPackageResourceServerPort 8080
-#define kSDKLauncherWebViewBundleProtocol @"epubwebviewbundle"
 #define kSDKLauncherWebViewSDKProtocol @"epubwebviewsdk"
 
 @interface Constants : NSObject

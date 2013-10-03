@@ -273,6 +273,7 @@
 	m_webView.delegate = self;
 	m_webView.hidden = YES;
 	m_webView.scrollView.bounces = NO;
+    m_webView.scalesPageToFit = YES;
 	[self.view addSubview:m_webView];
 
 	NSString *url = [NSString stringWithFormat:@"%@://%@/%@",

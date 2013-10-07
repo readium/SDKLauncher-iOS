@@ -67,6 +67,7 @@
 		34C5534416E15D32003A7C23 /* PackageResourceServer.m in Sources */ = {isa = PBXBuildFile; fileRef = 34C5534316E15D32003A7C23 /* PackageResourceServer.m */; };
 		34CE0B1A1720CC0300F55192 /* RDNavigationElement.mm in Sources */ = {isa = PBXBuildFile; fileRef = 34CE0B191720CC0300F55192 /* RDNavigationElement.mm */; };
 		34CE0B1F1720D8FE00F55192 /* NavigationElementController.m in Sources */ = {isa = PBXBuildFile; fileRef = 34CE0B1E1720D8FE00F55192 /* NavigationElementController.m */; };
+		85DE51A117FDDCAC00F55130 /* page-blanche-20130322.epub in Resources */ = {isa = PBXBuildFile; fileRef = 85DE51A017FDDCAC00F55130 /* page-blanche-20130322.epub */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -193,6 +194,7 @@
 		34CE0B191720CC0300F55192 /* RDNavigationElement.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = RDNavigationElement.mm; sourceTree = "<group>"; };
 		34CE0B1D1720D8FE00F55192 /* NavigationElementController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NavigationElementController.h; sourceTree = "<group>"; };
 		34CE0B1E1720D8FE00F55192 /* NavigationElementController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NavigationElementController.m; sourceTree = "<group>"; };
+		85DE51A017FDDCAC00F55130 /* page-blanche-20130322.epub */ = {isa = PBXFileReference; lastKnownFileType = file; path = "page-blanche-20130322.epub"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -226,6 +228,7 @@
 		340535B716BC728800D4A802 /* EPub */ = {
 			isa = PBXGroup;
 			children = (
+				85DE51A017FDDCAC00F55130 /* page-blanche-20130322.epub */,
 				34B56B5D1723158E00A5A4B8 /* childrens-literature-20130206.epub */,
 				340535B816BC729200D4A802 /* moby-dick-20120118.epub */,
 				340535BA16BC793700D4A802 /* wasteland-20120118.epub */,
@@ -528,6 +531,7 @@
 				340535B916BC729200D4A802 /* moby-dick-20120118.epub in Resources */,
 				3403516516CE93F2009E3B88 /* reader.css in Resources */,
 				3403516616CE93F2009E3B88 /* reader.html in Resources */,
+				85DE51A117FDDCAC00F55130 /* page-blanche-20130322.epub in Resources */,
 				340535BB16BC793700D4A802 /* wasteland-20120118.epub in Resources */,
 				34B53528170B3E60000D384F /* readium-shared-js in Resources */,
 			);
@@ -607,7 +611,7 @@
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN_OBJC_MISSING_PROPERTY_SYNTHESIS = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "";
 				COPY_PHASE_STRIP = NO;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_DYNAMIC_NO_PIC = NO;
@@ -628,7 +632,8 @@
 				INFOPLIST_FILE = "SDKLauncher-iOS-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
 				ONLY_ACTIVE_ARCH = YES;
-				SDKROOT = iphoneos;
+				PROVISIONING_PROFILE = "D6B9EA1D-C721-4E01-AB80-07E671B297B6";
+				SDKROOT = iphoneos6.1;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
@@ -645,7 +650,7 @@
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN_OBJC_MISSING_PROPERTY_SYNTHESIS = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "";
 				COPY_PHASE_STRIP = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_PREFIX_HEADER = "SDKLauncher-iOS-Prefix.pch";
@@ -659,7 +664,8 @@
 				INFOPLIST_FILE = "SDKLauncher-iOS-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
 				OTHER_CFLAGS = "-DNS_BLOCK_ASSERTIONS=1";
-				SDKROOT = iphoneos;
+				PROVISIONING_PROFILE = "D6B9EA1D-C721-4E01-AB80-07E671B297B6";
+				SDKROOT = iphoneos6.1;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VALIDATE_PRODUCT = YES;
 			};
@@ -668,6 +674,8 @@
 		340FC17716BC3B4600346A59 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CODE_SIGN_IDENTITY = "";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				HEADER_SEARCH_PATHS = (
 					"${SDKROOT}/usr/include/libxml2",
@@ -681,6 +689,8 @@
 		340FC17816BC3B4600346A59 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CODE_SIGN_IDENTITY = "";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				HEADER_SEARCH_PATHS = (
 					"${SDKROOT}/usr/include/libxml2",

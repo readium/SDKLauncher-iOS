@@ -74,7 +74,9 @@
 	UIColor *color = [UIColor colorWithRed:39/255.0 green:136/255.0 blue:156/255.0 alpha:1];
 
 	if ([m_window respondsToSelector:@selector(setTintColor:)]) {
-		m_window.tintColor = color;
+		// Avoid directly setting the property for temporary Xcode 4 support.
+		// m_window.tintColor = color;
+		[m_window performSelector:@selector(setTintColor:) withObject:color];
 	}
 	else {
 		[[UINavigationBar appearance] setTintColor:color];

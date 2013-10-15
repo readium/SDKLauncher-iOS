@@ -273,6 +273,7 @@
 	m_webView.delegate = self;
 	m_webView.hidden = YES;
 	m_webView.scrollView.bounces = NO;
+    m_webView.scalesPageToFit = YES;
 	[self.view addSubview:m_webView];
 
 	NSString *url = [NSString stringWithFormat:@"%@://%@/%@",
@@ -468,10 +469,8 @@
 
 	UILabel *label = [[[UILabel alloc] init] autorelease];
 	label.backgroundColor = [UIColor clearColor];
-	label.font = [UIFont boldSystemFontOfSize:16];
-	label.shadowColor = [UIColor colorWithWhite:0 alpha:0.5];
-	label.shadowOffset = CGSizeMake(0, -1);
-	label.textColor = [UIColor whiteColor];
+	label.font = [UIFont systemFontOfSize:16];
+	label.textColor = [UIColor blackColor];
 
 	if (m_currentPageCount == 0) {
 		label.text = @"";

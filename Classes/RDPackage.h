@@ -10,9 +10,11 @@
 #import "RDPackageResource.h"
 
 @class RDContainer;
+@class RDMediaOverlaysSmilModel;
 @class RDNavigationElement;
 
 @interface RDPackage : NSObject <RDPackageResourceDelegate> {
+	@private RDMediaOverlaysSmilModel *m_mediaOverlaysSmilModel;
 	@private RDNavigationElement *m_navElemListOfFigures;
 	@private RDNavigationElement *m_navElemListOfIllustrations;
 	@private RDNavigationElement *m_navElemListOfTables;
@@ -35,6 +37,7 @@
 @property (nonatomic, readonly) RDNavigationElement *listOfFigures;
 @property (nonatomic, readonly) RDNavigationElement *listOfIllustrations;
 @property (nonatomic, readonly) RDNavigationElement *listOfTables;
+@property (nonatomic, readonly) RDMediaOverlaysSmilModel *mediaOverlaysSmilModel;
 @property (nonatomic, readonly) NSString *modificationDateString;
 @property (nonatomic, readonly) NSString *packageID;
 @property (nonatomic, readonly) NSString *packageUUID;

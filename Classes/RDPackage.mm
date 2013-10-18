@@ -7,8 +7,10 @@
 //
 
 #import "RDPackage.h"
+#import <ePub3/media-overlays_smil_model.h>
 #import <ePub3/nav_table.h>
 #import <ePub3/package.h>
+#import "RDMediaOverlaysSmilModel.h"
 #import "RDNavigationElement.h"
 #import "RDSpineItem.h"
 
@@ -51,6 +53,7 @@
 
 
 - (void)dealloc {
+	[m_mediaOverlaysSmilModel release];
 	[m_navElemListOfFigures release];
 	[m_navElemListOfIllustrations release];
 	[m_navElemListOfTables release];
@@ -68,7 +71,7 @@
 - (NSDictionary *)dictionary {
 	NSMutableDictionary *dictRoot = [NSMutableDictionary dictionary];
 	[dictRoot setObject:@"/" forKey:@"rootUrl"];
-	[dictRoot setObject:[NSArray array] forKey:@"mediaOverlays"];
+	[dictRoot setObject:self.mediaOverlaysSmilModel.dictionary forKey:@"media_overlay"];
 
 	NSString *s = self.renditionLayout;
 
@@ -199,6 +202,17 @@
 	}
 
 	return m_navElemListOfTables;
+}
+
+
+- (RDMediaOverlaysSmilModel *)mediaOverlaysSmilModel {
+	if (m_mediaOverlaysSmilModel == nil) {
+		ePub3::MediaOverlaysSmilModel *smilModel = m_package->MediaOverlaysSmilModel().get();
+		m_mediaOverlaysSmilModel = [[RDMediaOverlaysSmilModel alloc]
+			initWithMediaOverlaysSmilModel:smilModel];
+	}
+
+	return m_mediaOverlaysSmilModel;
 }
 
 

@@ -17,18 +17,18 @@
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 ReadiumSDK.HostAppFeedback = function() {
-	ReadiumSDK.on("ReaderInitialized", function() {
-		ReadiumSDK.reader.on("PaginationChanged", this.onPaginationChanged, this);
-		ReadiumSDK.reader.on("SettingsApplied", this.onSettingsApplied, this);
+	ReadiumSDK.on(ReadiumSDK.Events.READER_INITIALIZED, function() {
+		ReadiumSDK.reader.on(ReadiumSDK.Events.PAGINATION_CHANGED, this.onPaginationChanged, this);
+		ReadiumSDK.reader.on(ReadiumSDK.Events.SETTINGS_APPLIED, this.onSettingsApplied, this);
 		window.location.href = "epubobjc:readerDidInitialize";
 	}, this);
 
-	this.onPaginationChanged = function(paginationInfo) {
+	this.onPaginationChanged = function(pageChangeData) {
 		window.location.href = "epubobjc:pageDidChange?q=" +
-			encodeURIComponent(JSON.stringify(paginationInfo));
+			encodeURIComponent(JSON.stringify(pageChangeData.paginationInfo));
 	};
 
-	this.onSettingsApplied = function(paginationInfo) {
+	this.onSettingsApplied = function() {
 		window.location.href = "epubobjc:settingsDidApply";
 	};
 }();

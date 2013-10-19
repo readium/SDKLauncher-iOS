@@ -70,8 +70,14 @@
 
 - (NSDictionary *)dictionary {
 	NSMutableDictionary *dictRoot = [NSMutableDictionary dictionary];
+
 	[dictRoot setObject:@"/" forKey:@"rootUrl"];
-	[dictRoot setObject:self.mediaOverlaysSmilModel.dictionary forKey:@"media_overlay"];
+
+    auto root = [NSString stringWithFormat:@"http://localhost:%d/%@/",
+                                           kSDKLauncherPackageResourceServerPort, m_packageUUID];
+    [dictRoot setObject:root forKey:@"rootUrlMO"];
+
+    [dictRoot setObject:self.mediaOverlaysSmilModel.dictionary forKey:@"media_overlay"];
 
 	NSString *s = self.renditionLayout;
 

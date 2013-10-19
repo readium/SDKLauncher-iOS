@@ -594,8 +594,11 @@
 					encoding:NSUTF8StringEncoding] autorelease];
 
 				[m_webView stringByEvaluatingJavaScriptFromString:[NSString stringWithFormat:
-					@"setTimeout(function(){ReadiumSDK.reader.openBook(%@);}, 1000)",
-                    //@"ReadiumSDK.reader.openBook(%@)",
+#ifdef DEBUG
+                        @"setTimeout(function(){ReadiumSDK.reader.openBook(%@);}, 1000)",
+#else
+                        @"ReadiumSDK.reader.openBook(%@)",
+#endif
                     arg]];
 			}
 		}

@@ -74,7 +74,10 @@
 		34E12BA9180301A2004DCB68 /* Icon-72@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 34E12B9C180301A2004DCB68 /* Icon-72@2x.png */; };
 		34E12BAA180301A2004DCB68 /* Icon-76.png in Resources */ = {isa = PBXBuildFile; fileRef = 34E12B9D180301A2004DCB68 /* Icon-76.png */; };
 		34E12BAB180301A2004DCB68 /* Icon-76@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 34E12B9E180301A2004DCB68 /* Icon-76@2x.png */; };
+		83F6D2BA18148BCF0030252D /* moby-dick-MO-HACKED.epub in Resources */ = {isa = PBXBuildFile; fileRef = 83F6D2B918148BCF0030252D /* moby-dick-MO-HACKED.epub */; };
 		85DE51A117FDDCAC00F55130 /* page-blanche-20130322.epub in Resources */ = {isa = PBXBuildFile; fileRef = 85DE51A017FDDCAC00F55130 /* page-blanche-20130322.epub */; };
+		A250D5FFC597F4E5EB74D3AC /* epub30-test-0120-20131022.epub in Resources */ = {isa = PBXBuildFile; fileRef = A250D58D34D67FC218608A1F /* epub30-test-0120-20131022.epub */; };
+		A250D8E19073D0C5B921BA5F /* epub30-test-0220-20131022.epub in Resources */ = {isa = PBXBuildFile; fileRef = A250D54A5C423A86C6099037 /* epub30-test-0220-20131022.epub */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -210,7 +213,10 @@
 		34E12B9C180301A2004DCB68 /* Icon-72@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon-72@2x.png"; sourceTree = "<group>"; };
 		34E12B9D180301A2004DCB68 /* Icon-76.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon-76.png"; sourceTree = "<group>"; };
 		34E12B9E180301A2004DCB68 /* Icon-76@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon-76@2x.png"; sourceTree = "<group>"; };
+		83F6D2B918148BCF0030252D /* moby-dick-MO-HACKED.epub */ = {isa = PBXFileReference; lastKnownFileType = file; path = "moby-dick-MO-HACKED.epub"; sourceTree = "<group>"; };
 		85DE51A017FDDCAC00F55130 /* page-blanche-20130322.epub */ = {isa = PBXFileReference; lastKnownFileType = file; path = "page-blanche-20130322.epub"; sourceTree = "<group>"; };
+		A250D54A5C423A86C6099037 /* epub30-test-0220-20131022.epub */ = {isa = PBXFileReference; lastKnownFileType = file.epub; path = "epub30-test-0220-20131022.epub"; sourceTree = "<group>"; };
+		A250D58D34D67FC218608A1F /* epub30-test-0120-20131022.epub */ = {isa = PBXFileReference; lastKnownFileType = file.epub; path = "epub30-test-0120-20131022.epub"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -244,10 +250,13 @@
 		340535B716BC728800D4A802 /* EPub */ = {
 			isa = PBXGroup;
 			children = (
+				83F6D2B918148BCF0030252D /* moby-dick-MO-HACKED.epub */,
 				34B56B5D1723158E00A5A4B8 /* childrens-literature-20130206.epub */,
 				340535B816BC729200D4A802 /* moby-dick-20120118.epub */,
 				85DE51A017FDDCAC00F55130 /* page-blanche-20130322.epub */,
 				340535BA16BC793700D4A802 /* wasteland-20120118.epub */,
+				A250D58D34D67FC218608A1F /* epub30-test-0120-20131022.epub */,
+				A250D54A5C423A86C6099037 /* epub30-test-0220-20131022.epub */,
 			);
 			name = EPub;
 			sourceTree = "<group>";
@@ -564,6 +573,9 @@
 				340535BB16BC793700D4A802 /* wasteland-20120118.epub in Resources */,
 				34B53528170B3E60000D384F /* readium-shared-js in Resources */,
 				34E12BA1180301A2004DCB68 /* Icon-40.png in Resources */,
+				83F6D2BA18148BCF0030252D /* moby-dick-MO-HACKED.epub in Resources */,
+				A250D5FFC597F4E5EB74D3AC /* epub30-test-0120-20131022.epub in Resources */,
+				A250D8E19073D0C5B921BA5F /* epub30-test-0220-20131022.epub in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

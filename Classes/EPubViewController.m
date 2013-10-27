@@ -634,7 +634,8 @@ static bool AmIBeingDebugged(void)
 
                 NSString* jsCode = @"ReadiumSDK.reader.openBook(%@)";
 #ifdef DEBUG
-if (AmIBeingDebugged())
+if (false && // annoying, confusing break! :(
+    AmIBeingDebugged())
 {
     // OPEN THE SAFARI REMOTE DEBUGGER HERE, THEN RESUME EXECUTION! :)
     kill (getpid(), SIGSTOP);

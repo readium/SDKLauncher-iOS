@@ -67,14 +67,14 @@
 
 - (NSString *)href {
 	ePub3::ManifestItemPtr manifestItem = m_smilData->SmilManifestItem();
-	const ePub3::string s = manifestItem->Href();
+	const ePub3::string s = manifestItem == nullptr ? "fake.smil" : manifestItem->Href();
 	return [NSString stringWithUTF8String:s.c_str()];
 }
 
 
 - (NSString *)identifier {
 	ePub3::ManifestItemPtr manifestItem = m_smilData->SmilManifestItem();
-	const ePub3::string s = manifestItem->Identifier();
+	const ePub3::string s = manifestItem == nullptr ? "" : manifestItem->Identifier();
 	return [NSString stringWithUTF8String:s.c_str()];
 }
 

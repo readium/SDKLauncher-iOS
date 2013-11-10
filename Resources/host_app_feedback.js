@@ -17,18 +17,36 @@
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 ReadiumSDK.HostAppFeedback = function() {
-	ReadiumSDK.on("ReaderInitialized", function() {
-		ReadiumSDK.reader.on("PaginationChanged", this.onPaginationChanged, this);
-		ReadiumSDK.reader.on("SettingsApplied", this.onSettingsApplied, this);
+	ReadiumSDK.on(ReadiumSDK.Events.READER_INITIALIZED, function() {
+		ReadiumSDK.reader.on(ReadiumSDK.Events.PAGINATION_CHANGED, this.onPaginationChanged, this);
+		ReadiumSDK.reader.on(ReadiumSDK.Events.SETTINGS_APPLIED, this.onSettingsApplied, this);
+        ReadiumSDK.reader.on(ReadiumSDK.Events.MEDIA_OVERLAY_STATUS_CHANGED, this.onMediaOverlayStatusChanged, this);
+        ReadiumSDK.reader.on(ReadiumSDK.Events.MEDIA_OVERLAY_TTS_SPEAK, this.onMediaOverlayTTSSpeak, this);
+        ReadiumSDK.reader.on(ReadiumSDK.Events.MEDIA_OVERLAY_TTS_STOP, this.onMediaOverlayTTSStop, this);
+        
 		window.location.href = "epubobjc:readerDidInitialize";
 	}, this);
 
-	this.onPaginationChanged = function(paginationInfo) {
+	this.onPaginationChanged = function(pageChangeData) {
 		window.location.href = "epubobjc:pageDidChange?q=" +
-			encodeURIComponent(JSON.stringify(paginationInfo));
+			encodeURIComponent(JSON.stringify(pageChangeData.paginationInfo));
 	};
 
-	this.onSettingsApplied = function(paginationInfo) {
+	this.onSettingsApplied = function() {
 		window.location.href = "epubobjc:settingsDidApply";
 	};
+
+    this.onMediaOverlayStatusChanged = function(status) {
+        window.location.href = "epubobjc:mediaOverlayStatusDidChange?q=" +
+			encodeURIComponent(JSON.stringify(status));
+    };
+
+    this.onMediaOverlayTTSSpeak = function(tts) {
+        window.location.href = "epubobjc:mediaOverlayTTSDoSpeak?q=" +
+			encodeURIComponent(JSON.stringify(tts));
+    };
+
+    this.onMediaOverlayTTSStop = function() {
+		window.location.href = "epubobjc:mediaOverlayTTSDoStop";
+    };
 }();

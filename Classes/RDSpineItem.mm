@@ -22,6 +22,7 @@
 
 
 @synthesize renditionLayout = m_renditionLayout;
+@synthesize mediaOverlayId = m_mediaOverlayId;
 
 
 - (NSString *)baseHref {
@@ -37,7 +38,9 @@
 
 
 - (void)dealloc {
-	[m_renditionLayout release];
+    [m_renditionLayout release];
+    [m_mediaOverlayId release];
+
 	[super dealloc];
 }
 
@@ -63,9 +66,13 @@
 		[dict setObject:s forKey:@"page_spread"];
 	}
 
-	if (self.renditionLayout != nil) {
-		[dict setObject:self.renditionLayout forKey:@"rendition_layout"];
-	}
+    if (self.renditionLayout != nil) {
+        [dict setObject:self.renditionLayout forKey:@"rendition_layout"];
+    }
+
+    if (self.mediaOverlayId != nil) {
+        [dict setObject:self.mediaOverlayId forKey:@"media_overlay_id"];
+    }
 
 	return dict;
 }
@@ -85,14 +92,17 @@
 
 	if (self = [super init]) {
 		m_spineItem = (ePub3::SpineItem *)spineItem;
-		ePub3::PropertyPtr prop = m_spineItem->PropertyMatching("layout", "rendition");
 
+		ePub3::PropertyPtr prop = m_spineItem->PropertyMatching("layout", "rendition");
 		if (prop == nullptr) {
 			m_renditionLayout = [[NSString alloc] initWithString:@""];
 		}
 		else {
 			m_renditionLayout = [[NSString alloc] initWithUTF8String:prop->Value().c_str()];
 		}
+
+        auto mediaOverlayID = m_spineItem->ManifestItem()->MediaOverlayID();
+        m_mediaOverlayId = [[NSString alloc] initWithUTF8String: mediaOverlayID.c_str()];
 	}
 
 	return self;

@@ -20,6 +20,10 @@ ReadiumSDK.HostAppFeedback = function() {
 	ReadiumSDK.on(ReadiumSDK.Events.READER_INITIALIZED, function() {
 		ReadiumSDK.reader.on(ReadiumSDK.Events.PAGINATION_CHANGED, this.onPaginationChanged, this);
 		ReadiumSDK.reader.on(ReadiumSDK.Events.SETTINGS_APPLIED, this.onSettingsApplied, this);
+        ReadiumSDK.reader.on(ReadiumSDK.Events.MEDIA_OVERLAY_STATUS_CHANGED, this.onMediaOverlayStatusChanged, this);
+        ReadiumSDK.reader.on(ReadiumSDK.Events.MEDIA_OVERLAY_TTS_SPEAK, this.onMediaOverlayTTSSpeak, this);
+        ReadiumSDK.reader.on(ReadiumSDK.Events.MEDIA_OVERLAY_TTS_STOP, this.onMediaOverlayTTSStop, this);
+        
 		window.location.href = "epubobjc:readerDidInitialize";
 	}, this);
 
@@ -31,4 +35,18 @@ ReadiumSDK.HostAppFeedback = function() {
 	this.onSettingsApplied = function() {
 		window.location.href = "epubobjc:settingsDidApply";
 	};
+
+    this.onMediaOverlayStatusChanged = function(status) {
+        window.location.href = "epubobjc:mediaOverlayStatusDidChange?q=" +
+			encodeURIComponent(JSON.stringify(status));
+    };
+
+    this.onMediaOverlayTTSSpeak = function(tts) {
+        window.location.href = "epubobjc:mediaOverlayTTSDoSpeak?q=" +
+			encodeURIComponent(JSON.stringify(tts));
+    };
+
+    this.onMediaOverlayTTSStop = function() {
+		window.location.href = "epubobjc:mediaOverlayTTSDoStop";
+    };
 }();

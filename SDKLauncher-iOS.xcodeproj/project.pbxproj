@@ -42,6 +42,7 @@
 		3462FBEB16BC40F9003C79E1 /* Default.png in Resources */ = {isa = PBXBuildFile; fileRef = 3462FBE416BC40F9003C79E1 /* Default.png */; };
 		3462FBEC16BC40F9003C79E1 /* Default@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 3462FBE516BC40F9003C79E1 /* Default@2x.png */; };
 		347C58C016BC879400A647B0 /* libePub3-iOS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 347C58BB16BC873700A647B0 /* libePub3-iOS.a */; };
+		348200FC183A9D2D007E72E6 /* MobileCoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 348200FB183A9D2D007E72E6 /* MobileCoreServices.framework */; };
 		349AF4B916EA9B1C00253269 /* PackageResourceCache.m in Sources */ = {isa = PBXBuildFile; fileRef = 349AF4B816EA9B1C00253269 /* PackageResourceCache.m */; };
 		34A94D9716C060E000FD4143 /* RDSpineItem.mm in Sources */ = {isa = PBXBuildFile; fileRef = 34A94D9616C060E000FD4143 /* RDSpineItem.mm */; };
 		34B53528170B3E60000D384F /* readium-shared-js in Resources */ = {isa = PBXBuildFile; fileRef = 34B53527170B3E60000D384F /* readium-shared-js */; };
@@ -52,6 +53,18 @@
 		34B56B4F1722E54A00A5A4B8 /* Settings.m in Sources */ = {isa = PBXBuildFile; fileRef = 34B56B4E1722E54A00A5A4B8 /* Settings.m */; };
 		34B56B5C17230FDF00A5A4B8 /* BookmarkListController.m in Sources */ = {isa = PBXBuildFile; fileRef = 34B56B5B17230FDF00A5A4B8 /* BookmarkListController.m */; };
 		34B56B5E1723158E00A5A4B8 /* childrens-literature-20130206.epub in Resources */ = {isa = PBXBuildFile; fileRef = 34B56B5D1723158E00A5A4B8 /* childrens-literature-20130206.epub */; };
+		34B6571A183A970D009FA23C /* AQHTTPConnection.m in Sources */ = {isa = PBXBuildFile; fileRef = 34B65700183A970D009FA23C /* AQHTTPConnection.m */; };
+		34B6571B183A970D009FA23C /* AQHTTPFileResponseOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = 34B65703183A970D009FA23C /* AQHTTPFileResponseOperation.m */; };
+		34B6571C183A970D009FA23C /* AQHTTPRequestOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = 34B65705183A970D009FA23C /* AQHTTPRequestOperation.m */; };
+		34B6571D183A970D009FA23C /* AQHTTPResponseOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = 34B65707183A970D009FA23C /* AQHTTPResponseOperation.m */; };
+		34B6571E183A970D009FA23C /* AQHTTPServer.m in Sources */ = {isa = PBXBuildFile; fileRef = 34B65709183A970D009FA23C /* AQHTTPServer.m */; };
+		34B6571F183A970D009FA23C /* AQSocket.m in Sources */ = {isa = PBXBuildFile; fileRef = 34B6570C183A970D009FA23C /* AQSocket.m */; };
+		34B65720183A970D009FA23C /* AQSocketIOChannel.m in Sources */ = {isa = PBXBuildFile; fileRef = 34B6570E183A970D009FA23C /* AQSocketIOChannel.m */; };
+		34B65721183A970D009FA23C /* AQSocketReader.m in Sources */ = {isa = PBXBuildFile; fileRef = 34B65711183A970D009FA23C /* AQSocketReader.m */; };
+		34B65722183A970D009FA23C /* DDData.m in Sources */ = {isa = PBXBuildFile; fileRef = 34B65713183A970D009FA23C /* DDData.m */; };
+		34B65723183A970D009FA23C /* DDNumber.m in Sources */ = {isa = PBXBuildFile; fileRef = 34B65715183A970D009FA23C /* DDNumber.m */; };
+		34B65724183A970D009FA23C /* DDRange.m in Sources */ = {isa = PBXBuildFile; fileRef = 34B65717183A970D009FA23C /* DDRange.m */; };
+		34B65725183A970D009FA23C /* NSDateFormatter+AQHTTPDateFormatter.m in Sources */ = {isa = PBXBuildFile; fileRef = 34B65719183A970D009FA23C /* NSDateFormatter+AQHTTPDateFormatter.m */; };
 		34C4064317A43A1700354C33 /* EPubSettingsController.m in Sources */ = {isa = PBXBuildFile; fileRef = 34C4064217A43A1700354C33 /* EPubSettingsController.m */; };
 		34C4064817A451D100354C33 /* EPubSettings.m in Sources */ = {isa = PBXBuildFile; fileRef = 34C4064717A451D100354C33 /* EPubSettings.m */; };
 		34C5533916E15C76003A7C23 /* AsyncSocket.m in Sources */ = {isa = PBXBuildFile; fileRef = 34C5533816E15C76003A7C23 /* AsyncSocket.m */; };
@@ -167,6 +180,7 @@
 		3462FBE416BC40F9003C79E1 /* Default.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Default.png; sourceTree = "<group>"; };
 		3462FBE516BC40F9003C79E1 /* Default@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default@2x.png"; sourceTree = "<group>"; };
 		347C58B216BC873700A647B0 /* ePub3.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = ePub3.xcodeproj; path = "readium-sdk/Platform/Apple/ePub3.xcodeproj"; sourceTree = "<group>"; };
+		348200FB183A9D2D007E72E6 /* MobileCoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MobileCoreServices.framework; path = System/Library/Frameworks/MobileCoreServices.framework; sourceTree = SDKROOT; };
 		349AF4B716EA9B1C00253269 /* PackageResourceCache.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PackageResourceCache.h; sourceTree = "<group>"; };
 		349AF4B816EA9B1C00253269 /* PackageResourceCache.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PackageResourceCache.m; sourceTree = "<group>"; };
 		34A94D9516C060E000FD4143 /* RDSpineItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RDSpineItem.h; sourceTree = "<group>"; };
@@ -183,6 +197,32 @@
 		34B56B5A17230FDF00A5A4B8 /* BookmarkListController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BookmarkListController.h; sourceTree = "<group>"; };
 		34B56B5B17230FDF00A5A4B8 /* BookmarkListController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BookmarkListController.m; sourceTree = "<group>"; };
 		34B56B5D1723158E00A5A4B8 /* childrens-literature-20130206.epub */ = {isa = PBXFileReference; lastKnownFileType = file; path = "childrens-literature-20130206.epub"; sourceTree = "<group>"; };
+		34B656FF183A970D009FA23C /* AQHTTPConnection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AQHTTPConnection.h; sourceTree = "<group>"; };
+		34B65700183A970D009FA23C /* AQHTTPConnection.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AQHTTPConnection.m; sourceTree = "<group>"; };
+		34B65701183A970D009FA23C /* AQHTTPConnection_PrivateInternal.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AQHTTPConnection_PrivateInternal.h; sourceTree = "<group>"; };
+		34B65702183A970D009FA23C /* AQHTTPFileResponseOperation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AQHTTPFileResponseOperation.h; sourceTree = "<group>"; };
+		34B65703183A970D009FA23C /* AQHTTPFileResponseOperation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AQHTTPFileResponseOperation.m; sourceTree = "<group>"; };
+		34B65704183A970D009FA23C /* AQHTTPRequestOperation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AQHTTPRequestOperation.h; sourceTree = "<group>"; };
+		34B65705183A970D009FA23C /* AQHTTPRequestOperation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AQHTTPRequestOperation.m; sourceTree = "<group>"; };
+		34B65706183A970D009FA23C /* AQHTTPResponseOperation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AQHTTPResponseOperation.h; sourceTree = "<group>"; };
+		34B65707183A970D009FA23C /* AQHTTPResponseOperation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AQHTTPResponseOperation.m; sourceTree = "<group>"; };
+		34B65708183A970D009FA23C /* AQHTTPServer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AQHTTPServer.h; sourceTree = "<group>"; };
+		34B65709183A970D009FA23C /* AQHTTPServer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AQHTTPServer.m; sourceTree = "<group>"; };
+		34B6570B183A970D009FA23C /* AQSocket.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AQSocket.h; sourceTree = "<group>"; };
+		34B6570C183A970D009FA23C /* AQSocket.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AQSocket.m; sourceTree = "<group>"; };
+		34B6570D183A970D009FA23C /* AQSocketIOChannel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AQSocketIOChannel.h; sourceTree = "<group>"; };
+		34B6570E183A970D009FA23C /* AQSocketIOChannel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AQSocketIOChannel.m; sourceTree = "<group>"; };
+		34B6570F183A970D009FA23C /* AQSocketReader+PrivateInternal.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "AQSocketReader+PrivateInternal.h"; sourceTree = "<group>"; };
+		34B65710183A970D009FA23C /* AQSocketReader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AQSocketReader.h; sourceTree = "<group>"; };
+		34B65711183A970D009FA23C /* AQSocketReader.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AQSocketReader.m; sourceTree = "<group>"; };
+		34B65712183A970D009FA23C /* DDData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDData.h; sourceTree = "<group>"; };
+		34B65713183A970D009FA23C /* DDData.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDData.m; sourceTree = "<group>"; };
+		34B65714183A970D009FA23C /* DDNumber.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDNumber.h; sourceTree = "<group>"; };
+		34B65715183A970D009FA23C /* DDNumber.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDNumber.m; sourceTree = "<group>"; };
+		34B65716183A970D009FA23C /* DDRange.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDRange.h; sourceTree = "<group>"; };
+		34B65717183A970D009FA23C /* DDRange.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDRange.m; sourceTree = "<group>"; };
+		34B65718183A970D009FA23C /* NSDateFormatter+AQHTTPDateFormatter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSDateFormatter+AQHTTPDateFormatter.h"; sourceTree = "<group>"; };
+		34B65719183A970D009FA23C /* NSDateFormatter+AQHTTPDateFormatter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSDateFormatter+AQHTTPDateFormatter.m"; sourceTree = "<group>"; };
 		34C4064117A43A1700354C33 /* EPubSettingsController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EPubSettingsController.h; sourceTree = "<group>"; };
 		34C4064217A43A1700354C33 /* EPubSettingsController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EPubSettingsController.m; sourceTree = "<group>"; };
 		34C4064617A451D000354C33 /* EPubSettings.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EPubSettings.h; sourceTree = "<group>"; };
@@ -227,6 +267,7 @@
 				34C5534116E15D08003A7C23 /* CFNetwork.framework in Frameworks */,
 				340FC16116BC3B4600346A59 /* CoreGraphics.framework in Frameworks */,
 				340FC15F16BC3B4600346A59 /* Foundation.framework in Frameworks */,
+				348200FC183A9D2D007E72E6 /* MobileCoreServices.framework in Frameworks */,
 				340FC15D16BC3B4600346A59 /* UIKit.framework in Frameworks */,
 				347C58C016BC879400A647B0 /* libePub3-iOS.a in Frameworks */,
 				34B5457C16BCB07800D14838 /* libxml2.dylib in Frameworks */,
@@ -287,6 +328,7 @@
 				34C5534016E15D08003A7C23 /* CFNetwork.framework */,
 				340FC16016BC3B4600346A59 /* CoreGraphics.framework */,
 				340FC15E16BC3B4600346A59 /* Foundation.framework */,
+				348200FB183A9D2D007E72E6 /* MobileCoreServices.framework */,
 				340FC15C16BC3B4600346A59 /* UIKit.framework */,
 				34B5457B16BCB07800D14838 /* libxml2.dylib */,
 				34B5457D16BCB08000D14838 /* libz.dylib */,
@@ -445,10 +487,52 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
+		34B656FE183A970D009FA23C /* SimpleHTTPServer */ = {
+			isa = PBXGroup;
+			children = (
+				34B656FF183A970D009FA23C /* AQHTTPConnection.h */,
+				34B65700183A970D009FA23C /* AQHTTPConnection.m */,
+				34B65701183A970D009FA23C /* AQHTTPConnection_PrivateInternal.h */,
+				34B65702183A970D009FA23C /* AQHTTPFileResponseOperation.h */,
+				34B65703183A970D009FA23C /* AQHTTPFileResponseOperation.m */,
+				34B65704183A970D009FA23C /* AQHTTPRequestOperation.h */,
+				34B65705183A970D009FA23C /* AQHTTPRequestOperation.m */,
+				34B65706183A970D009FA23C /* AQHTTPResponseOperation.h */,
+				34B65707183A970D009FA23C /* AQHTTPResponseOperation.m */,
+				34B65708183A970D009FA23C /* AQHTTPServer.h */,
+				34B65709183A970D009FA23C /* AQHTTPServer.m */,
+				34B6570A183A970D009FA23C /* AQSocket */,
+				34B65712183A970D009FA23C /* DDData.h */,
+				34B65713183A970D009FA23C /* DDData.m */,
+				34B65714183A970D009FA23C /* DDNumber.h */,
+				34B65715183A970D009FA23C /* DDNumber.m */,
+				34B65716183A970D009FA23C /* DDRange.h */,
+				34B65717183A970D009FA23C /* DDRange.m */,
+				34B65718183A970D009FA23C /* NSDateFormatter+AQHTTPDateFormatter.h */,
+				34B65719183A970D009FA23C /* NSDateFormatter+AQHTTPDateFormatter.m */,
+			);
+			path = SimpleHTTPServer;
+			sourceTree = "<group>";
+		};
+		34B6570A183A970D009FA23C /* AQSocket */ = {
+			isa = PBXGroup;
+			children = (
+				34B6570B183A970D009FA23C /* AQSocket.h */,
+				34B6570C183A970D009FA23C /* AQSocket.m */,
+				34B6570D183A970D009FA23C /* AQSocketIOChannel.h */,
+				34B6570E183A970D009FA23C /* AQSocketIOChannel.m */,
+				34B6570F183A970D009FA23C /* AQSocketReader+PrivateInternal.h */,
+				34B65710183A970D009FA23C /* AQSocketReader.h */,
+				34B65711183A970D009FA23C /* AQSocketReader.m */,
+			);
+			path = AQSocket;
+			sourceTree = "<group>";
+		};
 		34C5533316E15C4B003A7C23 /* ThirdParty */ = {
 			isa = PBXGroup;
 			children = (
 				34C5533616E15C54003A7C23 /* AsyncSocket */,
+				34B656FE183A970D009FA23C /* SimpleHTTPServer */,
 			);
 			name = ThirdParty;
 			sourceTree = "<group>";
@@ -588,7 +672,9 @@
 			files = (
 				3462FBBD16BC3C43003C79E1 /* AppDelegate.m in Sources */,
 				34C5533916E15C76003A7C23 /* AsyncSocket.m in Sources */,
+				34B65725183A970D009FA23C /* NSDateFormatter+AQHTTPDateFormatter.m in Sources */,
 				340535AA16BC5DD100D4A802 /* BaseViewController.m in Sources */,
+				34B65722183A970D009FA23C /* DDData.m in Sources */,
 				34B56B431722DB2200A5A4B8 /* Bookmark.m in Sources */,
 				34B56B4C1722DFB700A5A4B8 /* BookmarkDatabase.m in Sources */,
 				34B56B5C17230FDF00A5A4B8 /* BookmarkListController.m in Sources */,
@@ -596,6 +682,9 @@
 				3413980B16C02DE7000912C1 /* ContainerController.m in Sources */,
 				340535B616BC669C00D4A802 /* ContainerList.m in Sources */,
 				340535AD16BC5F4700D4A802 /* ContainerListController.m in Sources */,
+				34B6571F183A970D009FA23C /* AQSocket.m in Sources */,
+				34B65724183A970D009FA23C /* DDRange.m in Sources */,
+				34B6571E183A970D009FA23C /* AQHTTPServer.m in Sources */,
 				34C4064817A451D100354C33 /* EPubSettings.m in Sources */,
 				34C4064317A43A1700354C33 /* EPubSettingsController.m in Sources */,
 				3411DF03175FACC000FCE6D9 /* EPubViewController.m in Sources */,
@@ -606,17 +695,24 @@
 				340535B316BC608900D4A802 /* LocStrError.m in Sources */,
 				3462FBBE16BC3C43003C79E1 /* main.m in Sources */,
 				34CE0B1F1720D8FE00F55192 /* NavigationElementController.m in Sources */,
+				34B6571B183A970D009FA23C /* AQHTTPFileResponseOperation.m in Sources */,
 				341652A316C2F85700AFDB8B /* PackageMetadataController.m in Sources */,
 				349AF4B916EA9B1C00253269 /* PackageResourceCache.m in Sources */,
+				34B65721183A970D009FA23C /* AQSocketReader.m in Sources */,
+				34B65720183A970D009FA23C /* AQSocketIOChannel.m in Sources */,
 				34C5534416E15D32003A7C23 /* PackageResourceServer.m in Sources */,
 				345CA3E516C00F0500B8B56A /* RDContainer.mm in Sources */,
 				34134EF818108B77009FEDFE /* RDMediaOverlaysSmilModel.mm in Sources */,
+				34B6571C183A970D009FA23C /* AQHTTPRequestOperation.m in Sources */,
 				34CE0B1A1720CC0300F55192 /* RDNavigationElement.mm in Sources */,
+				34B6571A183A970D009FA23C /* AQHTTPConnection.m in Sources */,
 				3413981016C03062000912C1 /* RDPackage.mm in Sources */,
 				34C5533F16E15CDF003A7C23 /* RDPackageResource.mm in Sources */,
 				34134EFB18109660009FEDFE /* RDSmilData.mm in Sources */,
 				34A94D9716C060E000FD4143 /* RDSpineItem.mm in Sources */,
+				34B65723183A970D009FA23C /* DDNumber.m in Sources */,
 				34B56B4F1722E54A00A5A4B8 /* Settings.m in Sources */,
+				34B6571D183A970D009FA23C /* AQHTTPResponseOperation.m in Sources */,
 				341652A816C2F9E700AFDB8B /* SpineItemListController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

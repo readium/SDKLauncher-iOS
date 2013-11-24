@@ -23,7 +23,7 @@
 	@private NSString *m_relativePath;
 }
 
-@property (nonatomic, readonly) void *archiveReader;
+@property (nonatomic, readonly) void *byteStream;
 
 // The content of the resource in its entirety.  If you call this, don't call
 // createNextChunkByReading.
@@ -39,7 +39,7 @@
 // Creates an instance using the given C++ object.
 - (id)
 	initWithDelegate:(id <RDPackageResourceDelegate>)delegate
-	archiveReader:(void *)archiveReader
+	byteStream:(void *)byteStream
 	relativePath:(NSString *)relativePath;
 
 @end

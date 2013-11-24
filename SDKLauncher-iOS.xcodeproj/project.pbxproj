@@ -29,8 +29,6 @@
 		3436EB2A1790C3F300246925 /* host_app_feedback.js in Resources */ = {isa = PBXBuildFile; fileRef = 341A1F701790BC6800E603C4 /* host_app_feedback.js */; };
 		345CA3E516C00F0500B8B56A /* RDContainer.mm in Sources */ = {isa = PBXBuildFile; fileRef = 345CA3E416C00F0500B8B56A /* RDContainer.mm */; };
 		345DA0DD16C310F500E7285C /* Constants.m in Sources */ = {isa = PBXBuildFile; fileRef = 345DA0DC16C310F400E7285C /* Constants.m */; };
-		345DA0E216C3151E00E7285C /* EPubURLProtocol.m in Sources */ = {isa = PBXBuildFile; fileRef = 345DA0E116C3151E00E7285C /* EPubURLProtocol.m */; };
-		345DA0E516C334B300E7285C /* EPubURLProtocolBridge.m in Sources */ = {isa = PBXBuildFile; fileRef = 345DA0E416C334B300E7285C /* EPubURLProtocolBridge.m */; };
 		3462FBBD16BC3C43003C79E1 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 3462FBBB16BC3C43003C79E1 /* AppDelegate.m */; };
 		3462FBBE16BC3C43003C79E1 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 3462FBBC16BC3C43003C79E1 /* main.m */; };
 		3462FBC816BC3C8F003C79E1 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 3462FBC316BC3C8F003C79E1 /* Localizable.strings */; };
@@ -43,6 +41,8 @@
 		3462FBEC16BC40F9003C79E1 /* Default@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 3462FBE516BC40F9003C79E1 /* Default@2x.png */; };
 		347C58C016BC879400A647B0 /* libePub3-iOS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 347C58BB16BC873700A647B0 /* libePub3-iOS.a */; };
 		348200FC183A9D2D007E72E6 /* MobileCoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 348200FB183A9D2D007E72E6 /* MobileCoreServices.framework */; };
+		3499B0C218413A40002D8AEA /* PackageResourceResponseOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = 3499B0C118413A40002D8AEA /* PackageResourceResponseOperation.m */; };
+		3499B0C518413C68002D8AEA /* PackageResourceConnection.m in Sources */ = {isa = PBXBuildFile; fileRef = 3499B0C418413C68002D8AEA /* PackageResourceConnection.m */; };
 		349AF4B916EA9B1C00253269 /* PackageResourceCache.m in Sources */ = {isa = PBXBuildFile; fileRef = 349AF4B816EA9B1C00253269 /* PackageResourceCache.m */; };
 		34A94D9716C060E000FD4143 /* RDSpineItem.mm in Sources */ = {isa = PBXBuildFile; fileRef = 34A94D9616C060E000FD4143 /* RDSpineItem.mm */; };
 		34B53528170B3E60000D384F /* readium-shared-js in Resources */ = {isa = PBXBuildFile; fileRef = 34B53527170B3E60000D384F /* readium-shared-js */; };
@@ -67,8 +67,6 @@
 		34B65725183A970D009FA23C /* NSDateFormatter+AQHTTPDateFormatter.m in Sources */ = {isa = PBXBuildFile; fileRef = 34B65719183A970D009FA23C /* NSDateFormatter+AQHTTPDateFormatter.m */; };
 		34C4064317A43A1700354C33 /* EPubSettingsController.m in Sources */ = {isa = PBXBuildFile; fileRef = 34C4064217A43A1700354C33 /* EPubSettingsController.m */; };
 		34C4064817A451D100354C33 /* EPubSettings.m in Sources */ = {isa = PBXBuildFile; fileRef = 34C4064717A451D100354C33 /* EPubSettings.m */; };
-		34C5533916E15C76003A7C23 /* AsyncSocket.m in Sources */ = {isa = PBXBuildFile; fileRef = 34C5533816E15C76003A7C23 /* AsyncSocket.m */; };
-		34C5533C16E15CCB003A7C23 /* HTMLUtil.m in Sources */ = {isa = PBXBuildFile; fileRef = 34C5533B16E15CCB003A7C23 /* HTMLUtil.m */; };
 		34C5533F16E15CDF003A7C23 /* RDPackageResource.mm in Sources */ = {isa = PBXBuildFile; fileRef = 34C5533E16E15CDF003A7C23 /* RDPackageResource.mm */; };
 		34C5534116E15D08003A7C23 /* CFNetwork.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 34C5534016E15D08003A7C23 /* CFNetwork.framework */; };
 		34C5534416E15D32003A7C23 /* PackageResourceServer.m in Sources */ = {isa = PBXBuildFile; fileRef = 34C5534316E15D32003A7C23 /* PackageResourceServer.m */; };
@@ -162,10 +160,6 @@
 		345CA3E416C00F0500B8B56A /* RDContainer.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = RDContainer.mm; sourceTree = "<group>"; };
 		345DA0DB16C310F400E7285C /* Constants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Constants.h; sourceTree = "<group>"; };
 		345DA0DC16C310F400E7285C /* Constants.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Constants.m; sourceTree = "<group>"; };
-		345DA0E016C3151E00E7285C /* EPubURLProtocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EPubURLProtocol.h; sourceTree = "<group>"; };
-		345DA0E116C3151E00E7285C /* EPubURLProtocol.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EPubURLProtocol.m; sourceTree = "<group>"; };
-		345DA0E316C334B300E7285C /* EPubURLProtocolBridge.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EPubURLProtocolBridge.h; sourceTree = "<group>"; };
-		345DA0E416C334B300E7285C /* EPubURLProtocolBridge.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EPubURLProtocolBridge.m; sourceTree = "<group>"; };
 		3462FBBA16BC3C43003C79E1 /* AppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		3462FBBB16BC3C43003C79E1 /* AppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
 		3462FBBC16BC3C43003C79E1 /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
@@ -181,6 +175,10 @@
 		3462FBE516BC40F9003C79E1 /* Default@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default@2x.png"; sourceTree = "<group>"; };
 		347C58B216BC873700A647B0 /* ePub3.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = ePub3.xcodeproj; path = "readium-sdk/Platform/Apple/ePub3.xcodeproj"; sourceTree = "<group>"; };
 		348200FB183A9D2D007E72E6 /* MobileCoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MobileCoreServices.framework; path = System/Library/Frameworks/MobileCoreServices.framework; sourceTree = SDKROOT; };
+		3499B0C018413A40002D8AEA /* PackageResourceResponseOperation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PackageResourceResponseOperation.h; sourceTree = "<group>"; };
+		3499B0C118413A40002D8AEA /* PackageResourceResponseOperation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PackageResourceResponseOperation.m; sourceTree = "<group>"; };
+		3499B0C318413C68002D8AEA /* PackageResourceConnection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PackageResourceConnection.h; sourceTree = "<group>"; };
+		3499B0C418413C68002D8AEA /* PackageResourceConnection.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PackageResourceConnection.m; sourceTree = "<group>"; };
 		349AF4B716EA9B1C00253269 /* PackageResourceCache.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PackageResourceCache.h; sourceTree = "<group>"; };
 		349AF4B816EA9B1C00253269 /* PackageResourceCache.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PackageResourceCache.m; sourceTree = "<group>"; };
 		34A94D9516C060E000FD4143 /* RDSpineItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RDSpineItem.h; sourceTree = "<group>"; };
@@ -227,10 +225,6 @@
 		34C4064217A43A1700354C33 /* EPubSettingsController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EPubSettingsController.m; sourceTree = "<group>"; };
 		34C4064617A451D000354C33 /* EPubSettings.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EPubSettings.h; sourceTree = "<group>"; };
 		34C4064717A451D100354C33 /* EPubSettings.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EPubSettings.m; sourceTree = "<group>"; };
-		34C5533716E15C76003A7C23 /* AsyncSocket.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AsyncSocket.h; sourceTree = "<group>"; };
-		34C5533816E15C76003A7C23 /* AsyncSocket.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AsyncSocket.m; sourceTree = "<group>"; };
-		34C5533A16E15CCB003A7C23 /* HTMLUtil.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HTMLUtil.h; sourceTree = "<group>"; };
-		34C5533B16E15CCB003A7C23 /* HTMLUtil.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HTMLUtil.m; sourceTree = "<group>"; };
 		34C5533D16E15CDF003A7C23 /* RDPackageResource.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RDPackageResource.h; sourceTree = "<group>"; };
 		34C5533E16E15CDF003A7C23 /* RDPackageResource.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = RDPackageResource.mm; sourceTree = "<group>"; };
 		34C5534016E15D08003A7C23 /* CFNetwork.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CFNetwork.framework; path = System/Library/Frameworks/CFNetwork.framework; sourceTree = SDKROOT; };
@@ -361,14 +355,8 @@
 				34C4064717A451D100354C33 /* EPubSettings.m */,
 				34C4064117A43A1700354C33 /* EPubSettingsController.h */,
 				34C4064217A43A1700354C33 /* EPubSettingsController.m */,
-				345DA0E016C3151E00E7285C /* EPubURLProtocol.h */,
-				345DA0E116C3151E00E7285C /* EPubURLProtocol.m */,
-				345DA0E316C334B300E7285C /* EPubURLProtocolBridge.h */,
-				345DA0E416C334B300E7285C /* EPubURLProtocolBridge.m */,
 				3411DF01175FACC000FCE6D9 /* EPubViewController.h */,
 				3411DF02175FACC000FCE6D9 /* EPubViewController.m */,
-				34C5533A16E15CCB003A7C23 /* HTMLUtil.h */,
-				34C5533B16E15CCB003A7C23 /* HTMLUtil.m */,
 				340535AE16BC608900D4A802 /* LocStr.h */,
 				340535AF16BC608900D4A802 /* LocStr.m */,
 				340535B016BC608900D4A802 /* LocStrError.h */,
@@ -378,10 +366,6 @@
 				34CE0B1E1720D8FE00F55192 /* NavigationElementController.m */,
 				341652A116C2F85700AFDB8B /* PackageMetadataController.h */,
 				341652A216C2F85700AFDB8B /* PackageMetadataController.m */,
-				349AF4B716EA9B1C00253269 /* PackageResourceCache.h */,
-				349AF4B816EA9B1C00253269 /* PackageResourceCache.m */,
-				34C5534216E15D32003A7C23 /* PackageResourceServer.h */,
-				34C5534316E15D32003A7C23 /* PackageResourceServer.m */,
 				34B56B4D1722E54A00A5A4B8 /* Settings.h */,
 				34B56B4E1722E54A00A5A4B8 /* Settings.m */,
 				341652A616C2F9E700AFDB8B /* SpineItemListController.h */,
@@ -415,6 +399,7 @@
 			isa = PBXGroup;
 			children = (
 				345CA3E116C00EE100B8B56A /* Main */,
+				3499B0BA184139DB002D8AEA /* PackageResource */,
 				345CA3E216C00EE600B8B56A /* RDServices */,
 				34C5533316E15C4B003A7C23 /* ThirdParty */,
 			);
@@ -487,6 +472,21 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
+		3499B0BA184139DB002D8AEA /* PackageResource */ = {
+			isa = PBXGroup;
+			children = (
+				349AF4B716EA9B1C00253269 /* PackageResourceCache.h */,
+				349AF4B816EA9B1C00253269 /* PackageResourceCache.m */,
+				3499B0C318413C68002D8AEA /* PackageResourceConnection.h */,
+				3499B0C418413C68002D8AEA /* PackageResourceConnection.m */,
+				3499B0C018413A40002D8AEA /* PackageResourceResponseOperation.h */,
+				3499B0C118413A40002D8AEA /* PackageResourceResponseOperation.m */,
+				34C5534216E15D32003A7C23 /* PackageResourceServer.h */,
+				34C5534316E15D32003A7C23 /* PackageResourceServer.m */,
+			);
+			name = PackageResource;
+			sourceTree = "<group>";
+		};
 		34B656FE183A970D009FA23C /* SimpleHTTPServer */ = {
 			isa = PBXGroup;
 			children = (
@@ -531,19 +531,9 @@
 		34C5533316E15C4B003A7C23 /* ThirdParty */ = {
 			isa = PBXGroup;
 			children = (
-				34C5533616E15C54003A7C23 /* AsyncSocket */,
 				34B656FE183A970D009FA23C /* SimpleHTTPServer */,
 			);
 			name = ThirdParty;
-			sourceTree = "<group>";
-		};
-		34C5533616E15C54003A7C23 /* AsyncSocket */ = {
-			isa = PBXGroup;
-			children = (
-				34C5533716E15C76003A7C23 /* AsyncSocket.h */,
-				34C5533816E15C76003A7C23 /* AsyncSocket.m */,
-			);
-			name = AsyncSocket;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -671,7 +661,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				3462FBBD16BC3C43003C79E1 /* AppDelegate.m in Sources */,
-				34C5533916E15C76003A7C23 /* AsyncSocket.m in Sources */,
 				34B65725183A970D009FA23C /* NSDateFormatter+AQHTTPDateFormatter.m in Sources */,
 				340535AA16BC5DD100D4A802 /* BaseViewController.m in Sources */,
 				34B65722183A970D009FA23C /* DDData.m in Sources */,
@@ -688,9 +677,6 @@
 				34C4064817A451D100354C33 /* EPubSettings.m in Sources */,
 				34C4064317A43A1700354C33 /* EPubSettingsController.m in Sources */,
 				3411DF03175FACC000FCE6D9 /* EPubViewController.m in Sources */,
-				345DA0E216C3151E00E7285C /* EPubURLProtocol.m in Sources */,
-				345DA0E516C334B300E7285C /* EPubURLProtocolBridge.m in Sources */,
-				34C5533C16E15CCB003A7C23 /* HTMLUtil.m in Sources */,
 				340535B216BC608900D4A802 /* LocStr.m in Sources */,
 				340535B316BC608900D4A802 /* LocStrError.m in Sources */,
 				3462FBBE16BC3C43003C79E1 /* main.m in Sources */,
@@ -698,6 +684,7 @@
 				34B6571B183A970D009FA23C /* AQHTTPFileResponseOperation.m in Sources */,
 				341652A316C2F85700AFDB8B /* PackageMetadataController.m in Sources */,
 				349AF4B916EA9B1C00253269 /* PackageResourceCache.m in Sources */,
+				3499B0C518413C68002D8AEA /* PackageResourceConnection.m in Sources */,
 				34B65721183A970D009FA23C /* AQSocketReader.m in Sources */,
 				34B65720183A970D009FA23C /* AQSocketIOChannel.m in Sources */,
 				34C5534416E15D32003A7C23 /* PackageResourceServer.m in Sources */,
@@ -706,6 +693,7 @@
 				34B6571C183A970D009FA23C /* AQHTTPRequestOperation.m in Sources */,
 				34CE0B1A1720CC0300F55192 /* RDNavigationElement.mm in Sources */,
 				34B6571A183A970D009FA23C /* AQHTTPConnection.m in Sources */,
+				3499B0C218413A40002D8AEA /* PackageResourceResponseOperation.m in Sources */,
 				3413981016C03062000912C1 /* RDPackage.mm in Sources */,
 				34C5533F16E15CDF003A7C23 /* RDPackageResource.mm in Sources */,
 				34134EFB18109660009FEDFE /* RDSmilData.mm in Sources */,

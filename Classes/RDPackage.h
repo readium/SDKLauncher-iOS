@@ -21,8 +21,6 @@
 	@private RDNavigationElement *m_navElemPageList;
 	@private RDNavigationElement *m_navElemTableOfContents;
 	@private NSString *m_packageUUID;
-	@private NSMutableSet *m_relativePathsThatAreHTML;
-	@private NSMutableSet *m_relativePathsThatAreNotHTML;
 	@private NSMutableArray *m_spineItems;
 	@private NSMutableArray *m_subjects;
 }
@@ -52,8 +50,7 @@
 
 - (id)initWithPackage:(void *)package;
 
-// Returns the resource at the given relative path or nil if it doesn't exist.  The isHTML out
-// parameter returns whether or not the resource is HTML.
-- (RDPackageResource *)resourceAtRelativePath:(NSString *)relativePath isHTML:(BOOL *)isHTML;
+// Returns the resource at the given relative path or nil if it doesn't exist.
+- (RDPackageResource *)resourceAtRelativePath:(NSString *)relativePath;
 
 @end

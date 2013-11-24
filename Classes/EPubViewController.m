@@ -11,8 +11,6 @@
 #import "BookmarkDatabase.h"
 #import "EPubSettings.h"
 #import "EPubSettingsController.h"
-#import "EPubURLProtocolBridge.h"
-#import "HTMLUtil.h"
 #import "PackageResourceServer.h"
 #import "RDContainer.h"
 #import "RDNavigationElement.h"
@@ -26,39 +24,6 @@
 #include <unistd.h>
 #include <sys/sysctl.h>
 
-//https://developer.apple.com/library/mac/qa/qa1361/_index.html
-static bool AmIBeingDebugged(void)
-// Returns true if the current process is being debugged (either
-// running under the debugger or has a debugger attached post facto).
-{
-    int                 junk;
-    int                 mib[4];
-    struct kinfo_proc   info;
-    size_t              size;
-
-    // Initialize the flags so that, if sysctl fails for some bizarre
-    // reason, we get a predictable result.
-
-    info.kp_proc.p_flag = 0;
-
-    // Initialize mib, which tells sysctl the info we want, in this case
-    // we're looking for information about a specific process ID.
-
-    mib[0] = CTL_KERN;
-    mib[1] = KERN_PROC;
-    mib[2] = KERN_PROC_PID;
-    mib[3] = getpid();
-
-    // Call sysctl.
-
-    size = sizeof(info);
-    junk = sysctl(mib, sizeof(mib) / sizeof(*mib), &info, &size, NULL, 0);
-    assert(junk == 0);
-
-    // We're being debugged if the P_TRACED flag is set.
-
-    return ( (info.kp_proc.p_flag & P_TRACED) != 0 );
-}
 
 @interface EPubViewController ()
 
@@ -303,23 +268,17 @@ static bool AmIBeingDebugged(void)
 	[nc addObserver:self selector:@selector(onEPubSettingsDidChange:)
 		name:kSDKLauncherEPubSettingsDidChange object:nil];
 
-	[nc addObserver:self selector:@selector(onProtocolBridgeNeedsResponse:)
-		name:kSDKLauncherEPubURLProtocolBridgeNeedsResponse object:nil];
-
 	// Web view
 
 	m_webView = [[[UIWebView alloc] init] autorelease];
 	m_webView.delegate = self;
 	m_webView.hidden = YES;
+	m_webView.scalesPageToFit = YES;
 	m_webView.scrollView.bounces = NO;
-    m_webView.scalesPageToFit = YES;
 	[self.view addSubview:m_webView];
 
-	NSString *url = [NSString stringWithFormat:@"%@://%@/%@",
-		kSDKLauncherWebViewSDKProtocol,
-		m_package.packageUUID,
-		m_spineItem.baseHref];
-
+	NSString *url = [NSString stringWithFormat:
+		@"http://localhost:%d/reader.html", m_resourceServer.port];
 	[m_webView loadRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:url]]];
 }
 
@@ -372,67 +331,6 @@ static bool AmIBeingDebugged(void)
 
 - (void)onEPubSettingsDidChange:(NSNotification *)notification {
 	[self passSettingsToJavaScript];
-}
-
-
-- (void)onProtocolBridgeNeedsResponse:(NSNotification *)notification {
-	NSURL *url = [notification.userInfo objectForKey:@"url"];
-	NSString *s = url.absoluteString;
-	NSString *prefix = [kSDKLauncherWebViewSDKProtocol stringByAppendingString:@"://"];
-
-	if (s == nil || ![s hasPrefix:prefix] || s.length == prefix.length) {
-		return;
-	}
-
-	s = [s substringFromIndex:prefix.length];
-	NSRange range = [s rangeOfString:@"/"];
-
-	if (range.location == NSNotFound) {
-		return;
-	}
-
-	NSString *packageUUID = [s substringToIndex:range.location];
-
-	if (![packageUUID isEqualToString:m_package.packageUUID]) {
-		return;
-	}
-
-	s = [s substringFromIndex:packageUUID.length];
-
-	if (![s hasPrefix:@"/"]) {
-		return;
-	}
-
-	NSString *relativePath = [s substringFromIndex:1];
-	BOOL isHTML = NO;
-	NSData *data = [m_package resourceAtRelativePath:relativePath isHTML:&isHTML].data;
-	EPubURLProtocolBridge *bridge = notification.object;
-
-	BOOL didHandleFirstRequest = m_didHandleFirstRequest;
-	m_didHandleFirstRequest = YES;
-
-	if (isHTML) {
-		NSString *html = nil;
-
-		if (didHandleFirstRequest) {
-			html = [HTMLUtil
-				htmlByReplacingMediaURLsInHTML:[self htmlFromData:data]
-				relativePath:relativePath
-				packageUUID:m_package.packageUUID];
-		}
-		else {
-			// Return reader.html, which in turn will load the intended HTML.
-			html = [HTMLUtil readerHTML];
-		}
-
-		if (html != nil && html.length > 0) {
-			data = [html dataUsingEncoding:NSUTF8StringEncoding];
-		}
-	}
-
-	if (data != nil) {
-		bridge.currentData = data;
-	}
 }
 
 
@@ -631,20 +529,8 @@ static bool AmIBeingDebugged(void)
 			if (data != nil) {
 				NSString *arg = [[[NSString alloc] initWithData:data
 					encoding:NSUTF8StringEncoding] autorelease];
-
-                NSString* jsCode = @"ReadiumSDK.reader.openBook(%@)";
-#ifdef DEBUG
-if (false && // annoying, confusing break! :(
-    AmIBeingDebugged())
-{
-    // OPEN THE SAFARI REMOTE DEBUGGER HERE, THEN RESUME EXECUTION! :)
-    kill (getpid(), SIGSTOP);
-
-    jsCode = @"setTimeout(function(){ReadiumSDK.reader.openBook(%@);}, 1000)";
-}
-#endif
-
-                [m_webView stringByEvaluatingJavaScriptFromString:[NSString stringWithFormat: jsCode, arg]];
+				[m_webView stringByEvaluatingJavaScriptFromString:[NSString
+					stringWithFormat:@"ReadiumSDK.reader.openBook(%@)", arg]];
 			}
 		}
 		else if ([url hasPrefix:s]) {

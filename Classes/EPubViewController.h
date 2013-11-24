@@ -27,7 +27,6 @@
 	@private int m_currentPageIndex;
 	@private BOOL m_currentPageProgressionIsLTR;
 	@private int m_currentSpineItemIndex;
-	@private BOOL m_didHandleFirstRequest;
 	@private NSString *m_initialCFI;
 	@private RDNavigationElement *m_navElement;
 	@private RDPackage *m_package;

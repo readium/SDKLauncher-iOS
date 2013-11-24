@@ -68,8 +68,7 @@ static NSData *m_key = nil;
 	NSString *path = [self absolutePathForRelativePath:relativePath];
 	NSFileManager *fm = [NSFileManager defaultManager];
 	[fm removeItemAtPath:path error:nil];
-	[fm createDirectoryAtPath:m_basePath withIntermediateDirectories:YES attributes:nil
-		error:nil];
+	[fm createDirectoryAtPath:m_basePath withIntermediateDirectories:YES attributes:nil error:nil];
 
 	NSOutputStream *stream = [NSOutputStream outputStreamToFileAtPath:path append:NO];
 	[stream open];

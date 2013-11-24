@@ -7,11 +7,11 @@
 //
 
 #import "RDPackageResource.h"
-#import <ePub3/archive.h>
+#import <ePub3/utilities/byte_stream.h>
 
 
 @interface RDPackageResource() {
-	@private ePub3::ArchiveReader *m_archiveReader;
+	@private ePub3::ByteStream *m_byteStream;
 }
 
 @end
@@ -20,12 +20,12 @@
 @implementation RDPackageResource
 
 
-@synthesize archiveReader = m_archiveReader;
+@synthesize byteStream = m_byteStream;
 @synthesize relativePath = m_relativePath;
 
 
 - (NSData *)createNextChunkByReading {
-	ssize_t count = m_archiveReader->read(m_buffer, sizeof(m_buffer));
+	ePub3::ByteStream::size_type count = m_byteStream->ReadBytes(m_buffer, sizeof(m_buffer));
 	return (count == 0) ? nil : [[NSData alloc] initWithBytes:m_buffer length:count];
 }
 
@@ -65,16 +65,16 @@
 
 - (id)
 	initWithDelegate:(id <RDPackageResourceDelegate>)delegate
-	archiveReader:(void *)archiveReader
+	byteStream:(void *)byteStream
 	relativePath:(NSString *)relativePath
 {
-	if (archiveReader == nil || relativePath == nil || relativePath.length == 0) {
+	if (byteStream == nil || relativePath == nil || relativePath.length == 0) {
 		[self release];
 		return nil;
 	}
 
 	if (self = [super init]) {
-		m_archiveReader = (ePub3::ArchiveReader *)archiveReader;
+		m_byteStream = (ePub3::ByteStream *)byteStream;
 		m_delegate = delegate;
 		m_relativePath = [relativePath retain];
 	}

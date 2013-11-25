@@ -14,6 +14,8 @@
 	@private ePub3::ByteStream *m_byteStream;
 }
 
+- (NSData *)createNextChunkByReading;
+
 @end
 
 
@@ -32,21 +34,31 @@
 
 - (NSData *)data {
 	if (m_data == nil) {
-		NSMutableData *md = [NSMutableData data];
 
-		while (YES) {
-			NSData *chunk = [self createNextChunkByReading];
+		//
+		// There are some issues when reading multiple byte streams in parallel. For now,
+		// synchronize all byte stream reading (using a class object).
+		//
 
-			if (chunk != nil) {
-				[md appendData:chunk];
-				[chunk release];
-			}
-			else {
-				break;
+		@synchronized ([RDPackageResource class]) {
+			if (m_data == nil) {
+				NSMutableData *md = [NSMutableData data];
+
+				while (YES) {
+					NSData *chunk = [self createNextChunkByReading];
+
+					if (chunk != nil) {
+						[md appendData:chunk];
+						[chunk release];
+					}
+					else {
+						break;
+					}
+				}
+
+				m_data = [md retain];
 			}
 		}
-
-		m_data = [md retain];
 	}
 
 	return m_data;

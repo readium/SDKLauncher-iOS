@@ -7,7 +7,7 @@
 //
 
 #import "PackageResourceResponseOperation.h"
-#import "PackageResourceCache.h"
+#import "PackageResourceServer.h"
 #import "RDPackage.h"
 #import "RDPackageResource.h"
 
@@ -87,20 +87,10 @@
 		return [NSInputStream inputStreamWithURL:[NSURL fileURLWithPath:m_fileSystemPath]];
 	}
 
-	if (_ranges != nil) {
-		//!@# handle this
-	}
-
 	if (m_packageResource != nil) {
 		return [NSInputStream inputStreamWithData:m_packageResource.data];
 	}
 
-	return nil;
-}
-
-
-- (NSData *)readDataFromByteRange:(DDRange)range {
-	//!@# handle range requests
 	return nil;
 }
 
@@ -110,15 +100,6 @@
 		NSDictionary *attrs = [[NSFileManager defaultManager]
 			attributesOfItemAtPath:m_fileSystemPath error:nil];
 		return (attrs == nil) ? 0 : attrs.fileSize;
-	}
-
-	if (_ranges != nil) {
-		if ([rootRelativePath hasPrefix:@"/"]) {
-			rootRelativePath = [rootRelativePath substringFromIndex:1];
-		}
-
-		PackageResourceCache *cache = [PackageResourceCache shared];
-		return [cache contentLengthAtRelativePath:rootRelativePath];
 	}
 
 	if (m_packageResource != nil) {

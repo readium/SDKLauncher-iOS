@@ -7,7 +7,6 @@
 //
 
 #import "PackageResourceConnection.h"
-#import "PackageResourceCache.h"
 #import "PackageResourceResponseOperation.h"
 #import "RDPackage.h"
 
@@ -41,12 +40,12 @@ static RDPackage *m_package = nil;
 	PackageResourceResponseOperation *op = nil;
 
 	if ([[NSFileManager defaultManager] fileExistsAtPath:fileSystemPath]) {
-		op = [[PackageResourceResponseOperation alloc]
+		op = [[[PackageResourceResponseOperation alloc]
 			initWithRequest:request
 			socket:self.socket
 			ranges:nil
 			forConnection:self
-			fileSystemPath:fileSystemPath];
+			fileSystemPath:fileSystemPath] autorelease];
 	}
 	else {
 		NSString *path = url.path;
@@ -70,24 +69,16 @@ static RDPackage *m_package = nil;
 			NSArray *ranges = nil;
 
 			if (rangeHeader != nil && rangeHeader.length > 0) {
-				PackageResourceCache *cache = [PackageResourceCache shared];
-				int contentLength = [cache contentLengthAtRelativePath:path];
-
-				if (contentLength == 0) {
-					[cache addResource:resource];
-					contentLength = [cache contentLengthAtRelativePath:path];
-				}
-
-				ranges = [self parseRangeRequest:rangeHeader withContentLength:contentLength];
+				ranges = [self parseRangeRequest:rangeHeader withContentLength:resource.data.length];
 			}
 
-			op = [[PackageResourceResponseOperation alloc]
+			op = [[[PackageResourceResponseOperation alloc]
 				initWithRequest:request
 				socket:self.socket
 				ranges:ranges
 				forConnection:self
 				package:m_package
-				packageResource:resource];
+				packageResource:resource] autorelease];
 		}
 	}
 

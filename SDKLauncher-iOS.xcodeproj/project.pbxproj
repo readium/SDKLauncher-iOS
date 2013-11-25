@@ -43,7 +43,6 @@
 		348200FC183A9D2D007E72E6 /* MobileCoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 348200FB183A9D2D007E72E6 /* MobileCoreServices.framework */; };
 		3499B0C218413A40002D8AEA /* PackageResourceResponseOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = 3499B0C118413A40002D8AEA /* PackageResourceResponseOperation.m */; };
 		3499B0C518413C68002D8AEA /* PackageResourceConnection.m in Sources */ = {isa = PBXBuildFile; fileRef = 3499B0C418413C68002D8AEA /* PackageResourceConnection.m */; };
-		349AF4B916EA9B1C00253269 /* PackageResourceCache.m in Sources */ = {isa = PBXBuildFile; fileRef = 349AF4B816EA9B1C00253269 /* PackageResourceCache.m */; };
 		34A94D9716C060E000FD4143 /* RDSpineItem.mm in Sources */ = {isa = PBXBuildFile; fileRef = 34A94D9616C060E000FD4143 /* RDSpineItem.mm */; };
 		34B53528170B3E60000D384F /* readium-shared-js in Resources */ = {isa = PBXBuildFile; fileRef = 34B53527170B3E60000D384F /* readium-shared-js */; };
 		34B5457C16BCB07800D14838 /* libxml2.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 34B5457B16BCB07800D14838 /* libxml2.dylib */; };
@@ -179,8 +178,6 @@
 		3499B0C118413A40002D8AEA /* PackageResourceResponseOperation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PackageResourceResponseOperation.m; sourceTree = "<group>"; };
 		3499B0C318413C68002D8AEA /* PackageResourceConnection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PackageResourceConnection.h; sourceTree = "<group>"; };
 		3499B0C418413C68002D8AEA /* PackageResourceConnection.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PackageResourceConnection.m; sourceTree = "<group>"; };
-		349AF4B716EA9B1C00253269 /* PackageResourceCache.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PackageResourceCache.h; sourceTree = "<group>"; };
-		349AF4B816EA9B1C00253269 /* PackageResourceCache.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PackageResourceCache.m; sourceTree = "<group>"; };
 		34A94D9516C060E000FD4143 /* RDSpineItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RDSpineItem.h; sourceTree = "<group>"; };
 		34A94D9616C060E000FD4143 /* RDSpineItem.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = RDSpineItem.mm; sourceTree = "<group>"; };
 		34B53527170B3E60000D384F /* readium-shared-js */ = {isa = PBXFileReference; lastKnownFileType = folder; path = "readium-shared-js"; sourceTree = "<group>"; };
@@ -475,8 +472,6 @@
 		3499B0BA184139DB002D8AEA /* PackageResource */ = {
 			isa = PBXGroup;
 			children = (
-				349AF4B716EA9B1C00253269 /* PackageResourceCache.h */,
-				349AF4B816EA9B1C00253269 /* PackageResourceCache.m */,
 				3499B0C318413C68002D8AEA /* PackageResourceConnection.h */,
 				3499B0C418413C68002D8AEA /* PackageResourceConnection.m */,
 				3499B0C018413A40002D8AEA /* PackageResourceResponseOperation.h */,
@@ -683,7 +678,6 @@
 				34CE0B1F1720D8FE00F55192 /* NavigationElementController.m in Sources */,
 				34B6571B183A970D009FA23C /* AQHTTPFileResponseOperation.m in Sources */,
 				341652A316C2F85700AFDB8B /* PackageMetadataController.m in Sources */,
-				349AF4B916EA9B1C00253269 /* PackageResourceCache.m in Sources */,
 				3499B0C518413C68002D8AEA /* PackageResourceConnection.m in Sources */,
 				34B65721183A970D009FA23C /* AQSocketReader.m in Sources */,
 				34B65720183A970D009FA23C /* AQSocketIOChannel.m in Sources */,

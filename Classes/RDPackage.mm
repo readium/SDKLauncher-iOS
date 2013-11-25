@@ -71,7 +71,7 @@
 	NSMutableDictionary *dictRoot = [NSMutableDictionary dictionary];
 
 	[dictRoot setObject:@"/" forKey:@"rootUrl"];
-	[dictRoot setObject:@"/" forKey:@"rootUrlMO"]; // !@# need to verify if this is correct
+	[dictRoot setObject:@"/" forKey:@"rootUrlMO"];
 
 	[dictRoot setObject:self.mediaOverlaysSmilModel.dictionary forKey:@"media_overlay"];
 

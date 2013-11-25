@@ -8,7 +8,6 @@
 
 #import "PackageResourceServer.h"
 #import "AQHTTPServer.h"
-#import "PackageResourceCache.h"
 #import "PackageResourceConnection.h"
 #import "RDPackage.h"
 #import "RDPackageResource.h"
@@ -18,8 +17,6 @@
 
 
 - (void)dealloc {
-	[PackageResourceConnection setPackage:nil];
-
 	if (m_httpServer != nil) {
 		if (m_httpServer.isListening) {
 			[m_httpServer stop];
@@ -29,7 +26,9 @@
 		m_httpServer = nil;
 	}
 
+	[PackageResourceConnection setPackage:nil];
 	[m_package release];
+
 	[super dealloc];
 }
 

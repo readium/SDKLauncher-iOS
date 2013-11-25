@@ -25,16 +25,11 @@
 
 @property (nonatomic, readonly) void *byteStream;
 
-// The content of the resource in its entirety.  If you call this, don't call
-// createNextChunkByReading.
+// The content of the resource in its entirety.
 @property (nonatomic, readonly) NSData *data;
 
 // The relative path associated with this resource.
 @property (nonatomic, readonly) NSString *relativePath;
-
-// The next chunk of data for the resource, or nil if we have finished reading all chunks.  If
-// you call this, don't call the data property.
-- (NSData *)createNextChunkByReading;
 
 // Creates an instance using the given C++ object.
 - (id)

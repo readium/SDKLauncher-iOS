@@ -124,7 +124,7 @@
 
 - (NSArray *)smilDatas {
 	if (m_smilDatas == nil) {
-		std::vector<ePub3::SMILDataPtr>::size_type count = m_smilModel->GetSmilCount();
+		std::vector<std::shared_ptr<ePub3::SMILData>>::size_type count = m_smilModel->GetSmilCount();
 		NSMutableArray *array = [[NSMutableArray alloc] initWithCapacity:count];
 		m_smilDatas = array;
 

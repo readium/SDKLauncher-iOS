@@ -7,8 +7,8 @@
 //
 
 #import "RDContainer.h"
-#import <ePub3/archive.h>
 #import <ePub3/container.h>
+#import <ePub3/initialization.h>
 #import "RDPackage.h"
 
 
@@ -35,7 +35,8 @@
 
 
 + (void)initialize {
-	ePub3::Archive::Initialize();
+    ePub3::InitializeSdk();
+    ePub3::PopulateFilterManager();
 }
 
 

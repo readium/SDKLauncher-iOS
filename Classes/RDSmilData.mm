@@ -27,7 +27,7 @@
 
 - (NSDictionary *)bodyDictionary {
 	if (m_bodyDictionary == nil) {
-		const ePub3::SMILData::Sequence *sequence = m_smilData->Body();
+		const ePub3::SMILData::Sequence *sequence = m_smilData->Body().get();
 
 		if (sequence == nullptr) {
 			m_bodyDictionary = [[NSDictionary alloc] init];
@@ -121,13 +121,13 @@
 	auto textMedia = node->Text();
 
 	if (textMedia != nullptr && textMedia->IsText()) {
-		[children addObject:[self parseTreeText:textMedia]];
+		[children addObject:[self parseTreeText:textMedia.get()]];
 	}
 
 	auto audioMedia = node->Audio();
 
 	if (audioMedia != nullptr && audioMedia->IsAudio()) {
-		[children addObject:[self parseTreeAudio:audioMedia]];
+		[children addObject:[self parseTreeAudio:audioMedia.get()]];
 	}
 
 	dict[@"children"] = children;
@@ -154,7 +154,7 @@
 	auto count = node->GetChildrenCount();
 
 	for (int i = 0; i < count; i++) {
-		const ePub3::SMILData::TimeContainer *container = node->GetChild(i);
+		const ePub3::SMILData::TimeContainer *container = node->GetChild(i).get();
 
 		if (container->IsSequence()) {
 			[children addObject:[self parseTreeSequence:(ePub3::SMILData::Sequence *)container]];

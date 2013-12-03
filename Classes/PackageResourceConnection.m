@@ -54,12 +54,6 @@ static RDPackage *m_package = nil;
 			path = [path substringFromIndex:1];
 		}
 
-		NSString *basePath = m_package.basePath;
-
-		if (basePath != nil && basePath.length > 0) {
-			path = [basePath stringByAppendingString:path];
-		}
-
 		RDPackageResource *resource = [m_package resourceAtRelativePath:path];
 
 		if (resource != nil) {

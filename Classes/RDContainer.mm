@@ -7,10 +7,9 @@
 //
 
 #import "RDContainer.h"
-#import <ePub3/archive.h>
 #import <ePub3/container.h>
-#import "RDPackage.h"
 #import <ePub3/initialization.h>
+#import "RDPackage.h"
 
 
 @interface RDContainer() {

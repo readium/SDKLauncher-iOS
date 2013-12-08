@@ -372,7 +372,7 @@
     dispatch_source_set_event_handler(_readerSource, ^{
         // read as much data as possible
 #if DEBUGLOG
-        NSLog(@"Data readable on channel %@", self);
+        NSLog(@"1) Data readable on channel %@", self);
 #endif
         dispatch_sync(_q, ^{
             int flags = fcntl(_nativeSocket, F_GETFL, 0);
@@ -423,7 +423,7 @@
     // see if there's data here already
     int numReadable = 0;
     ioctl(_nativeSocket, FIONREAD, &numReadable);
-    NSLog(@"New IO channel set up: %d bytes ready to read prior to dispatch_source resumption.", numReadable);
+    NSLog(@"1) New IO channel set up: %d bytes ready to read prior to dispatch_source resumption.", numReadable);
 #endif
     
     dispatch_resume(_readerSource);
@@ -436,11 +436,11 @@
     
     // Run the write operation in the background. We use our serial queue to avoid spawning 1001 threads blocking on select().
 #if DEBUGLOG
-    NSLog(@"Dispatching write of %lu bytes to IO channel queue", (unsigned long)[data length]);
+    NSLog(@"1) Dispatching write of %lu bytes to IO channel queue", (unsigned long)[data length]);
 #endif
     dispatch_async(_q, ^{
 #if DEBUGLOG
-        NSLog(@"Starting write of %lu bytes on IO channel queue", (unsigned long)[data length]);
+        NSLog(@"1) Starting write of %lu bytes on IO channel queue", (unsigned long)[data length]);
 #endif
         ssize_t totalSent = 0;
         const uint8_t *p = [data bytes];
@@ -548,7 +548,7 @@
     dispatch_source_set_event_handler(_readerSource, ^{
         // read as much data as possible
 #if DEBUGLOG
-        NSLog(@"Data readable on channel %@", self);
+        NSLog(@"2) Data readable on channel %@", self);
 #endif
         int flags = fcntl(_nativeSocket, F_GETFL, 0);
         BOOL isNonBlocking = ((flags & O_NONBLOCK) == O_NONBLOCK);
@@ -597,7 +597,7 @@
     // see if there's data here already
     int numReadable = 0;
     ioctl(_nativeSocket, FIONREAD, &numReadable);
-    NSLog(@"New IO channel set up: %d bytes ready to read prior to dispatch_source resumption.", numReadable);
+    NSLog(@"2) New IO channel set up: %d bytes ready to read prior to dispatch_source resumption.", numReadable);
 #endif
     
     dispatch_resume(_readerSource);
@@ -607,10 +607,10 @@
 {
     // Run the write operation in the background. We use our serial queue to avoid spawning 1001 threads blocking on select().
 #if DEBUGLOG
-    NSLog(@"Dispatching write of %lu bytes to IO channel queue", (unsigned long)[data length]);
+    NSLog(@"2) Dispatching write of %lu bytes to IO channel queue", (unsigned long)[data length]);
 #endif
 #if DEBUGLOG
-    NSLog(@"Starting write of %lu bytes on IO channel queue", (unsigned long)[data length]);
+    NSLog(@"2) Starting write of %lu bytes on IO channel queue", (unsigned long)[data length]);
 #endif
     ssize_t totalSent = 0;
     const uint8_t *p = [data bytes];

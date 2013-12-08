@@ -15,6 +15,16 @@
 #import "DDRange.h"
 #import "DDNumber.h"
 
+
+#define LOCK_ME(block) do {\
+        dispatch_semaphore_wait(_lock, DISPATCH_TIME_FOREVER);\
+        @try {\
+            block();\
+        } @finally {\
+            dispatch_semaphore_signal(_lock);\
+        }\
+    } while (0);
+
 @interface AQHTTPConnection ()
 - (void) _setEventHandlerOnSocket;
 - (void) _handleIncomingData: (AQSocketReader *) reader;
@@ -32,6 +42,7 @@
     CFHTTPMessageRef _incomingMessage;
     
     NSTimer *   _idleDisconnectionTimer;
+    dispatch_semaphore_t _lock;
     
     AQHTTPServer * __maybe_weak _server;
 }
@@ -49,6 +60,9 @@
     
     _requestQ = [NSOperationQueue new];
     _requestQ.maxConcurrentOperationCount = 1;
+
+    // create a critical section lock
+    _lock = dispatch_semaphore_create(1);
     
     // don't install the event handler until we've got the queue ready: the event handler might be called immediately if data has already arrived.
     _socket = aSocket;
@@ -69,6 +83,16 @@
     if ( _incomingMessage != NULL )
         CFRelease(_incomingMessage);
     _socket.eventHandler = nil;
+
+#if DISPATCH_USES_ARC == 0
+    if ( _lock != NULL )
+    {
+        //dispatch_semaphore_signal(_lock);
+        dispatch_release(_lock);
+        _lock = NULL;
+    }
+#endif
+
 #if USING_MRR
     [_documentRoot release];
     [_socket release];
@@ -126,14 +150,23 @@
         switch ( event )
         {
             case AQSocketEventDataAvailable:
+#if DEBUGLOG
+                NSLog(@"AQSocketEventDataAvailable");
+#endif
                 [strongSelf _handleIncomingData: info];
                 break;
                 
             case AQSocketEventDisconnected:
+#if DEBUGLOG
+                NSLog(@"AQSocketEventDisconnected");
+#endif
                 [strongSelf _socketDisconnected];
                 break;
                 
             case AQSocketErrorEncountered:
+#if DEBUGLOG
+                NSLog(@"AQSocketErrorEncountered");
+#endif
                 [strongSelf _socketErrorOccurred: info];
                 break;
                 
@@ -279,37 +312,60 @@
 
 - (void) _maybeInstallIdleTimer
 {
-    if ( [_requestQ operationCount] != 0 )
-        return;
-    
-    if ( _idleDisconnectionTimer != nil )
-        return;
-    
-    _idleDisconnectionTimer = [[NSTimer alloc] initWithFireDate: [NSDate dateWithTimeIntervalSinceNow: 2.0]
-                                                       interval: 2.0
-                                                         target: self
-                                                       selector: @selector(_checkIdleTimer:)
-                                                       userInfo: nil
-                                                        repeats: NO];
-    [[NSRunLoop mainRunLoop] addTimer: _idleDisconnectionTimer forMode: NSRunLoopCommonModes];
+    LOCK_ME(^{
+
+    if ( [_requestQ operationCount] == 0 &&  _idleDisconnectionTimer == nil )
+    {
+        _idleDisconnectionTimer = [[NSTimer alloc] initWithFireDate: [NSDate dateWithTimeIntervalSinceNow: 2.0]
+                                                           interval: 2.0
+                                                             target: self
+                                                           selector: @selector(_checkIdleTimer:)
+                                                           userInfo: nil
+                                                            repeats: NO];
+        [[NSRunLoop mainRunLoop] addTimer: _idleDisconnectionTimer forMode: NSRunLoopCommonModes];
+    }
+
+    });
 }
 
 - (void) _checkIdleTimer: (NSTimer *) timer
 {
     if ( [_requestQ operationCount] != 0 )
         return;
-    
+
+#if DEBUGLOG
+    NSLog(@"_checkIdleTimer: %@", self);
+#endif
+
     // disconnect due to under-utilization
-    [self close];
+    //[self close];
+    [self _socketDisconnected];
 }
 
 - (AQHTTPResponseOperation *) responseOperationForRequest: (CFHTTPMessageRef) request
 {
+#if DEBUGLOG
+    NSLog(@"DEFAULT responseOperationForRequest (FILE)");
+#endif
+
+    NSString * path = [(NSURL *)CFBridgingRelease(CFHTTPMessageCopyRequestURL(request)) path];
+
+#if DEBUGLOG
+    NSLog(@"path: %@", path);
+#endif
+
+    if (path == nil)
+    {
+        return nil;
+    }
+
     NSString * rangeHeader = CFBridgingRelease(CFHTTPMessageCopyHeaderFieldValue(request, CFSTR("Range")));
     NSArray * ranges = nil;
     if ( rangeHeader != nil )
     {
-        NSString * path = [(NSURL *)CFBridgingRelease(CFHTTPMessageCopyRequestURL(request)) path];
+#if DEBUGLOG
+        NSLog(@"rangeHeader: %@", rangeHeader);
+#endif
         path = [[_documentRoot path] stringByAppendingPathComponent: path];
         ranges = [self parseRangeRequest: rangeHeader withContentLength: [[[NSFileManager defaultManager] attributesOfItemAtPath: path error: NULL] fileSize]];
     }
@@ -324,73 +380,119 @@
 
 - (void) _handleIncomingData: (AQSocketReader *) reader
 {
+    NSUInteger readerLength = reader.length;
+
 #if DEBUGLOG
-    NSLog(@"Data arriving on %p; length=%lu", self, (unsigned long)reader.length);
+    NSLog(@"Data arriving on %p; length=%lu", self, (unsigned long)readerLength);
 #endif
     
     CFHTTPMessageRef msg = NULL;
     if ( _incomingMessage != NULL )
-        msg = (CFHTTPMessageRef)CFRetain(_incomingMessage);
-    else
-        msg = CFHTTPMessageCreateEmpty(kCFAllocatorDefault, TRUE);
-    
-    NSData * data = [reader readBytes: reader.length];
-    CFHTTPMessageAppendBytes(msg, [data bytes], [data length]);
-    
-    if ( CFHTTPMessageIsHeaderComplete(msg) )
     {
-        if ( _incomingMessage == msg && _incomingMessage != NULL )
-        {
-            CFRelease(_incomingMessage);
-            _incomingMessage = NULL;
-        }
-        
 #if DEBUGLOG
-        NSString * httpVersion = CFBridgingRelease(CFHTTPMessageCopyVersion(msg));
-        NSString * httpMethod  = CFBridgingRelease(CFHTTPMessageCopyRequestMethod(msg));
-        NSURL * url = CFBridgingRelease(CFHTTPMessageCopyRequestURL(msg));
-        NSDictionary * headers = CFBridgingRelease(CFHTTPMessageCopyAllHeaderFields(msg));
-        NSData * body = CFBridgingRelease(CFHTTPMessageCopyBody(msg));
-        
-        NSMutableString * debugStr = [NSMutableString string];
-        [debugStr appendFormat: @"%@ %@ \"%@\"\n", httpVersion, httpMethod, [url absoluteString]];
-        [headers enumerateKeysAndObjectsUsingBlock: ^(id key, id obj, BOOL *stop) {
-            [debugStr appendFormat: @"%@: %@\n", key, obj];
-        }];
-        if ( [body length] != 0 )
-        {
-            NSString * bodyStr = [[NSString alloc] initWithData: body encoding: NSUTF8StringEncoding];
-            [debugStr appendFormat: @"\n%@\n", bodyStr];
-#if USING_MRR
-            [bodyStr release];
+        NSLog(@"CFHTTPMessageRef _incomingMessage RETAIN");
 #endif
-        }
-        
-        NSLog(@"Incoming request:\n%@", debugStr);
-#endif
-        AQHTTPResponseOperation * op = [self responseOperationForRequest: msg];
-        if ( op != nil )
-        {
-            [op setCompletionBlock: ^{ [self _maybeInstallIdleTimer]; }];
-            if ( [_idleDisconnectionTimer isValid] )
-            {
-                [_idleDisconnectionTimer invalidate];
-#if USING_MRR
-                [_idleDisconnectionTimer release];
-#endif
-                _idleDisconnectionTimer = nil;
-            }
-            
-            [_requestQ addOperation: op];
-        }
+        msg = (CFHTTPMessageRef)CFRetain(_incomingMessage);
     }
     else
     {
-        _incomingMessage = (CFHTTPMessageRef)CFRetain(msg);
+#if DEBUGLOG
+        NSLog(@"CFHTTPMessageCreateEmpty");
+#endif
+        msg = CFHTTPMessageCreateEmpty(kCFAllocatorDefault, TRUE);
+    }
+    
+    NSData * data = [reader readBytes: reader.length];
+    if (data == nil || readerLength <= 0 || [data length] <= 0 || !CFHTTPMessageAppendBytes(msg, [data bytes], [data length]))
+    {
+        NSLog(@"------ !CFHTTPMessageAppendBytes !!! %ld", (unsigned long)[data length]);
+    }
+    else
+    {
+        if ( CFHTTPMessageIsHeaderComplete(msg) )
+        {
+
+    #if DEBUGLOG
+            NSString * httpVersion = CFBridgingRelease(CFHTTPMessageCopyVersion(msg));
+            NSString * httpMethod  = CFBridgingRelease(CFHTTPMessageCopyRequestMethod(msg));
+            NSURL * url = CFBridgingRelease(CFHTTPMessageCopyRequestURL(msg));
+            NSDictionary * headers = CFBridgingRelease(CFHTTPMessageCopyAllHeaderFields(msg));
+            NSData * body = CFBridgingRelease(CFHTTPMessageCopyBody(msg));
+
+            NSMutableString * debugStr = [NSMutableString string];
+            [debugStr appendFormat: @"%@ %@ \"%@\"\n", httpVersion, httpMethod, [url absoluteString]];
+            [headers enumerateKeysAndObjectsUsingBlock: ^(id key, id obj, BOOL *stop) {
+                [debugStr appendFormat: @"%@: %@\n", key, obj];
+            }];
+            if ( [body length] != 0 )
+            {
+                NSString * bodyStr = [[NSString alloc] initWithData: body encoding: NSUTF8StringEncoding];
+                [debugStr appendFormat: @"\n%@\n", bodyStr];
+    #if USING_MRR
+                [bodyStr release];
+    #endif
+            }
+
+            NSLog(@"Incoming request:\n%@", debugStr);
+    #endif
+
+            if ( _incomingMessage == msg && _incomingMessage != NULL )
+            {
+    #if DEBUGLOG
+                NSLog(@"CFRelease _incomingMessage");
+    #endif
+                CFRelease(_incomingMessage);
+                _incomingMessage = NULL;
+            }
+
+            AQHTTPResponseOperation * op = [self responseOperationForRequest: msg];
+            if ( op != nil )
+            {
+    #if DEBUGLOG
+                NSLog(@"AQHTTPResponseOperation");
+    #endif
+                [op setCompletionBlock: ^{ [self _maybeInstallIdleTimer]; }];
+                LOCK_ME(^{
+
+                if ( [_idleDisconnectionTimer isValid] )
+                {
+    #if DEBUGLOG
+                    NSLog(@"_idleDisconnectionTimer");
+    #endif
+                    [_idleDisconnectionTimer invalidate];
+    #if USING_MRR
+                    [_idleDisconnectionTimer release];
+    #endif
+                    _idleDisconnectionTimer = nil;
+                }
+
+                [_requestQ addOperation: op];
+
+                });
+            }
+            else
+            {
+    #if DEBUGLOG
+                NSLog(@"!! AQHTTPResponseOperation");
+    #endif
+                // disconnect
+                //[self close];
+                [self _socketDisconnected];
+            }
+        }
+        else
+        {
+    #if DEBUGLOG
+            NSLog(@"!CFHTTPMessageIsHeaderComplete _incomingMessage NEW ");
+    #endif
+            _incomingMessage = (CFHTTPMessageRef)CFRetain(msg);
+        }
     }
     
     if (msg != NULL)
+    {
         CFRelease(msg);
+    }
 }
 
 - (void) _socketDisconnected

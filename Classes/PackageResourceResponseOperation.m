@@ -11,117 +11,178 @@
 #import "RDPackage.h"
 #import "RDPackageResource.h"
 
+@implementation PackageResourceResponseOperation {
+    RDPackage * m_package;
+    RDPackageResource * m_resource;
+    NSString * m_filePath;
+}
 
-@implementation PackageResourceResponseOperation
+- (void)initialiseData:(RDPackage *)package resource:(RDPackageResource *)resource filePath:(NSString *)fileSystemPath
+{
+    if (m_package != nil)
+    {
+        [m_package release];
+        m_package = nil;
+    }
+    m_package = package;
+    [m_package retain];
 
+    if (m_resource != nil)
+    {
+        [m_resource release];
+        m_resource = nil;
+    }
+    m_resource = resource;
+    [m_resource retain];
+
+    if (m_filePath != nil)
+    {
+        [m_filePath release];
+        m_filePath = nil;
+    }
+    m_filePath = fileSystemPath;
+    [m_filePath retain];
+
+    if (DEBUGLOG)
+    {
+        if (m_resource != nil)
+        {
+            NSLog(@"LOXHTTPResponseOperation: %@", m_resource.relativePath);
+            NSLog(@"LOXHTTPResponseOperation: %ld", m_resource.bytesCount);
+        }
+        if (m_filePath != nil)
+        {
+            NSLog(@"LOXHTTPResponseOperation: %@ (FS)", m_filePath);
+        }
+        NSLog(@"LOXHTTPResponseOperation: %@", self);
+    }
+}
 
 - (void)dealloc {
-	[m_fileSystemPath release];
-	[m_package release];
-	[m_packageResource release];
-	[super dealloc];
+    if (DEBUGLOG)
+    {
+        NSLog(@"DEALLOC LOXHTTPResponseOperation");
+        NSLog(@"DEALLOC LOXHTTPResponseOperation: %@", m_resource.relativePath);
+        NSLog(@"DEALLOC LOXHTTPResponseOperation: %@", self);
+    }
+
+    if (m_package != nil)
+    {
+        [m_package release];
+    }
+
+    if (m_resource != nil)
+    {
+        [m_resource release];
+    }
+
+    if (m_filePath != nil)
+    {
+        [m_filePath release];
+    }
+
+    [super dealloc];
 }
 
-
-- (id)
-	initWithRequest:(CFHTTPMessageRef)request
-	socket:(AQSocket *)aSocket
-	ranges:(NSArray *)ranges
-	forConnection:(AQHTTPConnection *)connection
-	fileSystemPath:(NSString *)fileSystemPath
+- (NSUInteger) statusCodeForItemAtPath: (NSString *) rootRelativePath
 {
-	if (fileSystemPath == nil) {
-		NSLog(@"The file system path is nil!");
-		[self release];
-		return nil;
-	}
+    if (m_resource == nil)
+    {
+        return ( 200 );
+    }
 
-	if (![[NSFileManager defaultManager] fileExistsAtPath:fileSystemPath]) {
-		NSLog(@"Path '%@' does not exist!", fileSystemPath);
-		[self release];
-		return nil;
-	}
+    NSString * method = CFBridgingRelease(CFHTTPMessageCopyRequestMethod(_request));
 
-	if (self = [super
-		initWithRequest:request
-		socket:aSocket
-		ranges:ranges
-		forConnection:connection])
-	{
-		m_fileSystemPath = [fileSystemPath retain];
-	}
+    if (method != nil && [method caseInsensitiveCompare: @"DELETE"] == NSOrderedSame )
+    {
+        // Not Permitted
+        return ( 403 );
+    }
+    else if ( _ranges != nil )
+    {
+        return ( 206 );
+    }
 
-	return self;
+    return ( 200 );
 }
 
-
-- (id)
-	initWithRequest:(CFHTTPMessageRef)request
-	socket:(AQSocket *)aSocket
-	ranges:(NSArray *)ranges
-	forConnection:(AQHTTPConnection *)connection
-	package:(RDPackage *)package
-	packageResource:(RDPackageResource *)packageResource
+- (UInt64) sizeOfItemAtPath: (NSString *) rootRelativePath
 {
-	if (package == nil || packageResource == nil) {
-		[self release];
-		return nil;
-	}
-
-	if (self = [super
-		initWithRequest:request
-		socket:aSocket
-		ranges:ranges
-		forConnection:connection])
-	{
-		m_package = [package retain];
-		m_packageResource = [packageResource retain];
-	}
-
-	return self;
+    return [self length];
 }
 
-
-- (NSInputStream *)inputStreamForItemAtPath:(NSString *)rootRelativePath {
-	if (m_fileSystemPath != nil && m_fileSystemPath.length > 0) {
-		return [NSInputStream inputStreamWithURL:[NSURL fileURLWithPath:m_fileSystemPath]];
-	}
-
-	if (m_packageResource != nil) {
-		return [NSInputStream inputStreamWithData:m_packageResource.data];
-	}
-
-	return nil;
+- (NSString *) etagForItemAtPath: (NSString *) path
+{
+    return nil;
 }
 
+- (NSInputStream *) inputStreamForItemAtPath: (NSString *) rootRelativePath
+{
+    if (m_resource == nil)
+    {
+        return [NSInputStream inputStreamWithURL:[NSURL fileURLWithPath:m_filePath]];
+    }
 
-- (UInt64)sizeOfItemAtPath:(NSString *)rootRelativePath {
-	if (m_fileSystemPath != nil && m_fileSystemPath.length > 0) {
-		NSDictionary *attrs = [[NSFileManager defaultManager]
-			attributesOfItemAtPath:m_fileSystemPath error:nil];
-		return (attrs == nil) ? 0 : attrs.fileSize;
-	}
-
-	if (m_packageResource != nil) {
-		return m_packageResource.data.length;
-	}
-
-	return 0;
+    return nil;
 }
 
+- (id<AQRandomAccessFile>) randomAccessFileForItemAtPath: (NSString *) rootRelativePath
+{
+    //return [self autorelease];
+    return self;
+}
 
-- (NSUInteger)statusCodeForItemAtPath:(NSString *)rootRelativePath {
-	NSString *method = [(id)CFHTTPMessageCopyRequestMethod(_request) autorelease];
+-(UInt64)length
+{
+    if (m_resource == nil)
+    {
+        //if ([[NSFileManager defaultManager] fileExistsAtPath:m_filePath])
+        NSDictionary *attrs = [[NSFileManager defaultManager] attributesOfItemAtPath:m_filePath error:nil];
+        return (attrs == nil) ? 0 : attrs.fileSize;
+    }
 
-	if (method == nil || [method caseInsensitiveCompare:@"GET"] != NSOrderedSame) {
-		return 403;
-	}
+    return m_resource.bytesCount;
+}
 
-	if (_ranges != nil) {
-		return 206;
-	}
+- (NSData *) readDataFromByteRange: (DDRange) range
+{
+    if (m_resource == nil)
+    {
+        NSLog(@"NOT READY?!");
+        return [NSData data];
+    }
 
-	return 200;
+    if (DEBUGLOG)
+    {
+        NSLog(@"[%ld ... %ld] (%ld / %ld)", range.location, range.location+range.length-1, range.length, m_resource.bytesCount);
+    }
+
+    if (range.length == 0 || m_resource.bytesCount == 0)
+    {
+        NSLog(@"WTF?!");
+        return [NSData data];
+    }
+
+    __block NSData * result = nil;
+
+    if (DEBUGLOG)
+    {
+        NSLog(@"LOCK readDataFromByteRange: %@", self);
+    }
+
+    LOCK_BYTESTREAM(^{
+        result = [m_resource createChunkByReadingRange:NSRangeFromDDRange(range) package:m_package];
+    });
+
+    if (DEBUGLOG)
+    {
+        NSLog(@"un-LOCK readDataFromByteRange: %@", self);
+    }
+
+    //result = [NSData data];
+    //[result autorelease];
+
+    return result;
 }
 
 

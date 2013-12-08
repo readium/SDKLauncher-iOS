@@ -94,5 +94,6 @@
  if available.
  */
 @property (nonatomic, readonly) NSString * serverAddress;
+- (uint16_t) serverPort;
 
 @end

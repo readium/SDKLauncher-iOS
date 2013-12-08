@@ -1050,7 +1050,10 @@ static CFRunLoopRef AQSocketCFHandlerRunLoop(void)
 - (void) connectionFailedWithError: (SInt32) err
 {
     NSError * info = [NSError errorWithDomain: NSPOSIXErrorDomain code: err userInfo: nil];
-    self.eventHandler(AQSocketEventConnectionFailed, info);
+    if (self.eventHandler != nil)
+    {
+        self.eventHandler(AQSocketEventConnectionFailed, info);
+    }
     
     // Get rid of the socket now, since we might try to re-connect, which will
     // create a new CFSocketRef.
@@ -1077,7 +1080,10 @@ static CFRunLoopRef AQSocketCFHandlerRunLoop(void)
     
     // Inform the client about the appearance of the child socket.
     // It's up to the client to keep it around -- we just pass it on as appropriate.
-    self.eventHandler(AQSocketEventAcceptedNewConnection, child);
+    if (self.eventHandler != nil)
+    {
+        self.eventHandler(AQSocketEventAcceptedNewConnection, child);
+    }
 #if USING_MRR
     [child release];
 #endif

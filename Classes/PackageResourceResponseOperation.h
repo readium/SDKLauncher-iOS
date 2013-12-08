@@ -8,28 +8,12 @@
 
 #import "AQHTTPResponseOperation.h"
 
+
 @class RDPackage;
 @class RDPackageResource;
 
-@interface PackageResourceResponseOperation : AQHTTPResponseOperation {
-	@private NSString *m_fileSystemPath;
-	@private RDPackage *m_package;
-	@private RDPackageResource *m_packageResource;
+@interface PackageResourceResponseOperation : AQHTTPResponseOperation<AQRandomAccessFile>
+{
 }
-
-- (id)
-	initWithRequest:(CFHTTPMessageRef)request
-	socket:(AQSocket *)aSocket
-	ranges:(NSArray *)ranges
-	forConnection:(AQHTTPConnection *)connection
-	fileSystemPath:(NSString *)fileSystemPath;
-
-- (id)
-	initWithRequest:(CFHTTPMessageRef)request
-	socket:(AQSocket *)aSocket
-	ranges:(NSArray *)ranges
-	forConnection:(AQHTTPConnection *)connection
-	package:(RDPackage *)package
-	packageResource:(RDPackageResource *)packageResource;
-
+- (void)initialiseData:(RDPackage *)package resource:(RDPackageResource *)resource filePath:(NSString *)fileSystemPath;
 @end

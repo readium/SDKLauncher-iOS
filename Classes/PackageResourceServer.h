@@ -8,6 +8,15 @@
 
 #import <Foundation/Foundation.h>
 
+#define LOCK_BYTESTREAM(block) do {\
+        dispatch_semaphore_wait(PackageResourceServer.byteStreamResourceLock, DISPATCH_TIME_FOREVER);\
+        @try {\
+            block();\
+        } @finally {\
+            dispatch_semaphore_signal(PackageResourceServer.byteStreamResourceLock);\
+        }\
+    } while (0);
+
 @class AQHTTPServer;
 @class RDPackage;
 
@@ -19,5 +28,7 @@
 @property (nonatomic, readonly) int port;
 
 - (id)initWithPackage:(RDPackage *)package;
+
++ (dispatch_semaphore_t) byteStreamResourceLock;
 
 @end

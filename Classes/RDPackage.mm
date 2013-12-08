@@ -279,7 +279,8 @@
 	RDPackageResource *resource = [[[RDPackageResource alloc]
 		initWithDelegate:self
 		byteStream:byteStream.get()
-		relativePath:relativePath] autorelease];
+		relativePath:relativePath
+        pack:self] autorelease];
 
 	if (resource != nil) {
 		m_byteStreamVector.push_back(std::move(byteStream));
@@ -328,5 +329,9 @@
 	return [NSString stringWithUTF8String:s.c_str()];
 }
 
+-(void*) sdkPackage
+{
+    return m_package;
+}
 
 @end

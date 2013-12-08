@@ -8,6 +8,7 @@
 
 #import <Foundation/Foundation.h>
 #import "RDPackageResource.h"
+//#import <ePub3/package.h>
 
 @class RDContainer;
 @class RDMediaOverlaysSmilModel;
@@ -52,5 +53,7 @@
 
 // Returns the resource at the given relative path or nil if it doesn't exist.
 - (RDPackageResource *)resourceAtRelativePath:(NSString *)relativePath;
+
+- (void*) sdkPackage;
 
 @end

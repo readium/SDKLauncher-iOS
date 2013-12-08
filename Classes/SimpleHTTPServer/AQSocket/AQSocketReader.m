@@ -53,7 +53,7 @@ static BOOL OSVersionAtLeast(int major, int minor)
     // The original implementation is commented out due to not compiling and since this project's
     // minimum version is greater than 5.0. -- Shane
     return YES;
-/*
+    /*
     static int _maj = 0, _minor = 0;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
@@ -73,7 +73,7 @@ static BOOL OSVersionAtLeast(int major, int minor)
 		if ( [versionComponents count] > 3 )
 			osRevision = [[versionComponents objectAtIndex:3] intValue];
     });
-*/
+    */
 }
 #endif
 

@@ -12,11 +12,27 @@
 #import "RDPackage.h"
 #import "RDPackageResource.h"
 
+static dispatch_semaphore_t m_byteStreamResourceLock = NULL;
 
 @implementation PackageResourceServer
 
++ (dispatch_semaphore_t) byteStreamResourceLock
+{
+    return m_byteStreamResourceLock;
+}
 
 - (void)dealloc {
+
+#if DISPATCH_USES_ARC == 0
+
+    if ( m_byteStreamResourceLock != NULL )
+    {
+        //dispatch_semaphore_signal(m_byteStreamResourceLock);
+        dispatch_release(m_byteStreamResourceLock);
+        m_byteStreamResourceLock = NULL;
+    }
+#endif
+
 	if (m_httpServer != nil) {
 		if (m_httpServer.isListening) {
 			[m_httpServer stop];
@@ -41,6 +57,9 @@
 
 	if (self = [super init]) {
 		m_package = [package retain];
+
+        // create a critical section lock
+        m_byteStreamResourceLock = dispatch_semaphore_create(1);
 
 		m_httpServer = [[AQHTTPServer alloc] initWithAddress:@"localhost"
 			root:[NSBundle mainBundle].resourceURL];

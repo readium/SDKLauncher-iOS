@@ -276,7 +276,14 @@ static NSString * const AQHTTPResponseRunLoopMode = @"AQHTTPResponseRunLoopMode"
                 }
                 
                 [self writeAll: data];
-                
+//autoreleased!
+//#if DEBUGLOG
+//                NSLog(@"RELEASE DATA 1");
+//#endif
+//                [data release];
+//#if DEBUGLOG
+//                NSLog(@"RELEASE DATA 2");
+//#endif
                 // whether that worked or not, we're done!
                 return;
             }
@@ -293,9 +300,27 @@ static NSString * const AQHTTPResponseRunLoopMode = @"AQHTTPResponseRunLoopMode"
                 // send this
                 if ( [self writeAll: [header dataUsingEncoding: NSUTF8StringEncoding]] == NO )
                     return;     // socket closed, can't write any more
-                
+
+                NSData * data = [file readDataFromByteRange: r];
+                if ( data == nil )
+                {
+                    NSLog(@"Error reading data 2!");
+                    return;
+                }
+
+
+                auto ret = [self writeAll: data];
+//autoreleased!
+//#if DEBUGLOG
+//                NSLog(@"RELEASE DATA A");
+//#endif
+//                [data release];
+//#if DEBUGLOG
+//                NSLog(@"RELEASE DATA B");
+//#endif
+
                 // now fetch & send the associated data
-                if ( [self writeAll: [file readDataFromByteRange: r]] == NO )
+                if ( ret == NO )
                     return;     // socket closed, can't write any more
             }
             
@@ -471,6 +496,7 @@ static NSString * const AQHTTPResponseRunLoopMode = @"AQHTTPResponseRunLoopMode"
     
     // this will enqueue the write and will call the completion block once it's completed
     [_socketRef writeBytes: inputData completion: ^(NSData *unwritten, NSError *error) {
+
         if ( error != nil )
         {
             if ( [error.domain isEqualToString: NSPOSIXErrorDomain] && (error.code == EPIPE || error.code == ECONNRESET || error.code == ECANCELED) )
@@ -499,7 +525,7 @@ static NSString * const AQHTTPResponseRunLoopMode = @"AQHTTPResponseRunLoopMode"
             [[NSRunLoop currentRunLoop] runMode: @"AQHTTPRequestWritingDataRunLoopMode" beforeDate: [NSDate dateWithTimeIntervalSinceNow: 0.05]];
         }
     }
-    
+
     if ( errorOccurred )
         return ( NO );      // socket shut down
     

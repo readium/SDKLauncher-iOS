@@ -266,6 +266,40 @@
     return ( [NSString stringWithFormat: @"%s:%hu", namebuf, port] );
 }
 
+- (uint16_t) serverPort
+{
+    struct sockaddr_storage saddr = {0};
+
+    // for localhost I'll stick to IPv4, since I don't know how to force IPv6 for a hostname
+    if ( _isLocalhost == NO && _serverSocket6 != nil )
+        saddr = _serverSocket6.socketAddress;
+
+    if ( saddr.ss_len == 0 )
+        saddr = _serverSocket4.socketAddress;
+
+    if ( saddr.ss_len == 0 )
+        return 0;
+
+    uint16_t port = 0;
+
+    if ( saddr.ss_family == AF_INET )
+    {
+        struct sockaddr_in *pIn = (struct sockaddr_in *)&saddr;
+        port = ntohs(pIn->sin_port);
+    }
+    else if ( saddr.ss_family == AF_INET6 )
+    {
+        struct sockaddr_in6 *pIn = (struct sockaddr_in6 *)&saddr;
+        port = ntohs(pIn->sin6_port);
+    }
+    else
+    {
+        return 0;
+    }
+
+    return port;
+}
+
 - (void) setConnectionClass: (Class) connectionClass
 {
     if ( connectionClass == Nil || connectionClass == [AQHTTPConnection class] )

@@ -14,7 +14,7 @@
 @class RDMediaOverlaysSmilModel;
 @class RDNavigationElement;
 
-@interface RDPackage : NSObject <RDPackageResourceDelegate> {
+@interface RDPackage : NSObject { //<RDPackageResourceDelegate> {
 	@private RDMediaOverlaysSmilModel *m_mediaOverlaysSmilModel;
 	@private RDNavigationElement *m_navElemListOfFigures;
 	@private RDNavigationElement *m_navElemListOfIllustrations;

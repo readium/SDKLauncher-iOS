@@ -17,7 +17,7 @@
 
 
 @interface RDPackage() {
-	@private std::vector<std::unique_ptr<ePub3::ByteStream>> m_byteStreamVector;
+	//@private std::vector<std::unique_ptr<ePub3::ByteStream>> m_byteStreamVector;
 	@private ePub3::Package *m_package;
 	@private std::vector<std::shared_ptr<ePub3::SpineItem>> m_spineItemVector;
 }
@@ -239,16 +239,16 @@
 }
 
 
-- (void)rdpackageResourceWillDeallocate:(RDPackageResource *)packageResource {
-	for (auto i = m_byteStreamVector.begin(); i != m_byteStreamVector.end(); i++) {
-		if (i->get() == packageResource.byteStream) {
-			m_byteStreamVector.erase(i);
-			return;
-		}
-	}
-
-	NSLog(@"The byte stream was not found!");
-}
+//- (void)rdpackageResourceWillDeallocate:(RDPackageResource *)packageResource {
+//	for (auto i = m_byteStreamVector.begin(); i != m_byteStreamVector.end(); i++) {
+//		if (i->get() == packageResource.byteStream) {
+//			m_byteStreamVector.erase(i);
+//			return;
+//		}
+//	}
+//
+//	NSLog(@"The byte stream was not found!");
+//}
 
 
 - (NSString *)renditionLayout {
@@ -277,14 +277,13 @@
 	}
 
 	RDPackageResource *resource = [[[RDPackageResource alloc]
-		initWithDelegate:self
-		byteStream:byteStream.get()
+            initWithByteStream:byteStream.release()
 		relativePath:relativePath
         pack:self] autorelease];
 
-	if (resource != nil) {
-		m_byteStreamVector.push_back(std::move(byteStream));
-	}
+//	if (resource != nil) {
+//		m_byteStreamVector.push_back(std::move(byteStream));
+//	}
 
 	return resource;
 }

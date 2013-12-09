@@ -94,7 +94,7 @@
     return size;
 }
 
-@synthesize byteStream = m_byteStream;
+//@synthesize byteStream = m_byteStream;
 @synthesize bytesCount = m_bytesCount;
 @synthesize relativePath = m_relativePath;
 
@@ -119,24 +119,6 @@
     {
         NSLog(@"ByteStream Range %@", m_relativePath);
         NSLog(@"%ld - %ld", range.location, range.length);
-    }
-
-    if (m_byteStream == nullptr)
-    {
-        if (m_byteStream != nullptr)
-        {
-            delete m_byteStream;
-            m_byteStream = nullptr;
-        }
-
-        if (DEBUGLOG)
-        {
-            NSLog(@"=== ByteStream RESET");
-        }
-
-        ePub3::string s = ePub3::string(m_relativePath.UTF8String);
-        m_byteStream = ((ePub3::Package*)package.sdkPackage)->ReadStreamForRelativePath(s).release(); //package.sdkPackage->BasePath() API changed
-        m_bytesCount = [RDPackageResource bytesAvailable:m_byteStream pack:package path:m_relativePath];
     }
 
     if (DEBUGLOG)
@@ -237,7 +219,19 @@
 }
 
 - (void)dealloc {
-	[m_delegate rdpackageResourceWillDeallocate:self];
+	//[m_delegate rdpackageResourceWillDeallocate:self];
+
+    // calls Close() on ByteStream destruction
+    if (m_byteStream != nullptr)
+    {
+        if (DEBUGLOG)
+        {
+            NSLog(@"DEALLOC BYTESTREAM");
+            NSLog(@"BYTESTREAM DEALLOC %p", m_byteStream);
+        }
+        delete m_byteStream;
+        m_byteStream = nullptr;
+    }
 
 	[m_relativePath release];
 
@@ -246,8 +240,8 @@
 
 
 - (id)
-	initWithDelegate:(id <RDPackageResourceDelegate>)delegate
-	byteStream:(void *)byteStream
+    initWithByteStream://(id <RDPackageResourceDelegate>)delegate
+	(void *)byteStream
 	relativePath:(NSString *)relativePath
     pack:(RDPackage *)package
 {
@@ -266,7 +260,7 @@
             NSLog(@"m_bytesCount == 0 ???? %@", m_relativePath);
         }
 
-		m_delegate = delegate;
+		//m_delegate = delegate;
 
         if (DEBUGLOG)
         {

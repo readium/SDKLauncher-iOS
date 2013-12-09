@@ -44,6 +44,16 @@
 #import <netdb.h>
 #import <syslog.h>
 
+
+#define CRITICAL_SECTION(block) do {\
+        dispatch_semaphore_wait(_criticalSection, DISPATCH_TIME_FOREVER);\
+        @try {\
+            block();\
+        } @finally {\
+            dispatch_semaphore_signal(_criticalSection);\
+        }\
+    } while (0);
+
 // See -connectToAddress:port:error: for discussion.
 #if TARGET_OS_IPHONE
 # import <UIKit/UIApplication.h>
@@ -256,6 +266,7 @@ static CFRunLoopRef AQSocketCFHandlerRunLoop(void)
     CFSocketNativeHandle    _rawSocket;
     CFRunLoopSourceRef      _socketRunloopSource;
     dispatch_semaphore_t    _sync;
+    dispatch_semaphore_t    _criticalSection;
     AQSocketIOChannel *     _socketIO;
     AQSocketReader *        _socketReader;
 }
@@ -276,7 +287,9 @@ static CFRunLoopRef AQSocketCFHandlerRunLoop(void)
     
     // gets created with zero resources available. Will be signalled when socket becomes available for use.
     _sync = dispatch_semaphore_create(0);
-    
+
+    _criticalSection = dispatch_semaphore_create(1);
+
     return ( self );
 }
 
@@ -334,8 +347,25 @@ static CFRunLoopRef AQSocketCFHandlerRunLoop(void)
     
     if ( _listenSource != NULL )
         dispatch_source_cancel(_listenSource);
-    
+
+
+#if USING_MRR
+CRITICAL_SECTION(^{
+    if (_socketReader != nil)
+    {
+        [_socketReader release];
+        _socketReader = nil;
+    }
+});
+#endif
+
 #if USING_MRR || DISPATCH_USES_ARC == 0
+    if ( _criticalSection != NULL )
+    {
+        dispatch_release(_criticalSection);
+        _criticalSection = NULL;
+    }
+
     if ( _sync != NULL )
     {
         dispatch_release(_sync);
@@ -347,8 +377,8 @@ static CFRunLoopRef AQSocketCFHandlerRunLoop(void)
         _listenSource = NULL;
     }
 #endif
+
 #if USING_MRR
-    [_socketReader release];
     [super dealloc];
 #endif
 }
@@ -833,8 +863,14 @@ static CFRunLoopRef AQSocketCFHandlerRunLoop(void)
     [oldHandler release];
 #endif
     
-    if ( anEventHandler != nil && [_socketReader length] > 0 )
+    if ( anEventHandler != nil )
     {
+//        if ( dispatch_semaphore_wait(_sync, dispatch_time(DISPATCH_TIME_NOW, 1 * NSEC_PER_SEC)) != 0 )
+//            return;     // timed out, which means we've got no socket any more
+
+        CRITICAL_SECTION(^{
+            if (_socketReader != nil && [_socketReader length] > 0)
+            {
 #if USING_MRR
         [_socketReader retain];
 #endif
@@ -842,6 +878,8 @@ static CFRunLoopRef AQSocketCFHandlerRunLoop(void)
 #if USING_MRR
         [_socketReader release];
 #endif
+            }
+        });
     }
 }
 
@@ -983,12 +1021,14 @@ static CFRunLoopRef AQSocketCFHandlerRunLoop(void)
     // protocol layers.
     // Note that we initialize it as a stack variable initially, which we use in the block
     // below to avoid a retain-cycle.
-    AQSocketReader * aSocketReader = [AQSocketReader new];
+    __block AQSocketReader * aSocketReader = [AQSocketReader new];
+    CRITICAL_SECTION(^{
 #if USING_MRR
     _socketReader = [aSocketReader retain];
 #else
     _socketReader = aSocketReader;
 #endif
+    });
     
     __block_weak AQSocket *weakSelf = self;
     
@@ -1003,7 +1043,10 @@ static CFRunLoopRef AQSocketCFHandlerRunLoop(void)
         {
             if ( [data length] != 0 )
             {
+                CRITICAL_SECTION(^{
                 [aSocketReader appendData: data];   // if using a dispatch data wrapper, this method will notice and do the right thing automatically
+                });
+
                 if ( strongSelf.eventHandler != nil )
                     strongSelf.eventHandler(AQSocketEventDataAvailable, aSocketReader);
             }
@@ -1040,7 +1083,9 @@ static CFRunLoopRef AQSocketCFHandlerRunLoop(void)
     };
     
 #if USING_MRR
+CRITICAL_SECTION(^{
     [aSocketReader release];
+});
 #endif
     
     // socket is now available for use

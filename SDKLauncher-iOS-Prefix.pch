@@ -22,7 +22,7 @@
 	// -----------------------------------------
 	// SimpleHTTPServer requires the following
 
-#define DEBUGLOG true
+#define DEBUGLOG false
 
 	# define USING_MRR (!__has_feature(objc_arc))
 

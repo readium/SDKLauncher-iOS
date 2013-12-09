@@ -350,6 +350,7 @@ static CFRunLoopRef AQSocketCFHandlerRunLoop(void)
 
 
 #if USING_MRR
+//NSLog(@"CHECK_1 %@", self);
 CRITICAL_SECTION(^{
     if (_socketReader != nil)
     {
@@ -357,6 +358,7 @@ CRITICAL_SECTION(^{
         _socketReader = nil;
     }
 });
+//NSLog(@"CHECK_2 %@", self);
 #endif
 
 #if USING_MRR || DISPATCH_USES_ARC == 0

@@ -8,19 +8,20 @@
 
 #import <Foundation/Foundation.h>
 #import "RDPackageResource.h"
+//#import <ePub3/package.h>
 
 @class RDContainer;
+@class RDMediaOverlaysSmilModel;
 @class RDNavigationElement;
 
-@interface RDPackage : NSObject <RDPackageResourceDelegate> {
+@interface RDPackage : NSObject { //<RDPackageResourceDelegate> {
+	@private RDMediaOverlaysSmilModel *m_mediaOverlaysSmilModel;
 	@private RDNavigationElement *m_navElemListOfFigures;
 	@private RDNavigationElement *m_navElemListOfIllustrations;
 	@private RDNavigationElement *m_navElemListOfTables;
 	@private RDNavigationElement *m_navElemPageList;
 	@private RDNavigationElement *m_navElemTableOfContents;
 	@private NSString *m_packageUUID;
-	@private NSMutableSet *m_relativePathsThatAreHTML;
-	@private NSMutableSet *m_relativePathsThatAreNotHTML;
 	@private NSMutableArray *m_spineItems;
 	@private NSMutableArray *m_subjects;
 }
@@ -35,6 +36,7 @@
 @property (nonatomic, readonly) RDNavigationElement *listOfFigures;
 @property (nonatomic, readonly) RDNavigationElement *listOfIllustrations;
 @property (nonatomic, readonly) RDNavigationElement *listOfTables;
+@property (nonatomic, readonly) RDMediaOverlaysSmilModel *mediaOverlaysSmilModel;
 @property (nonatomic, readonly) NSString *modificationDateString;
 @property (nonatomic, readonly) NSString *packageID;
 @property (nonatomic, readonly) NSString *packageUUID;
@@ -49,8 +51,9 @@
 
 - (id)initWithPackage:(void *)package;
 
-// Returns the resource at the given relative path or nil if it doesn't exist.  The isHTML out
-// parameter returns whether or not the resource is HTML.
-- (RDPackageResource *)resourceAtRelativePath:(NSString *)relativePath isHTML:(BOOL *)isHTML;
+// Returns the resource at the given relative path or nil if it doesn't exist.
+- (RDPackageResource *)resourceAtRelativePath:(NSString *)relativePath;
+
+- (void*) sdkPackage;
 
 @end

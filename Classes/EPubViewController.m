@@ -11,14 +11,18 @@
 #import "BookmarkDatabase.h"
 #import "EPubSettings.h"
 #import "EPubSettingsController.h"
-#import "EPubURLProtocolBridge.h"
-#import "HTMLUtil.h"
 #import "PackageResourceServer.h"
 #import "RDContainer.h"
 #import "RDNavigationElement.h"
 #import "RDPackage.h"
 #import "RDPackageResource.h"
 #import "RDSpineItem.h"
+
+#include <assert.h>
+#include <stdbool.h>
+#include <sys/types.h>
+#include <unistd.h>
+#include <sys/sysctl.h>
 
 
 @interface EPubViewController ()
@@ -73,6 +77,8 @@
 
 - (void)cleanUp {
 	[[NSNotificationCenter defaultCenter] removeObserver:self];
+
+	m_moIsPlaying = NO;
 	m_webView = nil;
 
 	if (m_alertAddBookmark != nil) {
@@ -264,23 +270,17 @@
 	[nc addObserver:self selector:@selector(onEPubSettingsDidChange:)
 		name:kSDKLauncherEPubSettingsDidChange object:nil];
 
-	[nc addObserver:self selector:@selector(onProtocolBridgeNeedsResponse:)
-		name:kSDKLauncherEPubURLProtocolBridgeNeedsResponse object:nil];
-
 	// Web view
 
 	m_webView = [[[UIWebView alloc] init] autorelease];
 	m_webView.delegate = self;
 	m_webView.hidden = YES;
+	m_webView.scalesPageToFit = YES;
 	m_webView.scrollView.bounces = NO;
-    m_webView.scalesPageToFit = YES;
 	[self.view addSubview:m_webView];
 
-	NSString *url = [NSString stringWithFormat:@"%@://%@/%@",
-		kSDKLauncherWebViewSDKProtocol,
-		m_package.packageUUID,
-		m_spineItem.baseHref];
-
+	NSString *url = [NSString stringWithFormat:
+		@"http://localhost:%d/reader.html", m_resourceServer.port];
 	[m_webView loadRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:url]]];
 }
 
@@ -298,6 +298,16 @@
 		textField.placeholder = LocStr(@"ADD_BOOKMARK_PROMPT_PLACEHOLDER");
 		[m_alertAddBookmark show];
 	}
+}
+
+
+- (void)onClickMOPause {
+	[m_webView stringByEvaluatingJavaScriptFromString:@"ReadiumSDK.reader.toggleMediaOverlay()"];
+}
+
+
+- (void)onClickMOPlay {
+	[m_webView stringByEvaluatingJavaScriptFromString:@"ReadiumSDK.reader.toggleMediaOverlay()"];
 }
 
 
@@ -333,67 +343,6 @@
 
 - (void)onEPubSettingsDidChange:(NSNotification *)notification {
 	[self passSettingsToJavaScript];
-}
-
-
-- (void)onProtocolBridgeNeedsResponse:(NSNotification *)notification {
-	NSURL *url = [notification.userInfo objectForKey:@"url"];
-	NSString *s = url.absoluteString;
-	NSString *prefix = [kSDKLauncherWebViewSDKProtocol stringByAppendingString:@"://"];
-
-	if (s == nil || ![s hasPrefix:prefix] || s.length == prefix.length) {
-		return;
-	}
-
-	s = [s substringFromIndex:prefix.length];
-	NSRange range = [s rangeOfString:@"/"];
-
-	if (range.location == NSNotFound) {
-		return;
-	}
-
-	NSString *packageUUID = [s substringToIndex:range.location];
-
-	if (![packageUUID isEqualToString:m_package.packageUUID]) {
-		return;
-	}
-
-	s = [s substringFromIndex:packageUUID.length];
-
-	if (![s hasPrefix:@"/"]) {
-		return;
-	}
-
-	NSString *relativePath = [s substringFromIndex:1];
-	BOOL isHTML = NO;
-	NSData *data = [m_package resourceAtRelativePath:relativePath isHTML:&isHTML].data;
-	EPubURLProtocolBridge *bridge = notification.object;
-
-	BOOL didHandleFirstRequest = m_didHandleFirstRequest;
-	m_didHandleFirstRequest = YES;
-
-	if (isHTML) {
-		NSString *html = nil;
-
-		if (didHandleFirstRequest) {
-			html = [HTMLUtil
-				htmlByReplacingMediaURLsInHTML:[self htmlFromData:data]
-				relativePath:relativePath
-				packageUUID:m_package.packageUUID];
-		}
-		else {
-			// Return reader.html, which in turn will load the intended HTML.
-			html = [HTMLUtil readerHTML];
-		}
-
-		if (html != nil && html.length > 0) {
-			data = [html dataUsingEncoding:NSUTF8StringEncoding];
-		}
-	}
-
-	if (data != nil) {
-		bridge.currentData = data;
-	}
 }
 
 
@@ -436,16 +385,13 @@
 		return;
 	}
 
+	NSMutableArray *items = [NSMutableArray arrayWithCapacity:8];
+
 	UIBarButtonItem *itemFixed = [[[UIBarButtonItem alloc]
 		initWithBarButtonSystemItem:UIBarButtonSystemItemFixedSpace
 		target:nil
 		action:nil] autorelease];
 	itemFixed.width = 12;
-
-	UIBarButtonItem *itemFlex = [[[UIBarButtonItem alloc]
-		initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace
-		target:nil
-		action:nil] autorelease];
 
 	static NSString *arrowL = @"\u2190";
 	static NSString *arrowR = @"\u2192";
@@ -462,10 +408,18 @@
 		target:self
 		action:@selector(onClickPrev)] autorelease];
 
-	UIBarButtonItem *itemAddBookmark = [[[UIBarButtonItem alloc]
-		initWithBarButtonSystemItem:UIBarButtonSystemItemAdd
-		target:self
-		action:@selector(onClickAddBookmark)] autorelease];
+	if (m_currentPageProgressionIsLTR) {
+		[items addObject:itemPrev];
+		[items addObject:itemFixed];
+		[items addObject:itemNext];
+	}
+	else {
+		[items addObject:itemNext];
+		[items addObject:itemFixed];
+		[items addObject:itemPrev];
+	}
+
+	[items addObject:itemFixed];
 
 	UILabel *label = [[[UILabel alloc] init] autorelease];
 	label.backgroundColor = [UIColor clearColor];
@@ -490,31 +444,43 @@
 
 	[label sizeToFit];
 
-	UIBarButtonItem *itemLabel = [[[UIBarButtonItem alloc]
-		initWithCustomView:label] autorelease];
+	[items addObject:[[[UIBarButtonItem alloc] initWithCustomView:label] autorelease]];
 
-	if (m_currentPageProgressionIsLTR) {
-		self.toolbarItems = @[
-			itemPrev,
-			itemFixed,
-			itemNext,
-			itemFixed,
-			itemLabel,
-			itemFlex,
-			itemAddBookmark
-		];
+	[items addObject:[[[UIBarButtonItem alloc]
+		initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace
+		target:nil
+		action:nil] autorelease]
+	];
+
+	NSString *response = [m_webView stringByEvaluatingJavaScriptFromString:
+		@"ReadiumSDK.reader.isMediaOverlayAvailable()"];
+
+	if (response != nil && [response isEqualToString:@"true"]) {
+		if (m_moIsPlaying) {
+			[items addObject:[[[UIBarButtonItem alloc]
+				initWithBarButtonSystemItem:UIBarButtonSystemItemPause
+				target:self
+				action:@selector(onClickMOPause)] autorelease]
+			];
+		}
+		else {
+			[items addObject:[[[UIBarButtonItem alloc]
+				initWithBarButtonSystemItem:UIBarButtonSystemItemPlay
+				target:self
+				action:@selector(onClickMOPlay)] autorelease]
+			];
+		}
+
+		[items addObject:itemFixed];
 	}
-	else {
-		self.toolbarItems = @[
-			itemNext,
-			itemFixed,
-			itemPrev,
-			itemFixed,
-			itemLabel,
-			itemFlex,
-			itemAddBookmark
-		];
-	}
+
+	[items addObject:[[[UIBarButtonItem alloc]
+		initWithBarButtonSystemItem:UIBarButtonSystemItemAdd
+		target:self
+		action:@selector(onClickAddBookmark)] autorelease]
+	];
+
+	self.toolbarItems = items;
 }
 
 
@@ -553,7 +519,6 @@
 	if ([url hasPrefix:s]) {
 		url = [url substringFromIndex:s.length];
 		shouldLoad = NO;
-		s = @"pageDidChange?q=";
 
 		if ([url isEqualToString:@"readerDidInitialize"]) {
 			NSMutableDictionary *dict = [NSMutableDictionary dictionary];
@@ -592,12 +557,16 @@
 			if (data != nil) {
 				NSString *arg = [[[NSString alloc] initWithData:data
 					encoding:NSUTF8StringEncoding] autorelease];
-
-				[m_webView stringByEvaluatingJavaScriptFromString:[NSString stringWithFormat:
-					@"ReadiumSDK.reader.openBook(%@)", arg]];
+				[m_webView stringByEvaluatingJavaScriptFromString:[NSString
+					stringWithFormat:@"ReadiumSDK.reader.openBook(%@)", arg]];
 			}
+
+			return shouldLoad;
 		}
-		else if ([url hasPrefix:s]) {
+
+		s = @"pageDidChange?q=";
+
+		if ([url hasPrefix:s]) {
 			s = [url substringFromIndex:s.length];
 			s = [s stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
 
@@ -635,6 +604,29 @@
 
 			m_webView.hidden = NO;
 			[self updateToolbar];
+			return shouldLoad;
+		}
+
+		s = @"mediaOverlayStatusDidChange?q=";
+
+		if ([url hasPrefix:s]) {
+			s = [url substringFromIndex:s.length];
+			s = [s stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+
+			NSData *data = [s dataUsingEncoding:NSUTF8StringEncoding];
+			NSError *error;
+
+			NSDictionary *dict = [NSJSONSerialization JSONObjectWithData:data
+				options:0 error:&error];
+
+			NSNumber *number = [dict objectForKey:@"isPlaying"];
+
+			if (number != nil) {
+				m_moIsPlaying = number.boolValue;
+			}
+
+			[self updateToolbar];
+			return shouldLoad;
 		}
 	}
 

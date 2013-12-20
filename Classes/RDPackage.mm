@@ -7,14 +7,17 @@
 //
 
 #import "RDPackage.h"
+#import <ePub3/media-overlays_smil_model.h>
 #import <ePub3/nav_table.h>
 #import <ePub3/package.h>
+#import <ePub3/utilities/byte_stream.h>
+#import "RDMediaOverlaysSmilModel.h"
 #import "RDNavigationElement.h"
 #import "RDSpineItem.h"
 
 
 @interface RDPackage() {
-	@private std::vector<std::unique_ptr<ePub3::ArchiveReader>> m_archiveReaderVector;
+	//@private std::vector<std::unique_ptr<ePub3::ByteStream>> m_byteStreamVector;
 	@private ePub3::Package *m_package;
 	@private std::vector<std::shared_ptr<ePub3::SpineItem>> m_spineItemVector;
 }
@@ -51,14 +54,13 @@
 
 
 - (void)dealloc {
+	[m_mediaOverlaysSmilModel release];
 	[m_navElemListOfFigures release];
 	[m_navElemListOfIllustrations release];
 	[m_navElemListOfTables release];
 	[m_navElemPageList release];
 	[m_navElemTableOfContents release];
 	[m_packageUUID release];
-	[m_relativePathsThatAreHTML release];
-	[m_relativePathsThatAreNotHTML release];
 	[m_spineItems release];
 	[m_subjects release];
 	[super dealloc];
@@ -67,8 +69,10 @@
 
 - (NSDictionary *)dictionary {
 	NSMutableDictionary *dictRoot = [NSMutableDictionary dictionary];
+
 	[dictRoot setObject:@"/" forKey:@"rootUrl"];
-	[dictRoot setObject:[NSArray array] forKey:@"mediaOverlays"];
+
+	[dictRoot setObject:self.mediaOverlaysSmilModel.dictionary forKey:@"media_overlay"];
 
 	NSString *s = self.renditionLayout;
 
@@ -116,8 +120,6 @@
 
 	if (self = [super init]) {
 		m_package = (ePub3::Package *)package;
-		m_relativePathsThatAreHTML = [[NSMutableSet alloc] init];
-		m_relativePathsThatAreNotHTML = [[NSMutableSet alloc] init];
 
 		// Package ID.
 
@@ -202,6 +204,17 @@
 }
 
 
+- (RDMediaOverlaysSmilModel *)mediaOverlaysSmilModel {
+	if (m_mediaOverlaysSmilModel == nil) {
+		ePub3::MediaOverlaysSmilModel *smilModel = m_package->MediaOverlaysSmilModel().get();
+		m_mediaOverlaysSmilModel = [[RDMediaOverlaysSmilModel alloc]
+			initWithMediaOverlaysSmilModel:smilModel];
+	}
+
+	return m_mediaOverlaysSmilModel;
+}
+
+
 - (NSString *)modificationDateString {
 	const ePub3::string s = m_package->ModificationDate();
 	return [NSString stringWithUTF8String:s.c_str()];
@@ -226,16 +239,16 @@
 }
 
 
-- (void)rdpackageResourceWillDeallocate:(RDPackageResource *)packageResource {
-	for (auto i = m_archiveReaderVector.begin(); i != m_archiveReaderVector.end(); i++) {
-		if (i->get() == packageResource.archiveReader) {
-			m_archiveReaderVector.erase(i);
-			return;
-		}
-	}
-
-	NSLog(@"The archive reader was not found!");
-}
+//- (void)rdpackageResourceWillDeallocate:(RDPackageResource *)packageResource {
+//	for (auto i = m_byteStreamVector.begin(); i != m_byteStreamVector.end(); i++) {
+//		if (i->get() == packageResource.byteStream) {
+//			m_byteStreamVector.erase(i);
+//			return;
+//		}
+//	}
+//
+//	NSLog(@"The byte stream was not found!");
+//}
 
 
 - (NSString *)renditionLayout {
@@ -244,11 +257,7 @@
 }
 
 
-- (RDPackageResource *)resourceAtRelativePath:(NSString *)relativePath isHTML:(BOOL *)isHTML {
-	if (isHTML != NULL) {
-		*isHTML = NO;
-	}
-
+- (RDPackageResource *)resourceAtRelativePath:(NSString *)relativePath {
 	if (relativePath == nil || relativePath.length == 0) {
 		return nil;
 	}
@@ -260,49 +269,21 @@
 	}
 
 	ePub3::string s = ePub3::string(relativePath.UTF8String);
-	std::unique_ptr<ePub3::ArchiveReader> reader = m_package->ReaderForRelativePath(s);
+	std::unique_ptr<ePub3::ByteStream> byteStream = m_package->ReadStreamForRelativePath(s);
 
-	if (reader == nullptr) {
-		NSLog(@"Relative path '%@' does not have an archive reader!", relativePath);
+	if (byteStream == nullptr) {
+		NSLog(@"Relative path '%@' does not have a byte stream!", relativePath);
 		return nil;
 	}
 
 	RDPackageResource *resource = [[[RDPackageResource alloc]
-		initWithDelegate:self
-		archiveReader:reader.get()
-		relativePath:relativePath] autorelease];
+            initWithByteStream:byteStream.release()
+		relativePath:relativePath
+        pack:self] autorelease];
 
-	if (resource != nil) {
-		m_archiveReaderVector.push_back(std::move(reader));
-	}
-
-	// Determine if the data represents HTML.
-
-	if (isHTML != NULL) {
-		if ([m_relativePathsThatAreHTML containsObject:relativePath]) {
-			*isHTML = YES;
-		}
-		else if (![m_relativePathsThatAreNotHTML containsObject:relativePath]) {
-			ePub3::ManifestTable manifest = m_package->Manifest();
-
-			for (auto i = manifest.begin(); i != manifest.end(); i++) {
-				std::shared_ptr<ePub3::ManifestItem> item = i->second;
-
-				if (item->Href() == s) {
-					if (item->MediaType() == "application/xhtml+xml") {
-						[m_relativePathsThatAreHTML addObject:relativePath];
-						*isHTML = YES;
-					}
-
-					break;
-				}
-			}
-
-			if (*isHTML == NO) {
-				[m_relativePathsThatAreNotHTML addObject:relativePath];
-			}
-		}
-	}
+//	if (resource != nil) {
+//		m_byteStreamVector.push_back(std::move(byteStream));
+//	}
 
 	return resource;
 }
@@ -347,5 +328,9 @@
 	return [NSString stringWithUTF8String:s.c_str()];
 }
 
+-(void*) sdkPackage
+{
+    return m_package;
+}
 
 @end

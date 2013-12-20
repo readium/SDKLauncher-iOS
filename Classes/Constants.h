@@ -9,8 +9,6 @@
 #import <Foundation/Foundation.h>
 
 #define kSDKLauncherPackageResourceBufferSize 4096
-#define kSDKLauncherPackageResourceServerPort 8080
-#define kSDKLauncherWebViewSDKProtocol @"epubwebviewsdk"
 
 @interface Constants : NSObject
 

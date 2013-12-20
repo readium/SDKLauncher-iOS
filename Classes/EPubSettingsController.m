@@ -12,8 +12,7 @@
 
 @interface EPubSettingsController ()
 
-- (UILabel *)addLabelWithText:(NSString *)text;
-- (void)updateLabels;
+- (void)updateCells;
 
 @end
 
@@ -21,45 +20,92 @@
 @implementation EPubSettingsController
 
 
-- (UILabel *)addLabelWithText:(NSString *)text {
-	UILabel *label = [[[UILabel alloc] init] autorelease];
-	label.backgroundColor = [UIColor clearColor];
-	label.font = [UIFont boldSystemFontOfSize:18];
-	label.text = text;
-	label.textColor = [UIColor blackColor];
-	[label sizeToFit];
-	[self.view addSubview:label];
-	return label;
-}
-
-
 - (void)cleanUp {
-	[[NSNotificationCenter defaultCenter] removeObserver:self];
-
-	m_labelColumnGap = nil;
-	m_labelFontScale = nil;
-	m_labelIsSyntheticSpread = nil;
-	m_stepperColumnGap = nil;
-	m_stepperFontScale = nil;
-	m_switchIsSyntheticSpread = nil;
+	m_table = nil;
 }
 
 
 - (void)dealloc {
+	[[NSNotificationCenter defaultCenter] removeObserver:self];
+	[m_cells release];
+	m_cells = nil;
 	[super dealloc];
 }
 
 
 - (id)init {
 	if (self = [super initWithTitle:LocStr(@"EPUB_SETTINGS_TITLE") navBarHidden:NO]) {
-		self.contentSizeForViewInPopover = CGSizeMake(320, 150);
-
 		if (!IS_IPAD) {
 			self.navigationItem.rightBarButtonItem = [[[UIBarButtonItem alloc]
 				initWithBarButtonSystemItem:UIBarButtonSystemItemDone
 				target:self
 				action:@selector(onClickDone)] autorelease];
 		}
+
+		// Synthetic spread
+
+		UISwitch *sw = [[[UISwitch alloc] init] autorelease];
+		sw.on = [EPubSettings shared].isSyntheticSpread;
+		[sw addTarget:self action:@selector(onIsSyntheticSpreadDidChange:)
+			forControlEvents:UIControlEventValueChanged];
+
+		m_cellIsSyntheticSpread = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault
+			reuseIdentifier:nil] autorelease];
+		m_cellIsSyntheticSpread.accessoryView = sw;
+		m_cellIsSyntheticSpread.textLabel.text = LocStr(@"EPUB_SETTINGS_IS_SYNTHETIC_SPREAD");
+
+		// Font scale
+
+		UIStepper *stepper = [[[UIStepper alloc] init] autorelease];
+		stepper.minimumValue = 0.2;
+		stepper.maximumValue = 5;
+		stepper.stepValue = 0.1;
+		stepper.value = [EPubSettings shared].fontScale;
+		[stepper addTarget:self action:@selector(onFontScaleDidChange:)
+			forControlEvents:UIControlEventValueChanged];
+
+		m_cellFontScale = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault
+			reuseIdentifier:nil] autorelease];
+		m_cellFontScale.accessoryView = stepper;
+
+		// Column gap
+
+		int maxValue = MIN(SCREEN_SIZE.width, SCREEN_SIZE.height) / 3.0;
+		int stepValue = 5;
+
+		while (maxValue % stepValue != 0) {
+			maxValue--;
+		}
+
+		stepper = [[[UIStepper alloc] init] autorelease];
+		stepper.minimumValue = 0;
+		stepper.maximumValue = maxValue;
+		stepper.stepValue = stepValue;
+		stepper.value = [EPubSettings shared].columnGap;
+		[stepper addTarget:self action:@selector(onColumnGapDidChange:)
+			forControlEvents:UIControlEventValueChanged];
+
+		m_cellColumnGap = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault
+			reuseIdentifier:nil] autorelease];
+		m_cellColumnGap.accessoryView = stepper;
+
+		// Finish up
+
+		m_cells = [[NSArray alloc] initWithArray:@[
+			m_cellIsSyntheticSpread,
+			m_cellFontScale,
+			m_cellColumnGap
+		]];
+
+		[self updateCells];
+
+		self.contentSizeForViewInPopover = CGSizeMake(320, 44 * m_cells.count);
+
+		[[NSNotificationCenter defaultCenter]
+			addObserver:self
+			selector:@selector(updateCells)
+			name:kSDKLauncherEPubSettingsDidChange
+			object:nil];
 	}
 
 	return self;
@@ -68,62 +114,11 @@
 
 - (void)loadView {
 	self.view = [[[UIView alloc] init] autorelease];
-	self.view.backgroundColor = [UIColor whiteColor];
 
-	m_labelColumnGap = [self addLabelWithText:@"X"];
-	m_labelFontScale = [self addLabelWithText:@"X"];
-	m_labelIsSyntheticSpread = [self addLabelWithText:LocStr(@"EPUB_SETTINGS_IS_SYNTHETIC_SPREAD")];
-
-	[self updateLabels];
-
-	// Column gap stepper
-
-	int minValue = 0;
-	int maxValue = MIN(SCREEN_SIZE.width, SCREEN_SIZE.height) / 3.0;
-	int stepValue = 5;
-
-	while (maxValue % stepValue != 0) {
-		maxValue--;
-	}
-
-	m_stepperColumnGap = [[[UIStepper alloc] init] autorelease];
-	m_stepperColumnGap.minimumValue = minValue;
-	m_stepperColumnGap.maximumValue = maxValue;
-	m_stepperColumnGap.stepValue = stepValue;
-	m_stepperColumnGap.value = [EPubSettings shared].columnGap;
-	[m_stepperColumnGap addTarget:self action:@selector(onStepperDidChange:)
-		forControlEvents:UIControlEventValueChanged];
-	[m_stepperColumnGap sizeToFit];
-	[self.view addSubview:m_stepperColumnGap];
-
-	// Font scale stepper
-
-	m_stepperFontScale = [[[UIStepper alloc] init] autorelease];
-	m_stepperFontScale.minimumValue = 0.2;
-	m_stepperFontScale.maximumValue = 5;
-	m_stepperFontScale.stepValue = 0.1;
-	m_stepperFontScale.value = [EPubSettings shared].fontScale;
-	[m_stepperFontScale addTarget:self action:@selector(onStepperDidChange:)
-		forControlEvents:UIControlEventValueChanged];
-	[m_stepperFontScale sizeToFit];
-	[self.view addSubview:m_stepperFontScale];
-
-	// Switch
-
-	m_switchIsSyntheticSpread = [[[UISwitch alloc] init] autorelease];
-	m_switchIsSyntheticSpread.on = [EPubSettings shared].isSyntheticSpread;
-	[m_switchIsSyntheticSpread addTarget:self action:@selector(onSwitchDidChange:)
-		forControlEvents:UIControlEventValueChanged];
-	[m_switchIsSyntheticSpread sizeToFit];
-	[self.view addSubview:m_switchIsSyntheticSpread];
-
-	// Notifications
-
-	[[NSNotificationCenter defaultCenter]
-		addObserver:self
-		selector:@selector(updateLabels)
-		name:kSDKLauncherEPubSettingsDidChange
-		object:nil];
+	m_table = [[[UITableView alloc] initWithFrame:CGRectZero
+		style:UITableViewStylePlain] autorelease];
+	m_table.dataSource = self;
+	[self.view addSubview:m_table];
 }
 
 
@@ -132,63 +127,50 @@
 }
 
 
-- (void)onStepperDidChange:(UIStepper *)stepper {
-	if (stepper == m_stepperColumnGap) {
-		[EPubSettings shared].columnGap = stepper.value;
-	}
-	else if (stepper == m_stepperFontScale) {
-		[EPubSettings shared].fontScale = stepper.value;
-	}
+- (void)onColumnGapDidChange:(UIStepper *)stepper {
+	[EPubSettings shared].columnGap = stepper.value;
 }
 
 
-- (void)onSwitchDidChange:(UISwitch *)sw {
-	if (sw == m_switchIsSyntheticSpread) {
-		[EPubSettings shared].isSyntheticSpread = sw.on;
-	}
+- (void)onFontScaleDidChange:(UIStepper *)stepper {
+	[EPubSettings shared].fontScale = stepper.value;
 }
 
 
-- (void)updateLabels {
+- (void)onIsSyntheticSpreadDidChange:(UISwitch *)sw {
+	[EPubSettings shared].isSyntheticSpread = sw.on;
+}
+
+
+- (UITableViewCell *)
+	tableView:(UITableView *)tableView
+	cellForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+	return [m_cells objectAtIndex:indexPath.row];
+}
+
+
+- (NSInteger)
+	tableView:(UITableView *)tableView
+	numberOfRowsInSection:(NSInteger)section
+{
+	return m_cells.count;
+}
+
+
+- (void)updateCells {
 	EPubSettings *settings = [EPubSettings shared];
 
-	m_labelColumnGap.text = LocStr(@"EPUB_SETTINGS_COLUMN_GAP",
+	m_cellColumnGap.textLabel.text = LocStr(@"EPUB_SETTINGS_COLUMN_GAP",
 		(int)round(settings.columnGap));
 
-	m_labelFontScale.text = LocStr(@"EPUB_SETTINGS_FONT_SCALE",
+	m_cellFontScale.textLabel.text = LocStr(@"EPUB_SETTINGS_FONT_SCALE",
 		(int)round(100.0 * settings.fontScale));
 }
 
 
 - (void)viewDidLayoutSubviews {
-	CGSize size = self.view.bounds.size;
-	CGFloat marginLR = 12;
-	CGFloat gap = 24;
-
-	m_labelIsSyntheticSpread.frame = CGRectMake(marginLR, 16, size.width - 2.0 * marginLR,
-		m_labelIsSyntheticSpread.bounds.size.height);
-	CGFloat y = CGRectGetMaxY(m_labelIsSyntheticSpread.frame);
-
-	m_labelFontScale.frame = CGRectMake(marginLR, y + gap, size.width - 2.0 * marginLR,
-		m_labelFontScale.bounds.size.height);
-	y = CGRectGetMaxY(m_labelFontScale.frame);
-
-	m_labelColumnGap.frame = CGRectMake(marginLR, y + gap, size.width - 2.0 * marginLR,
-		m_labelColumnGap.bounds.size.height);
-	y = CGRectGetMaxY(m_labelColumnGap.frame);
-
-	m_switchIsSyntheticSpread.frame = CGRectOffset(m_switchIsSyntheticSpread.bounds,
-		size.width - marginLR - m_switchIsSyntheticSpread.bounds.size.width,
-		round(CGRectGetMidY(m_labelIsSyntheticSpread.frame) -
-			0.5 * m_switchIsSyntheticSpread.bounds.size.height));
-
-	m_stepperFontScale.frame = CGRectOffset(m_stepperFontScale.bounds,
-		size.width - marginLR - m_stepperFontScale.bounds.size.width,
-		round(CGRectGetMidY(m_labelFontScale.frame) - 0.5 * m_stepperFontScale.bounds.size.height));
-
-	m_stepperColumnGap.frame = CGRectOffset(m_stepperColumnGap.bounds,
-		size.width - marginLR - m_stepperColumnGap.bounds.size.width,
-		round(CGRectGetMidY(m_labelColumnGap.frame) - 0.5 * m_stepperColumnGap.bounds.size.height));
+	m_table.frame = self.view.bounds;
 }
 
 

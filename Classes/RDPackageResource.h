@@ -8,38 +8,39 @@
 
 #import <Foundation/Foundation.h>
 
+@class RDPackage;
 @class RDPackageResource;
 
-@protocol RDPackageResourceDelegate
-
-- (void)rdpackageResourceWillDeallocate:(RDPackageResource *)packageResource;
-
-@end
+//@protocol RDPackageResourceDelegate
+//
+//- (void)rdpackageResourceWillDeallocate:(RDPackageResource *)packageResource;
+//
+//@end
 
 @interface RDPackageResource : NSObject {
 	@private UInt8 m_buffer[kSDKLauncherPackageResourceBufferSize];
-	@private NSData *m_data;
-	@private id <RDPackageResourceDelegate> m_delegate;
+	//@private id <RDPackageResourceDelegate> m_delegate;
 	@private NSString *m_relativePath;
 }
 
-@property (nonatomic, readonly) void *archiveReader;
-
-// The content of the resource in its entirety.  If you call this, don't call
-// createNextChunkByReading.
-@property (nonatomic, readonly) NSData *data;
+//@property (nonatomic, readonly) void *byteStream;
+@property (nonatomic, readonly) int bytesCount;
 
 // The relative path associated with this resource.
 @property (nonatomic, readonly) NSString *relativePath;
 
-// The next chunk of data for the resource, or nil if we have finished reading all chunks.  If
-// you call this, don't call the data property.
-- (NSData *)createNextChunkByReading;
+//- (NSData *)createNextChunkByReading;
+
+//- (NSData *)readAllDataChunks;
+
+- (NSData *)createChunkByReadingRange:(NSRange)range package:(RDPackage *)package;
+
 
 // Creates an instance using the given C++ object.
 - (id)
-	initWithDelegate:(id <RDPackageResourceDelegate>)delegate
-	archiveReader:(void *)archiveReader
-	relativePath:(NSString *)relativePath;
+	initWithByteStream://(id <RDPackageResourceDelegate>)delegate
+	(void *)byteStream
+	relativePath:(NSString *)relativePath
+    pack:(RDPackage *)package;
 
 @end

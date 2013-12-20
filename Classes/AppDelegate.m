@@ -8,7 +8,6 @@
 
 #import "AppDelegate.h"
 #import "ContainerListController.h"
-#import "EPubURLProtocol.h"
 
 
 @interface AppDelegate()
@@ -25,8 +24,6 @@
 	application:(UIApplication *)application
 	didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
-	[NSURLProtocol registerClass:[EPubURLProtocol class]];
-
 	m_window = [[UIWindow alloc] initWithFrame:[UIScreen mainScreen].bounds];
 	[self configureAppearance];
 

@@ -8,13 +8,12 @@
 
 #import "BaseViewController.h"
 
-@interface EPubSettingsController : BaseViewController {
-	@private UILabel *m_labelColumnGap;
-	@private UILabel *m_labelFontScale;
-	@private UILabel *m_labelIsSyntheticSpread;
-	@private UIStepper *m_stepperColumnGap;
-	@private UIStepper *m_stepperFontScale;
-	@private UISwitch *m_switchIsSyntheticSpread;
+@interface EPubSettingsController : BaseViewController <UITableViewDataSource> {
+	@private UITableViewCell *m_cellColumnGap;
+	@private UITableViewCell *m_cellFontScale;
+	@private UITableViewCell *m_cellIsSyntheticSpread;
+	@private NSArray *m_cells;
+	@private UITableView *m_table;
 }
 
 @end

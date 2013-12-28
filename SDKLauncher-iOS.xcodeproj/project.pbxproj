@@ -71,6 +71,7 @@
 		34C5534416E15D32003A7C23 /* PackageResourceServer.m in Sources */ = {isa = PBXBuildFile; fileRef = 34C5534316E15D32003A7C23 /* PackageResourceServer.m */; };
 		34CE0B1A1720CC0300F55192 /* RDNavigationElement.mm in Sources */ = {isa = PBXBuildFile; fileRef = 34CE0B191720CC0300F55192 /* RDNavigationElement.mm */; };
 		34CE0B1F1720D8FE00F55192 /* NavigationElementController.m in Sources */ = {isa = PBXBuildFile; fileRef = 34CE0B1E1720D8FE00F55192 /* NavigationElementController.m */; };
+		34D73601186E729400AA361E /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 34D73600186E729400AA361E /* AVFoundation.framework */; };
 		34E12B9F180301A2004DCB68 /* Icon-29.png in Resources */ = {isa = PBXBuildFile; fileRef = 34E12B92180301A2004DCB68 /* Icon-29.png */; };
 		34E12BA0180301A2004DCB68 /* Icon-29@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 34E12B93180301A2004DCB68 /* Icon-29@2x.png */; };
 		34E12BA1180301A2004DCB68 /* Icon-40.png in Resources */ = {isa = PBXBuildFile; fileRef = 34E12B94180301A2004DCB68 /* Icon-40.png */; };
@@ -230,6 +231,7 @@
 		34CE0B191720CC0300F55192 /* RDNavigationElement.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = RDNavigationElement.mm; sourceTree = "<group>"; };
 		34CE0B1D1720D8FE00F55192 /* NavigationElementController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NavigationElementController.h; sourceTree = "<group>"; };
 		34CE0B1E1720D8FE00F55192 /* NavigationElementController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NavigationElementController.m; sourceTree = "<group>"; };
+		34D73600186E729400AA361E /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
 		34E12B92180301A2004DCB68 /* Icon-29.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon-29.png"; sourceTree = "<group>"; };
 		34E12B93180301A2004DCB68 /* Icon-29@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon-29@2x.png"; sourceTree = "<group>"; };
 		34E12B94180301A2004DCB68 /* Icon-40.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon-40.png"; sourceTree = "<group>"; };
@@ -253,6 +255,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				34D73601186E729400AA361E /* AVFoundation.framework in Frameworks */,
 				34C5534116E15D08003A7C23 /* CFNetwork.framework in Frameworks */,
 				340FC16116BC3B4600346A59 /* CoreGraphics.framework in Frameworks */,
 				340FC15F16BC3B4600346A59 /* Foundation.framework in Frameworks */,
@@ -313,6 +316,7 @@
 		340FC15B16BC3B4600346A59 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				34D73600186E729400AA361E /* AVFoundation.framework */,
 				34C5534016E15D08003A7C23 /* CFNetwork.framework */,
 				340FC16016BC3B4600346A59 /* CoreGraphics.framework */,
 				340FC15E16BC3B4600346A59 /* Foundation.framework */,

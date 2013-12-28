@@ -7,6 +7,7 @@
 //
 
 #import "AppDelegate.h"
+#import <AVFoundation/AVFoundation.h>
 #import "ContainerListController.h"
 
 
@@ -24,6 +25,8 @@
 	application:(UIApplication *)application
 	didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
+	[[AVAudioSession sharedInstance] setCategory:AVAudioSessionCategoryPlayback error:nil];
+
 	m_window = [[UIWindow alloc] initWithFrame:[UIScreen mainScreen].bounds];
 	[self configureAppearance];
 

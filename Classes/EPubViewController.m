@@ -280,7 +280,7 @@
 	[self.view addSubview:m_webView];
 
 	NSString *url = [NSString stringWithFormat:
-		@"http://localhost:%d/reader.html", m_resourceServer.port];
+		@"http://localhost:%d/reader.html", m_resourceServer.port]; //127.0.0.1
 	[m_webView loadRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:url]]];
 }
 

@@ -61,7 +61,7 @@ static dispatch_semaphore_t m_byteStreamResourceLock = NULL;
         // create a critical section lock
         m_byteStreamResourceLock = dispatch_semaphore_create(1);
 
-		m_httpServer = [[AQHTTPServer alloc] initWithAddress:@"localhost" //127.0.0.1
+		m_httpServer = [[AQHTTPServer alloc] initWithAddress:@"localhost"
 			root:[NSBundle mainBundle].resourceURL];
 
 		if (m_httpServer == nil) {

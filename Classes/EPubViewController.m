@@ -279,8 +279,19 @@
 	m_webView.scrollView.bounces = NO;
 	[self.view addSubview:m_webView];
 
+	//
+	// Important!  Rather than "localhost", "127.0.0.1" is specified in the following URL to work
+	// around an issue introduced in iOS 7.0.  When an iOS 7 device is offline (Wi-Fi off, or
+	// airplane mode on), audio and video refuses to be served by UIWebView / QuickTime, even
+	// though being offline is irrelevant for an embedded HTTP server like ours.  Daniel suggested
+	// trying 127.0.0.1 in case the underlying issue was host name resolution, and it worked!
+	//
+	//   -- Shane
+	//
+
 	NSString *url = [NSString stringWithFormat:
-		@"http://localhost:%d/reader.html", m_resourceServer.port]; //127.0.0.1
+		@"http://127.0.0.1:%d/reader.html", m_resourceServer.port];
+
 	[m_webView loadRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:url]]];
 }
 

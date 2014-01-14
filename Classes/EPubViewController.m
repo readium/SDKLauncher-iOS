@@ -312,6 +312,11 @@
 }
 
 
+- (void)onClickMONext {
+	[m_webView stringByEvaluatingJavaScriptFromString:@"ReadiumSDK.reader.nextMediaOverlay()"];
+}
+
+
 - (void)onClickMOPause {
 	[m_webView stringByEvaluatingJavaScriptFromString:@"ReadiumSDK.reader.toggleMediaOverlay()"];
 }
@@ -319,6 +324,11 @@
 
 - (void)onClickMOPlay {
 	[m_webView stringByEvaluatingJavaScriptFromString:@"ReadiumSDK.reader.toggleMediaOverlay()"];
+}
+
+
+- (void)onClickMOPrev {
+	[m_webView stringByEvaluatingJavaScriptFromString:@"ReadiumSDK.reader.previousMediaOverlay()"];
 }
 
 
@@ -467,6 +477,13 @@
 		@"ReadiumSDK.reader.isMediaOverlayAvailable()"];
 
 	if (response != nil && [response isEqualToString:@"true"]) {
+		[items addObject:[[[UIBarButtonItem alloc]
+			initWithTitle:@"<"
+			style:UIBarButtonItemStylePlain
+			target:self
+			action:@selector(onClickMOPrev)] autorelease]
+		];
+
 		if (m_moIsPlaying) {
 			[items addObject:[[[UIBarButtonItem alloc]
 				initWithBarButtonSystemItem:UIBarButtonSystemItemPause
@@ -481,6 +498,13 @@
 				action:@selector(onClickMOPlay)] autorelease]
 			];
 		}
+
+		[items addObject:[[[UIBarButtonItem alloc]
+			initWithTitle:@">"
+			style:UIBarButtonItemStylePlain
+			target:self
+			action:@selector(onClickMONext)] autorelease]
+		];
 
 		[items addObject:itemFixed];
 	}

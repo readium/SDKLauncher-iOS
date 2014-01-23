@@ -457,7 +457,7 @@
 
 		itemNext.enabled = !(
 			(m_currentSpineItemIndex + 1 == m_package.spineItems.count) &&
-			(m_currentPageIndex + m_currentOpenPageCount + 1 >= m_currentPageCount)
+			(m_currentPageIndex + m_currentOpenPageCount + 1 > m_currentPageCount)
 		);
 
 		itemPrev.enabled = !(m_currentSpineItemIndex == 0 && m_currentPageIndex == 0);
@@ -625,16 +625,16 @@
 			for (NSDictionary *pageDict in [dict objectForKey:@"openPages"]) {
 				m_currentOpenPageCount++;
 
-				NSNumber *number = [pageDict objectForKey:@"spineItemPageCount"];
-				m_currentPageCount = number.intValue;
+				if (m_currentOpenPageCount == 1) {
+					NSNumber *number = [pageDict objectForKey:@"spineItemPageCount"];
+					m_currentPageCount = number.intValue;
 
-				number = [pageDict objectForKey:@"spineItemPageIndex"];
-				m_currentPageIndex = number.intValue;
+					number = [pageDict objectForKey:@"spineItemPageIndex"];
+					m_currentPageIndex = number.intValue;
 
-				number = [pageDict objectForKey:@"spineItemIndex"];
-				m_currentSpineItemIndex = number.intValue;
-
-				break;
+					number = [pageDict objectForKey:@"spineItemIndex"];
+					m_currentSpineItemIndex = number.intValue;
+				}
 			}
 
 			m_webView.hidden = NO;

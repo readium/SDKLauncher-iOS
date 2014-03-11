@@ -22,6 +22,7 @@
 	@private RDNavigationElement *m_navElemPageList;
 	@private RDNavigationElement *m_navElemTableOfContents;
 	@private NSString *m_packageUUID;
+	@private NSString *m_rootURL;
 	@private NSMutableArray *m_spineItems;
 	@private NSMutableArray *m_subjects;
 }
@@ -42,6 +43,7 @@
 @property (nonatomic, readonly) NSString *packageUUID;
 @property (nonatomic, readonly) RDNavigationElement *pageList;
 @property (nonatomic, readonly) NSString *renditionLayout;
+@property (nonatomic, retain) NSString *rootURL;
 @property (nonatomic, readonly) NSString *source;
 @property (nonatomic, readonly) NSArray *spineItems;
 @property (nonatomic, readonly) NSArray *subjects;

@@ -72,6 +72,7 @@
 		34CE0B1A1720CC0300F55192 /* RDNavigationElement.mm in Sources */ = {isa = PBXBuildFile; fileRef = 34CE0B191720CC0300F55192 /* RDNavigationElement.mm */; };
 		34CE0B1F1720D8FE00F55192 /* NavigationElementController.m in Sources */ = {isa = PBXBuildFile; fileRef = 34CE0B1E1720D8FE00F55192 /* NavigationElementController.m */; };
 		34D73601186E729400AA361E /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 34D73600186E729400AA361E /* AVFoundation.framework */; };
+		34DAEBBF18CE13BE00660B4A /* EPubURLProtocol.m in Sources */ = {isa = PBXBuildFile; fileRef = 34DAEBBE18CE13BE00660B4A /* EPubURLProtocol.m */; };
 		34E12B9F180301A2004DCB68 /* Icon-29.png in Resources */ = {isa = PBXBuildFile; fileRef = 34E12B92180301A2004DCB68 /* Icon-29.png */; };
 		34E12BA0180301A2004DCB68 /* Icon-29@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 34E12B93180301A2004DCB68 /* Icon-29@2x.png */; };
 		34E12BA1180301A2004DCB68 /* Icon-40.png in Resources */ = {isa = PBXBuildFile; fileRef = 34E12B94180301A2004DCB68 /* Icon-40.png */; };
@@ -232,6 +233,8 @@
 		34CE0B1D1720D8FE00F55192 /* NavigationElementController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NavigationElementController.h; sourceTree = "<group>"; };
 		34CE0B1E1720D8FE00F55192 /* NavigationElementController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NavigationElementController.m; sourceTree = "<group>"; };
 		34D73600186E729400AA361E /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
+		34DAEBBD18CE13BE00660B4A /* EPubURLProtocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EPubURLProtocol.h; sourceTree = "<group>"; };
+		34DAEBBE18CE13BE00660B4A /* EPubURLProtocol.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EPubURLProtocol.m; sourceTree = "<group>"; };
 		34E12B92180301A2004DCB68 /* Icon-29.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon-29.png"; sourceTree = "<group>"; };
 		34E12B93180301A2004DCB68 /* Icon-29@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon-29@2x.png"; sourceTree = "<group>"; };
 		34E12B94180301A2004DCB68 /* Icon-40.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon-40.png"; sourceTree = "<group>"; };
@@ -353,6 +356,8 @@
 				34C4064717A451D100354C33 /* EPubSettings.m */,
 				34C4064117A43A1700354C33 /* EPubSettingsController.h */,
 				34C4064217A43A1700354C33 /* EPubSettingsController.m */,
+				34DAEBBD18CE13BE00660B4A /* EPubURLProtocol.h */,
+				34DAEBBE18CE13BE00660B4A /* EPubURLProtocol.m */,
 				3411DF01175FACC000FCE6D9 /* EPubViewController.h */,
 				3411DF02175FACC000FCE6D9 /* EPubViewController.m */,
 				340535AE16BC608900D4A802 /* LocStr.h */,
@@ -687,6 +692,7 @@
 				34134EF818108B77009FEDFE /* RDMediaOverlaysSmilModel.mm in Sources */,
 				34CE0B1A1720CC0300F55192 /* RDNavigationElement.mm in Sources */,
 				34B1439D18581DC600602635 /* AQSocket.m in Sources */,
+				34DAEBBF18CE13BE00660B4A /* EPubURLProtocol.m in Sources */,
 				3499B0C218413A40002D8AEA /* PackageResourceResponseOperation.m in Sources */,
 				3413981016C03062000912C1 /* RDPackage.mm in Sources */,
 				34B143A418581DC600602635 /* NSDateFormatter+AQHTTPDateFormatter.m in Sources */,

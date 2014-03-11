@@ -31,6 +31,7 @@
 
 
 @synthesize packageUUID = m_packageUUID;
+@synthesize rootURL = m_rootURL;
 @synthesize spineItems = m_spineItems;
 @synthesize subjects = m_subjects;
 
@@ -61,6 +62,7 @@
 	[m_navElemPageList release];
 	[m_navElemTableOfContents release];
 	[m_packageUUID release];
+	[m_rootURL release];
 	[m_spineItems release];
 	[m_subjects release];
 	[super dealloc];
@@ -70,7 +72,8 @@
 - (NSDictionary *)dictionary {
 	NSMutableDictionary *dictRoot = [NSMutableDictionary dictionary];
 
-	[dictRoot setObject:@"/" forKey:@"rootUrl"];
+	NSString *rootURL = (m_rootURL == nil ? @"" : m_rootURL);
+	[dictRoot setObject:rootURL forKey:@"rootUrl"];
 
 	[dictRoot setObject:self.mediaOverlaysSmilModel.dictionary forKey:@"media_overlay"];
 

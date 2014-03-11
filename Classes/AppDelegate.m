@@ -9,6 +9,7 @@
 #import "AppDelegate.h"
 #import <AVFoundation/AVFoundation.h>
 #import "ContainerListController.h"
+#import "EPubURLProtocol.h"
 
 
 @interface AppDelegate()
@@ -25,6 +26,7 @@
 	application:(UIApplication *)application
 	didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
+	[NSURLProtocol registerClass:[EPubURLProtocol class]];
 	[[AVAudioSession sharedInstance] setCategory:AVAudioSessionCategoryPlayback error:nil];
 
 	m_window = [[UIWindow alloc] initWithFrame:[UIScreen mainScreen].bounds];

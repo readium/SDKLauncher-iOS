@@ -279,19 +279,7 @@
 	m_webView.scrollView.bounces = NO;
 	[self.view addSubview:m_webView];
 
-	//
-	// Important!  Rather than "localhost", "127.0.0.1" is specified in the following URL to work
-	// around an issue introduced in iOS 7.0.  When an iOS 7 device is offline (Wi-Fi off, or
-	// airplane mode on), audio and video refuses to be served by UIWebView / QuickTime, even
-	// though being offline is irrelevant for an embedded HTTP server like ours.  Daniel suggested
-	// trying 127.0.0.1 in case the underlying issue was host name resolution, and it worked!
-	//
-	//   -- Shane
-	//
-
-	NSString *url = [NSString stringWithFormat:
-		@"http://127.0.0.1:%d/reader.html", m_resourceServer.port];
-
+	NSString *url = [NSString stringWithFormat:@"%@reader.html", kSDKLauncherWebViewSDKURL];
 	[m_webView loadRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:url]]];
 }
 
@@ -557,6 +545,22 @@
 
 		if ([url isEqualToString:@"readerDidInitialize"]) {
 			NSMutableDictionary *dict = [NSMutableDictionary dictionary];
+
+			//
+			// Important!  Rather than "localhost", "127.0.0.1" is specified in the following URL to work
+			// around an issue introduced in iOS 7.0.  When an iOS 7 device is offline (Wi-Fi off, or
+			// airplane mode on), audio and video refuses to be served by UIWebView / QuickTime, even
+			// though being offline is irrelevant for an embedded HTTP server like ours.  Daniel suggested
+			// trying 127.0.0.1 in case the underlying issue was host name resolution, and it worked!
+			//
+			//   -- Shane
+			//
+
+			if (m_package.rootURL == nil || m_package.rootURL.length == 0) {
+				m_package.rootURL = [NSString stringWithFormat:
+					@"http://127.0.0.1:%d/", m_resourceServer.port];
+			}
+
 			[dict setObject:m_package.dictionary forKey:@"package"];
 			[dict setObject:[EPubSettings shared].dictionary forKey:@"settings"];
 

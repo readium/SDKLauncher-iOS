@@ -279,8 +279,8 @@
 	m_webView.scrollView.bounces = NO;
 	[self.view addSubview:m_webView];
 
-	NSString *url = [NSString stringWithFormat:@"%@reader.html", kSDKLauncherWebViewSDKURL];
-	[m_webView loadRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:url]]];
+	NSURL *url = [[NSBundle mainBundle] URLForResource:@"reader.html" withExtension:nil];
+	[m_webView loadRequest:[NSURLRequest requestWithURL:url]];
 }
 
 

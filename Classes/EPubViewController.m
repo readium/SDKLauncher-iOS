@@ -202,6 +202,9 @@
 		return nil;
 	}
 
+	// Clear the root URL since its port may have changed.
+	package.rootURL = nil;
+
 	RDSpineItem *spineItem = nil;
 
 	if (package.spineItems.count > 0) {
@@ -236,6 +239,9 @@
 		[self release];
 		return nil;
 	}
+
+	// Clear the root URL since its port may have changed.
+	package.rootURL = nil;
 
 	if (spineItem == nil && package.spineItems.count > 0) {
 		spineItem = [package.spineItems objectAtIndex:0];

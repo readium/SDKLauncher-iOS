@@ -26,6 +26,7 @@
 		3413981016C03062000912C1 /* RDPackage.mm in Sources */ = {isa = PBXBuildFile; fileRef = 3413980F16C03062000912C1 /* RDPackage.mm */; };
 		341652A316C2F85700AFDB8B /* PackageMetadataController.m in Sources */ = {isa = PBXBuildFile; fileRef = 341652A216C2F85700AFDB8B /* PackageMetadataController.m */; };
 		341652A816C2F9E700AFDB8B /* SpineItemListController.m in Sources */ = {isa = PBXBuildFile; fileRef = 341652A716C2F9E700AFDB8B /* SpineItemListController.m */; };
+		3434215818D4E826001D4279 /* PackageResourceResponse.m in Sources */ = {isa = PBXBuildFile; fileRef = 3434215718D4E826001D4279 /* PackageResourceResponse.m */; };
 		3436EB2A1790C3F300246925 /* host_app_feedback.js in Resources */ = {isa = PBXBuildFile; fileRef = 341A1F701790BC6800E603C4 /* host_app_feedback.js */; };
 		345CA3E516C00F0500B8B56A /* RDContainer.mm in Sources */ = {isa = PBXBuildFile; fileRef = 345CA3E416C00F0500B8B56A /* RDContainer.mm */; };
 		345DA0DD16C310F500E7285C /* Constants.m in Sources */ = {isa = PBXBuildFile; fileRef = 345DA0DC16C310F400E7285C /* Constants.m */; };
@@ -41,20 +42,8 @@
 		3462FBEC16BC40F9003C79E1 /* Default@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 3462FBE516BC40F9003C79E1 /* Default@2x.png */; };
 		347C58C016BC879400A647B0 /* libePub3-iOS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 347C58BB16BC873700A647B0 /* libePub3-iOS.a */; };
 		348200FC183A9D2D007E72E6 /* MobileCoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 348200FB183A9D2D007E72E6 /* MobileCoreServices.framework */; };
-		3499B0C218413A40002D8AEA /* PackageResourceResponseOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = 3499B0C118413A40002D8AEA /* PackageResourceResponseOperation.m */; };
 		3499B0C518413C68002D8AEA /* PackageResourceConnection.m in Sources */ = {isa = PBXBuildFile; fileRef = 3499B0C418413C68002D8AEA /* PackageResourceConnection.m */; };
 		34A94D9716C060E000FD4143 /* RDSpineItem.mm in Sources */ = {isa = PBXBuildFile; fileRef = 34A94D9616C060E000FD4143 /* RDSpineItem.mm */; };
-		34B1439818581DC600602635 /* AQHTTPConnection.m in Sources */ = {isa = PBXBuildFile; fileRef = 34B1437B18581DC600602635 /* AQHTTPConnection.m */; };
-		34B1439918581DC600602635 /* AQHTTPFileResponseOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = 34B1437E18581DC600602635 /* AQHTTPFileResponseOperation.m */; };
-		34B1439A18581DC600602635 /* AQHTTPRequestOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = 34B1438018581DC600602635 /* AQHTTPRequestOperation.m */; };
-		34B1439B18581DC600602635 /* AQHTTPResponseOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = 34B1438218581DC600602635 /* AQHTTPResponseOperation.m */; };
-		34B1439C18581DC600602635 /* AQHTTPServer.m in Sources */ = {isa = PBXBuildFile; fileRef = 34B1438418581DC600602635 /* AQHTTPServer.m */; };
-		34B1439D18581DC600602635 /* AQSocket.m in Sources */ = {isa = PBXBuildFile; fileRef = 34B1438718581DC600602635 /* AQSocket.m */; };
-		34B1439E18581DC600602635 /* AQSocketIOChannel.m in Sources */ = {isa = PBXBuildFile; fileRef = 34B1438918581DC600602635 /* AQSocketIOChannel.m */; };
-		34B1439F18581DC600602635 /* AQSocketReader.m in Sources */ = {isa = PBXBuildFile; fileRef = 34B1438C18581DC600602635 /* AQSocketReader.m */; };
-		34B143A018581DC600602635 /* DDData.m in Sources */ = {isa = PBXBuildFile; fileRef = 34B1438E18581DC600602635 /* DDData.m */; };
-		34B143A118581DC600602635 /* DDNumber.m in Sources */ = {isa = PBXBuildFile; fileRef = 34B1439018581DC600602635 /* DDNumber.m */; };
-		34B143A418581DC600602635 /* NSDateFormatter+AQHTTPDateFormatter.m in Sources */ = {isa = PBXBuildFile; fileRef = 34B1439518581DC600602635 /* NSDateFormatter+AQHTTPDateFormatter.m */; };
 		34B53528170B3E60000D384F /* readium-shared-js in Resources */ = {isa = PBXBuildFile; fileRef = 34B53527170B3E60000D384F /* readium-shared-js */; };
 		34B5457C16BCB07800D14838 /* libxml2.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 34B5457B16BCB07800D14838 /* libxml2.dylib */; };
 		34B5457E16BCB08000D14838 /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 34B5457D16BCB08000D14838 /* libz.dylib */; };
@@ -180,6 +169,8 @@
 		341652A616C2F9E700AFDB8B /* SpineItemListController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SpineItemListController.h; sourceTree = "<group>"; };
 		341652A716C2F9E700AFDB8B /* SpineItemListController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SpineItemListController.m; sourceTree = "<group>"; };
 		341A1F701790BC6800E603C4 /* host_app_feedback.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = host_app_feedback.js; sourceTree = "<group>"; };
+		3434215618D4E826001D4279 /* PackageResourceResponse.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PackageResourceResponse.h; sourceTree = "<group>"; };
+		3434215718D4E826001D4279 /* PackageResourceResponse.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PackageResourceResponse.m; sourceTree = "<group>"; };
 		345CA3E316C00F0500B8B56A /* RDContainer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RDContainer.h; sourceTree = "<group>"; };
 		345CA3E416C00F0500B8B56A /* RDContainer.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = RDContainer.mm; sourceTree = "<group>"; };
 		345DA0DB16C310F400E7285C /* Constants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Constants.h; sourceTree = "<group>"; };
@@ -199,36 +190,10 @@
 		3462FBE516BC40F9003C79E1 /* Default@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default@2x.png"; sourceTree = "<group>"; };
 		347C58B216BC873700A647B0 /* ePub3.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = ePub3.xcodeproj; path = "readium-sdk/Platform/Apple/ePub3.xcodeproj"; sourceTree = "<group>"; };
 		348200FB183A9D2D007E72E6 /* MobileCoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MobileCoreServices.framework; path = System/Library/Frameworks/MobileCoreServices.framework; sourceTree = SDKROOT; };
-		3499B0C018413A40002D8AEA /* PackageResourceResponseOperation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PackageResourceResponseOperation.h; sourceTree = "<group>"; };
-		3499B0C118413A40002D8AEA /* PackageResourceResponseOperation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PackageResourceResponseOperation.m; sourceTree = "<group>"; };
 		3499B0C318413C68002D8AEA /* PackageResourceConnection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PackageResourceConnection.h; sourceTree = "<group>"; };
 		3499B0C418413C68002D8AEA /* PackageResourceConnection.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PackageResourceConnection.m; sourceTree = "<group>"; };
 		34A94D9516C060E000FD4143 /* RDSpineItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RDSpineItem.h; sourceTree = "<group>"; };
 		34A94D9616C060E000FD4143 /* RDSpineItem.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = RDSpineItem.mm; sourceTree = "<group>"; };
-		34B1437A18581DC600602635 /* AQHTTPConnection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AQHTTPConnection.h; sourceTree = "<group>"; };
-		34B1437B18581DC600602635 /* AQHTTPConnection.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AQHTTPConnection.m; sourceTree = "<group>"; };
-		34B1437C18581DC600602635 /* AQHTTPConnection_PrivateInternal.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AQHTTPConnection_PrivateInternal.h; sourceTree = "<group>"; };
-		34B1437D18581DC600602635 /* AQHTTPFileResponseOperation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AQHTTPFileResponseOperation.h; sourceTree = "<group>"; };
-		34B1437E18581DC600602635 /* AQHTTPFileResponseOperation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AQHTTPFileResponseOperation.m; sourceTree = "<group>"; };
-		34B1437F18581DC600602635 /* AQHTTPRequestOperation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AQHTTPRequestOperation.h; sourceTree = "<group>"; };
-		34B1438018581DC600602635 /* AQHTTPRequestOperation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AQHTTPRequestOperation.m; sourceTree = "<group>"; };
-		34B1438118581DC600602635 /* AQHTTPResponseOperation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AQHTTPResponseOperation.h; sourceTree = "<group>"; };
-		34B1438218581DC600602635 /* AQHTTPResponseOperation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AQHTTPResponseOperation.m; sourceTree = "<group>"; };
-		34B1438318581DC600602635 /* AQHTTPServer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AQHTTPServer.h; sourceTree = "<group>"; };
-		34B1438418581DC600602635 /* AQHTTPServer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AQHTTPServer.m; sourceTree = "<group>"; };
-		34B1438618581DC600602635 /* AQSocket.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AQSocket.h; sourceTree = "<group>"; };
-		34B1438718581DC600602635 /* AQSocket.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AQSocket.m; sourceTree = "<group>"; };
-		34B1438818581DC600602635 /* AQSocketIOChannel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AQSocketIOChannel.h; sourceTree = "<group>"; };
-		34B1438918581DC600602635 /* AQSocketIOChannel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AQSocketIOChannel.m; sourceTree = "<group>"; };
-		34B1438A18581DC600602635 /* AQSocketReader+PrivateInternal.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "AQSocketReader+PrivateInternal.h"; sourceTree = "<group>"; };
-		34B1438B18581DC600602635 /* AQSocketReader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AQSocketReader.h; sourceTree = "<group>"; };
-		34B1438C18581DC600602635 /* AQSocketReader.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AQSocketReader.m; sourceTree = "<group>"; };
-		34B1438D18581DC600602635 /* DDData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDData.h; sourceTree = "<group>"; };
-		34B1438E18581DC600602635 /* DDData.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDData.m; sourceTree = "<group>"; };
-		34B1438F18581DC600602635 /* DDNumber.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDNumber.h; sourceTree = "<group>"; };
-		34B1439018581DC600602635 /* DDNumber.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDNumber.m; sourceTree = "<group>"; };
-		34B1439418581DC600602635 /* NSDateFormatter+AQHTTPDateFormatter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSDateFormatter+AQHTTPDateFormatter.h"; sourceTree = "<group>"; };
-		34B1439518581DC600602635 /* NSDateFormatter+AQHTTPDateFormatter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSDateFormatter+AQHTTPDateFormatter.m"; sourceTree = "<group>"; };
 		34B53527170B3E60000D384F /* readium-shared-js */ = {isa = PBXFileReference; lastKnownFileType = folder; path = "readium-shared-js"; sourceTree = "<group>"; };
 		34B5457B16BCB07800D14838 /* libxml2.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libxml2.dylib; path = usr/lib/libxml2.dylib; sourceTree = SDKROOT; };
 		34B5457D16BCB08000D14838 /* libz.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libz.dylib; path = usr/lib/libz.dylib; sourceTree = SDKROOT; };
@@ -553,59 +518,18 @@
 			children = (
 				3499B0C318413C68002D8AEA /* PackageResourceConnection.h */,
 				3499B0C418413C68002D8AEA /* PackageResourceConnection.m */,
-				3499B0C018413A40002D8AEA /* PackageResourceResponseOperation.h */,
-				3499B0C118413A40002D8AEA /* PackageResourceResponseOperation.m */,
+				3434215618D4E826001D4279 /* PackageResourceResponse.h */,
+				3434215718D4E826001D4279 /* PackageResourceResponse.m */,
 				34C5534216E15D32003A7C23 /* PackageResourceServer.h */,
 				34C5534316E15D32003A7C23 /* PackageResourceServer.m */,
 			);
 			name = PackageResource;
 			sourceTree = "<group>";
 		};
-		34B1437918581DC600602635 /* SimpleHTTPServer */ = {
-			isa = PBXGroup;
-			children = (
-				34B1437A18581DC600602635 /* AQHTTPConnection.h */,
-				34B1437B18581DC600602635 /* AQHTTPConnection.m */,
-				34B1437C18581DC600602635 /* AQHTTPConnection_PrivateInternal.h */,
-				34B1437D18581DC600602635 /* AQHTTPFileResponseOperation.h */,
-				34B1437E18581DC600602635 /* AQHTTPFileResponseOperation.m */,
-				34B1437F18581DC600602635 /* AQHTTPRequestOperation.h */,
-				34B1438018581DC600602635 /* AQHTTPRequestOperation.m */,
-				34B1438118581DC600602635 /* AQHTTPResponseOperation.h */,
-				34B1438218581DC600602635 /* AQHTTPResponseOperation.m */,
-				34B1438318581DC600602635 /* AQHTTPServer.h */,
-				34B1438418581DC600602635 /* AQHTTPServer.m */,
-				34B1438518581DC600602635 /* AQSocket */,
-				34B1438D18581DC600602635 /* DDData.h */,
-				34B1438E18581DC600602635 /* DDData.m */,
-				34B1438F18581DC600602635 /* DDNumber.h */,
-				34B1439018581DC600602635 /* DDNumber.m */,
-				34B1439418581DC600602635 /* NSDateFormatter+AQHTTPDateFormatter.h */,
-				34B1439518581DC600602635 /* NSDateFormatter+AQHTTPDateFormatter.m */,
-			);
-			name = SimpleHTTPServer;
-			path = SimpleHTTPServer/SimpleHTTPServer;
-			sourceTree = SOURCE_ROOT;
-		};
-		34B1438518581DC600602635 /* AQSocket */ = {
-			isa = PBXGroup;
-			children = (
-				34B1438618581DC600602635 /* AQSocket.h */,
-				34B1438718581DC600602635 /* AQSocket.m */,
-				34B1438818581DC600602635 /* AQSocketIOChannel.h */,
-				34B1438918581DC600602635 /* AQSocketIOChannel.m */,
-				34B1438A18581DC600602635 /* AQSocketReader+PrivateInternal.h */,
-				34B1438B18581DC600602635 /* AQSocketReader.h */,
-				34B1438C18581DC600602635 /* AQSocketReader.m */,
-			);
-			path = AQSocket;
-			sourceTree = "<group>";
-		};
 		34C5533316E15C4B003A7C23 /* ThirdParty */ = {
 			isa = PBXGroup;
 			children = (
 				34DAC69118D4BB95004F926A /* CocoaHTTPServer */,
-				34B1437918581DC600602635 /* SimpleHTTPServer */,
 			);
 			name = ThirdParty;
 			sourceTree = "<group>";
@@ -859,7 +783,6 @@
 				3462FBBD16BC3C43003C79E1 /* AppDelegate.m in Sources */,
 				340535AA16BC5DD100D4A802 /* BaseViewController.m in Sources */,
 				34B56B431722DB2200A5A4B8 /* Bookmark.m in Sources */,
-				34B1439F18581DC600602635 /* AQSocketReader.m in Sources */,
 				34B56B4C1722DFB700A5A4B8 /* BookmarkDatabase.m in Sources */,
 				34DAC6D918D4BB96004F926A /* MultipartMessageHeader.m in Sources */,
 				34B56B5C17230FDF00A5A4B8 /* BookmarkListController.m in Sources */,
@@ -867,10 +790,10 @@
 				345DA0DD16C310F500E7285C /* Constants.m in Sources */,
 				34DAC6D818D4BB96004F926A /* MultipartFormDataParser.m in Sources */,
 				3413980B16C02DE7000912C1 /* ContainerController.m in Sources */,
+				3434215818D4E826001D4279 /* PackageResourceResponse.m in Sources */,
 				34DAC6E618D4BB96004F926A /* DDASLLogger.m in Sources */,
 				340535B616BC669C00D4A802 /* ContainerList.m in Sources */,
 				34DAC6D118D4BB96004F926A /* DDData.m in Sources */,
-				34B143A018581DC600602635 /* DDData.m in Sources */,
 				34DAC6E518D4BB96004F926A /* DDAbstractDatabaseLogger.m in Sources */,
 				34DAC6DA18D4BB96004F926A /* MultipartMessageHeaderField.m in Sources */,
 				34DAC6E918D4BB96004F926A /* DDTTYLogger.m in Sources */,
@@ -880,23 +803,18 @@
 				34C4064317A43A1700354C33 /* EPubSettingsController.m in Sources */,
 				3411DF03175FACC000FCE6D9 /* EPubViewController.m in Sources */,
 				340535B216BC608900D4A802 /* LocStr.m in Sources */,
-				34B1439B18581DC600602635 /* AQHTTPResponseOperation.m in Sources */,
 				340535B316BC608900D4A802 /* LocStrError.m in Sources */,
 				3462FBBE16BC3C43003C79E1 /* main.m in Sources */,
-				34B1439C18581DC600602635 /* AQHTTPServer.m in Sources */,
-				34B1439918581DC600602635 /* AQHTTPFileResponseOperation.m in Sources */,
 				34CE0B1F1720D8FE00F55192 /* NavigationElementController.m in Sources */,
 				34DAC6E318D4BB96004F926A /* GCDAsyncSocket.m in Sources */,
 				341652A316C2F85700AFDB8B /* PackageMetadataController.m in Sources */,
 				34DAC6DD18D4BB96004F926A /* HTTPDynamicFileResponse.m in Sources */,
 				34DAC6D618D4BB96004F926A /* HTTPMessage.m in Sources */,
-				34B1439818581DC600602635 /* AQHTTPConnection.m in Sources */,
 				3499B0C518413C68002D8AEA /* PackageResourceConnection.m in Sources */,
 				34DAC6DE18D4BB96004F926A /* HTTPErrorResponse.m in Sources */,
 				34DAC6D518D4BB96004F926A /* HTTPConnection.m in Sources */,
 				34DAC6D318D4BB96004F926A /* DDRange.m in Sources */,
 				34DAC6DC18D4BB96004F926A /* HTTPDataResponse.m in Sources */,
-				34B1439E18581DC600602635 /* AQSocketIOChannel.m in Sources */,
 				34DAC6D718D4BB96004F926A /* HTTPServer.m in Sources */,
 				34C5534416E15D32003A7C23 /* PackageResourceServer.m in Sources */,
 				34DAC6E818D4BB96004F926A /* DDLog.m in Sources */,
@@ -906,20 +824,15 @@
 				34134EF818108B77009FEDFE /* RDMediaOverlaysSmilModel.mm in Sources */,
 				34DAC6EA18D4BB96004F926A /* ContextFilterLogFormatter.m in Sources */,
 				34CE0B1A1720CC0300F55192 /* RDNavigationElement.mm in Sources */,
-				34B1439D18581DC600602635 /* AQSocket.m in Sources */,
-				3499B0C218413A40002D8AEA /* PackageResourceResponseOperation.m in Sources */,
 				3413981016C03062000912C1 /* RDPackage.mm in Sources */,
-				34B143A418581DC600602635 /* NSDateFormatter+AQHTTPDateFormatter.m in Sources */,
 				34DAC6E718D4BB96004F926A /* DDFileLogger.m in Sources */,
 				34C5533F16E15CDF003A7C23 /* RDPackageResource.mm in Sources */,
 				34134EFB18109660009FEDFE /* RDSmilData.mm in Sources */,
 				34A94D9716C060E000FD4143 /* RDSpineItem.mm in Sources */,
-				34B143A118581DC600602635 /* DDNumber.m in Sources */,
 				34B56B4F1722E54A00A5A4B8 /* Settings.m in Sources */,
 				34DAC6D218D4BB96004F926A /* DDNumber.m in Sources */,
 				34DAC6DF18D4BB96004F926A /* HTTPFileResponse.m in Sources */,
 				341652A816C2F9E700AFDB8B /* SpineItemListController.m in Sources */,
-				34B1439A18581DC600602635 /* AQHTTPRequestOperation.m in Sources */,
 				34DAC6DB18D4BB96004F926A /* HTTPAsyncFileResponse.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

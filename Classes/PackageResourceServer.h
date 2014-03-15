@@ -8,27 +8,17 @@
 
 #import <Foundation/Foundation.h>
 
-#define LOCK_BYTESTREAM(block) do {\
-        dispatch_semaphore_wait(PackageResourceServer.byteStreamResourceLock, DISPATCH_TIME_FOREVER);\
-        @try {\
-            block();\
-        } @finally {\
-            dispatch_semaphore_signal(PackageResourceServer.byteStreamResourceLock);\
-        }\
-    } while (0);
-
-@class AQHTTPServer;
+@class HTTPServer;
 @class RDPackage;
 
 @interface PackageResourceServer : NSObject {
-	@private AQHTTPServer *m_httpServer;
+	@private HTTPServer *m_httpServer;
 	@private RDPackage *m_package;
 }
 
 @property (nonatomic, readonly) int port;
 
 - (id)initWithPackage:(RDPackage *)package;
-
-+ (dispatch_semaphore_t) byteStreamResourceLock;
++ (id)resourceLock;
 
 @end

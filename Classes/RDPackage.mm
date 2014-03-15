@@ -315,9 +315,5 @@
 	return [NSString stringWithUTF8String:s.c_str()];
 }
 
--(void*) sdkPackage
-{
-    return m_package;
-}
 
 @end

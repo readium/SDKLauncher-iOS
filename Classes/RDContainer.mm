@@ -28,8 +28,8 @@
 
 
 + (void)initialize {
-    ePub3::InitializeSdk();
-    ePub3::PopulateFilterManager();
+	ePub3::InitializeSdk();
+	ePub3::PopulateFilterManager();
 }
 
 

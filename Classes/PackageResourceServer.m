@@ -7,35 +7,26 @@
 //
 
 #import "PackageResourceServer.h"
-#import "AQHTTPServer.h"
+#import "HTTPServer.h"
 #import "PackageResourceConnection.h"
 #import "RDPackage.h"
 #import "RDPackageResource.h"
 
 
-static dispatch_semaphore_t m_byteStreamResourceLock = NULL;
+static id m_resourceLock = nil;
 
 
 @implementation PackageResourceServer
 
 
-+ (dispatch_semaphore_t) byteStreamResourceLock
-{
-    return m_byteStreamResourceLock;
-}
-
-
 - (void)dealloc {
-	if (m_httpServer != nil && m_httpServer.isListening) {
-		[m_httpServer stop];
-	}
-
+	[m_httpServer stop];
 	[PackageResourceConnection setPackage:nil];
 }
 
 
 + (void)initialize {
-	m_byteStreamResourceLock = dispatch_semaphore_create(1);
+	m_resourceLock = [[NSObject alloc] init];
 }
 
 
@@ -46,15 +37,14 @@ static dispatch_semaphore_t m_byteStreamResourceLock = NULL;
 
 	if (self = [super init]) {
 		m_package = package;
-
-		m_httpServer = [[AQHTTPServer alloc] initWithAddress:@"localhost"
-			root:[NSBundle mainBundle].resourceURL];
+		m_httpServer = [[HTTPServer alloc] init];
 
 		if (m_httpServer == nil) {
 			NSLog(@"The HTTP server is nil!");
 			return nil;
 		}
 
+		m_httpServer.documentRoot = @"";
 		[m_httpServer setConnectionClass:[PackageResourceConnection class]];
 
 		NSError *error = nil;
@@ -76,9 +66,12 @@ static dispatch_semaphore_t m_byteStreamResourceLock = NULL;
 
 
 - (int)port {
-	NSString *s = m_httpServer.serverAddress;
-	NSRange range = [s rangeOfString:@":"];
-	return range.location == NSNotFound ? 0 : [s substringFromIndex:range.location + 1].intValue;
+	return m_httpServer.listeningPort;
+}
+
+
++ (id)resourceLock {
+	return m_resourceLock;
 }
 
 

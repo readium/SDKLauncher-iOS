@@ -54,6 +54,4 @@
 // Returns the resource at the given relative path or nil if it doesn't exist.
 - (RDPackageResource *)resourceAtRelativePath:(NSString *)relativePath;
 
-- (void*) sdkPackage;
-
 @end

@@ -58,13 +58,13 @@
 		[dict setObject:s forKey:@"page_spread"];
 	}
 
-    if (self.renditionLayout != nil) {
-        [dict setObject:self.renditionLayout forKey:@"rendition_layout"];
-    }
+	if (self.renditionLayout != nil) {
+		[dict setObject:self.renditionLayout forKey:@"rendition_layout"];
+	}
 
-    if (self.mediaOverlayId != nil) {
-        [dict setObject:self.mediaOverlayId forKey:@"media_overlay_id"];
-    }
+	if (self.mediaOverlayId != nil) {
+		[dict setObject:self.mediaOverlayId forKey:@"media_overlay_id"];
+	}
 
 	return dict;
 }

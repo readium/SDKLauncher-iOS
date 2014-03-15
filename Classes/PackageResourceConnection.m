@@ -7,10 +7,11 @@
 //
 
 #import "PackageResourceConnection.h"
-#import "PackageResourceResponseOperation.h"
+#import "HTTPDataResponse.h"
+#import "PackageResourceResponse.h"
+#import "PackageResourceServer.h"
 #import "RDPackage.h"
 #import "RDPackageResource.h"
-#import "PackageResourceServer.h"
 
 
 static RDPackage *m_package = nil;
@@ -19,73 +20,46 @@ static RDPackage *m_package = nil;
 @implementation PackageResourceConnection
 
 
-- (BOOL) supportsPipelinedRequests
-{
-    return YES;
-}
-
-
-- (AQHTTPResponseOperation *)responseOperationForRequest:(CFHTTPMessageRef)request {
-	if (m_package == nil) {
-		NSLog(@"The package is nil!");
+- (NSObject <HTTPResponse> *)httpResponseForMethod:(NSString *)method URI:(NSString *)path {
+	if (m_package == nil ||
+		method == nil ||
+		![method isEqualToString:@"GET"] ||
+		path == nil ||
+		path.length == 0)
+	{
 		return nil;
 	}
 
-	NSURL *url = CFBridgingRelease(CFHTTPMessageCopyRequestURL(request));
-
-	if (url == nil) {
-		return [super responseOperationForRequest:request];
+	if (path != nil && [path hasPrefix:@"/"]) {
+		path = [path substringFromIndex:1];
 	}
 
-	NSString *fileSystemPath = [[NSBundle mainBundle].resourcePath
-		stringByAppendingPathComponent:url.path];
+	// Synchronize using a process-level lock to guard against multiple threads accessing a
+	// resource byte stream, which may lead to instability.
 
-	PackageResourceResponseOperation *op = nil;
+	@synchronized ([PackageResourceServer resourceLock]) {
+		RDPackageResource *resource = [m_package resourceAtRelativePath:path];
 
-	if ([[NSFileManager defaultManager] fileExistsAtPath:fileSystemPath]) {
-		op = [[PackageResourceResponseOperation alloc]
-			initWithRequest:request
-			socket:self.socket
-			ranges:nil
-			forConnection:self
-			package:m_package
-			resource:nil
-			filePath:fileSystemPath];
-	}
-	else {
-		NSString *path = url.path;
-
-		if (path != nil && [path hasPrefix:@"/"]) {
-			path = [path substringFromIndex:1];
+		if (resource == nil) {
+			NSLog(@"No resource found! (%@)", path);
 		}
+		else if (resource.contentLength < 1000000) {
 
-        __block RDPackageResource *resource =nil;
-        LOCK_BYTESTREAM(^{
-            resource = [m_package resourceAtRelativePath:path];
-        });
+			// This resource is small enough that we can just fetch the entire thing in memory,
+			// which simplifies access into the byte stream.  Adjust the threshold to taste.
 
-		if (resource != nil) {
-			NSString *rangeHeader = CFBridgingRelease(
-				CFHTTPMessageCopyHeaderFieldValue(request, CFSTR("Range")));
+			NSData *data = resource.data;
 
-			NSArray *ranges = nil;
-
-			if (rangeHeader != nil && rangeHeader.length > 0) {
-				ranges = [self parseRangeRequest:rangeHeader withContentLength:resource.bytesCount];
+			if (data != nil) {
+				return [[HTTPDataResponse alloc] initWithData:data];
 			}
-
-			op = [[PackageResourceResponseOperation alloc]
-				initWithRequest:request
-				socket:self.socket
-				ranges:ranges
-				forConnection:self
-				package:m_package
-				resource:resource
-				filePath:nil];
+		}
+		else {
+			return [[PackageResourceResponse alloc] initWithResource:resource];
 		}
 	}
 
-	return op;
+	return nil;
 }
 
 

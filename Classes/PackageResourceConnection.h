@@ -6,11 +6,11 @@
 //  Copyright (c) 2013 The Readium Foundation. All rights reserved.
 //
 
-#import "AQHTTPConnection.h"
+#import "HTTPConnection.h"
 
 @class RDPackage;
 
-@interface PackageResourceConnection : AQHTTPConnection
+@interface PackageResourceConnection : HTTPConnection
 
 + (void)setPackage:(RDPackage *)package;
 

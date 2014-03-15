@@ -19,22 +19,27 @@
 
 @interface RDPackageResource : NSObject {
 	@private UInt8 m_buffer[kSDKLauncherPackageResourceBufferSize];
+	@private NSData *m_data;
 	@private __weak id <RDPackageResourceDelegate> m_delegate;
+	@private RDPackage *m_package;
 	@private NSString *m_relativePath;
 }
 
-@property (nonatomic, readonly) int bytesCount;
 @property (nonatomic, readonly) void *byteStream;
+@property (nonatomic, readonly) NSUInteger contentLength;
+@property (nonatomic, readonly) NSData *data;
+@property (nonatomic, readonly) RDPackage *package;
 
 // The relative path associated with this resource.
 @property (nonatomic, readonly) NSString *relativePath;
-
-- (NSData *)createChunkByReadingRange:(NSRange)range package:(RDPackage *)package;
 
 - (id)
 	initWithDelegate:(id <RDPackageResourceDelegate>)delegate
 	byteStream:(void *)byteStream
 	package:(RDPackage *)package
 	relativePath:(NSString *)relativePath;
+
+- (NSData *)readDataOfLength:(NSUInteger)length;
+- (void)setOffset:(UInt64)offset;
 
 @end

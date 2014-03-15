@@ -18,7 +18,7 @@
 	@private NSArray *m_bookmarks;
 	@private RDContainer *m_container;
 	@private RDPackage *m_package;
-	@private UITableView *m_table;
+	@private __weak UITableView *m_table;
 }
 
 - (id)initWithContainer:(RDContainer *)container package:(RDPackage *)package;

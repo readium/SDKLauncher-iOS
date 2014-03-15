@@ -37,14 +37,6 @@
 }
 
 
-- (void)dealloc {
-    [m_renditionLayout release];
-    [m_mediaOverlayId release];
-
-	[super dealloc];
-}
-
-
 - (NSDictionary *)dictionary {
 	NSMutableDictionary *dict = [NSMutableDictionary dictionary];
 
@@ -86,23 +78,22 @@
 
 - (id)initWithSpineItem:(void *)spineItem {
 	if (spineItem == nil) {
-		[self release];
 		return nil;
 	}
 
 	if (self = [super init]) {
 		m_spineItem = (ePub3::SpineItem *)spineItem;
-
 		ePub3::PropertyPtr prop = m_spineItem->PropertyMatching("layout", "rendition");
+
 		if (prop == nullptr) {
-			m_renditionLayout = [[NSString alloc] initWithString:@""];
+			m_renditionLayout = @"";
 		}
 		else {
 			m_renditionLayout = [[NSString alloc] initWithUTF8String:prop->Value().c_str()];
 		}
 
-        auto mediaOverlayID = m_spineItem->ManifestItem()->MediaOverlayID();
-        m_mediaOverlayId = [[NSString alloc] initWithUTF8String: mediaOverlayID.c_str()];
+		auto mediaOverlayID = m_spineItem->ManifestItem()->MediaOverlayID();
+		m_mediaOverlayId = [[NSString alloc] initWithUTF8String: mediaOverlayID.c_str()];
 	}
 
 	return self;

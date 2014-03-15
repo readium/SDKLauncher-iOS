@@ -19,7 +19,7 @@
 	@private RDContainer *m_container;
 	@private RDNavigationElement *m_element;
 	@private RDPackage *m_package;
-	@private UITableView *m_table;
+	@private __weak UITableView *m_table;
 }
 
 - (id)

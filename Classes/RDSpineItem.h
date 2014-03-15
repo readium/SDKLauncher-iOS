@@ -9,8 +9,8 @@
 #import <Foundation/Foundation.h>
 
 @interface RDSpineItem : NSObject {
-@private NSString *m_renditionLayout;
-@private NSString *m_mediaOverlayId;
+	@private NSString *m_renditionLayout;
+	@private NSString *m_mediaOverlayId;
 }
 
 @property (nonatomic, readonly) NSString *baseHref;

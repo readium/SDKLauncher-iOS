@@ -27,14 +27,6 @@
 }
 
 
-- (void)dealloc {
-	[m_escapables release];
-	[m_skippables release];
-	[m_smilDatas release];
-	[super dealloc];
-}
-
-
 - (NSDictionary *)dictionary {
 	NSMutableArray *array = [NSMutableArray arrayWithCapacity:self.smilDatas.count];
 
@@ -80,7 +72,6 @@
 
 - (id)initWithMediaOverlaysSmilModel:(void *)smilModel {
 	if (smilModel == nil) {
-		[self release];
 		return nil;
 	}
 
@@ -132,7 +123,6 @@
 			ePub3::SMILData *p = m_smilModel->GetSmil(i).get();
 			RDSmilData *smilData = [[RDSmilData alloc] initWithSmilData:p];
 			[array addObject:smilData];
-			[smilData release];
 		}
 	}
 

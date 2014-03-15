@@ -20,43 +20,35 @@
 @implementation EPubSettingsController
 
 
-- (void)cleanUp {
-	m_table = nil;
-}
-
-
 - (void)dealloc {
 	[[NSNotificationCenter defaultCenter] removeObserver:self];
-	[m_cells release];
-	m_cells = nil;
-	[super dealloc];
 }
 
 
 - (id)init {
 	if (self = [super initWithTitle:LocStr(@"EPUB_SETTINGS_TITLE") navBarHidden:NO]) {
 		if (!IS_IPAD) {
-			self.navigationItem.rightBarButtonItem = [[[UIBarButtonItem alloc]
+			self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc]
 				initWithBarButtonSystemItem:UIBarButtonSystemItemDone
 				target:self
-				action:@selector(onClickDone)] autorelease];
+				action:@selector(onClickDone)];
 		}
 
 		// Synthetic spread
 
-		UISwitch *sw = [[[UISwitch alloc] init] autorelease];
+		UISwitch *sw = [[UISwitch alloc] init];
 		sw.on = [EPubSettings shared].isSyntheticSpread;
 		[sw addTarget:self action:@selector(onIsSyntheticSpreadDidChange:)
 			forControlEvents:UIControlEventValueChanged];
 
-		m_cellIsSyntheticSpread = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault
-			reuseIdentifier:nil] autorelease];
+		m_cellIsSyntheticSpread = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault
+			reuseIdentifier:nil];
 		m_cellIsSyntheticSpread.accessoryView = sw;
 		m_cellIsSyntheticSpread.textLabel.text = LocStr(@"EPUB_SETTINGS_IS_SYNTHETIC_SPREAD");
 
 		// Font scale
 
-		UIStepper *stepper = [[[UIStepper alloc] init] autorelease];
+		UIStepper *stepper = [[UIStepper alloc] init];
 		stepper.minimumValue = 0.2;
 		stepper.maximumValue = 5;
 		stepper.stepValue = 0.1;
@@ -64,8 +56,8 @@
 		[stepper addTarget:self action:@selector(onFontScaleDidChange:)
 			forControlEvents:UIControlEventValueChanged];
 
-		m_cellFontScale = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault
-			reuseIdentifier:nil] autorelease];
+		m_cellFontScale = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault
+			reuseIdentifier:nil];
 		m_cellFontScale.accessoryView = stepper;
 
 		// Column gap
@@ -77,7 +69,7 @@
 			maxValue--;
 		}
 
-		stepper = [[[UIStepper alloc] init] autorelease];
+		stepper = [[UIStepper alloc] init];
 		stepper.minimumValue = 0;
 		stepper.maximumValue = maxValue;
 		stepper.stepValue = stepValue;
@@ -85,17 +77,17 @@
 		[stepper addTarget:self action:@selector(onColumnGapDidChange:)
 			forControlEvents:UIControlEventValueChanged];
 
-		m_cellColumnGap = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault
-			reuseIdentifier:nil] autorelease];
+		m_cellColumnGap = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault
+			reuseIdentifier:nil];
 		m_cellColumnGap.accessoryView = stepper;
 
 		// Finish up
 
-		m_cells = [[NSArray alloc] initWithArray:@[
+		m_cells = @[
 			m_cellIsSyntheticSpread,
 			m_cellFontScale,
 			m_cellColumnGap
-		]];
+		];
 
 		[self updateCells];
 
@@ -113,12 +105,12 @@
 
 
 - (void)loadView {
-	self.view = [[[UIView alloc] init] autorelease];
+	self.view = [[UIView alloc] init];
 
-	m_table = [[[UITableView alloc] initWithFrame:CGRectZero
-		style:UITableViewStylePlain] autorelease];
-	m_table.dataSource = self;
-	[self.view addSubview:m_table];
+	UITableView *table = [[UITableView alloc] initWithFrame:CGRectZero style:UITableViewStylePlain];
+	m_table = table;
+	table.dataSource = self;
+	[self.view addSubview:table];
 }
 
 

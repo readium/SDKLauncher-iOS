@@ -35,7 +35,6 @@
 			RDNavigationElement *element = [[RDNavigationElement alloc]
 				initWithNavigationElement:i->get() sourceHref:m_sourceHref];
 			[array addObject:element];
-			[element release];
 		}
 	}
 
@@ -55,22 +54,14 @@
 }
 
 
-- (void)dealloc {
-	[m_children release];
-	[m_sourceHref release];
-	[super dealloc];
-}
-
-
 - (id)initWithNavigationElement:(void *)element sourceHref:(NSString *)sourceHref {
 	if (element == nil) {
-		[self release];
 		return nil;
 	}
 
 	if (self = [super init]) {
 		m_element = (ePub3::NavigationElement *)element;
-		m_sourceHref = [sourceHref retain];
+		m_sourceHref = sourceHref;
 	}
 
 	return self;

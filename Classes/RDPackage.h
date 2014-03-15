@@ -7,14 +7,13 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "RDPackageResource.h"
-//#import <ePub3/package.h>
 
 @class RDContainer;
 @class RDMediaOverlaysSmilModel;
 @class RDNavigationElement;
+@class RDPackageResource;
 
-@interface RDPackage : NSObject { //<RDPackageResourceDelegate> {
+@interface RDPackage : NSObject {
 	@private RDMediaOverlaysSmilModel *m_mediaOverlaysSmilModel;
 	@private RDNavigationElement *m_navElemListOfFigures;
 	@private RDNavigationElement *m_navElemListOfIllustrations;
@@ -22,7 +21,6 @@
 	@private RDNavigationElement *m_navElemPageList;
 	@private RDNavigationElement *m_navElemTableOfContents;
 	@private NSString *m_packageUUID;
-	@private NSString *m_rootURL;
 	@private NSMutableArray *m_spineItems;
 	@private NSMutableArray *m_subjects;
 }
@@ -43,7 +41,7 @@
 @property (nonatomic, readonly) NSString *packageUUID;
 @property (nonatomic, readonly) RDNavigationElement *pageList;
 @property (nonatomic, readonly) NSString *renditionLayout;
-@property (nonatomic, retain) NSString *rootURL;
+@property (nonatomic, strong) NSString *rootURL;
 @property (nonatomic, readonly) NSString *source;
 @property (nonatomic, readonly) NSArray *spineItems;
 @property (nonatomic, readonly) NSArray *subjects;

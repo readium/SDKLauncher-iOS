@@ -13,7 +13,7 @@
 	UITableViewDelegate>
 {
 	@private NSArray *m_paths;
-	@private UITableView *m_table;
+	@private __weak UITableView *m_table;
 }
 
 @end

@@ -34,7 +34,7 @@
 	@private UIPopoverController *m_popover;
 	@private PackageResourceServer *m_resourceServer;
 	@private RDSpineItem *m_spineItem;
-	@private UIWebView *m_webView;
+	@private __weak UIWebView *m_webView;
 }
 
 - (id)

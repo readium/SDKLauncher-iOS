@@ -27,7 +27,7 @@ NSString *LocStr(NSString *key, ...) {
 
 			va_list list;
 			va_start(list, key);
-			s = [[[NSString alloc] initWithFormat:s arguments:list] autorelease];
+			s = [[NSString alloc] initWithFormat:s arguments:list];
 			va_end(list);
 
 			return s;

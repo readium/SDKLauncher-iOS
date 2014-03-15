@@ -13,7 +13,7 @@
 	@private UITableViewCell *m_cellFontScale;
 	@private UITableViewCell *m_cellIsSyntheticSpread;
 	@private NSArray *m_cells;
-	@private UITableView *m_table;
+	@private __weak UITableView *m_table;
 }
 
 @end

@@ -7,15 +7,15 @@
 //
 
 #import "RDPackageResource.h"
-#import "RDPackage.h"
-
 #import <ePub3/archive.h>
 #import <ePub3/package.h>
 #import <ePub3/utilities/byte_stream.h>
+#import "RDPackage.h"
+
 
 @interface RDPackageResource() {
 	@private ePub3::ByteStream *m_byteStream;
-    @private int m_bytesCount;
+	@private int m_bytesCount;
 }
 
 - (NSData *)createNextChunkByReading;
@@ -24,6 +24,12 @@
 
 
 @implementation RDPackageResource
+
+
+@synthesize bytesCount = m_bytesCount;
+@synthesize byteStream = m_byteStream;
+@synthesize relativePath = m_relativePath;
+
 
 + (std::size_t)bytesAvailable:(ePub3::ByteStream*)byteStream pack:(RDPackage *)package path:(NSString *)relPath {
     std::size_t size = byteStream->BytesAvailable();
@@ -94,10 +100,6 @@
     return size;
 }
 
-//@synthesize byteStream = m_byteStream;
-@synthesize bytesCount = m_bytesCount;
-@synthesize relativePath = m_relativePath;
-
 
 - (NSData *)createChunkByReadingRange:(NSRange)range package:(RDPackage *)package {
 
@@ -118,12 +120,12 @@
     if (DEBUGLOG)
     {
         NSLog(@"ByteStream Range %@", m_relativePath);
-        NSLog(@"%ld - %ld", range.location, range.length);
+        NSLog(@"%ld - %ld", (unsigned long)range.location, (unsigned long)range.length);
     }
 
     if (DEBUGLOG)
     {
-        NSLog(@"ByteStream COUNT: %ld", m_bytesCount);
+        NSLog(@"ByteStream COUNT: %d", m_bytesCount);
     }
 
     if (NSMaxRange(range) > m_bytesCount) {
@@ -135,7 +137,7 @@
 
     if (DEBUGLOG)
     {
-        NSLog(@"TOTAL %ld", m_bytesCount);
+        NSLog(@"TOTAL %d", m_bytesCount);
         NSLog(@"ByteStream TO READ: %ld", bytesToRead);
     }
 
@@ -150,7 +152,7 @@
     ePub3::ByteStream::size_type pos = seekStream->Seek(range.location, std::ios::beg);
     if (pos != range.location)
     {
-        NSLog(@"Unable to ZIP seek! %ld vs. %ld", pos, range.location);
+        NSLog(@"Unable to ZIP seek! %ld vs. %ld", pos, (unsigned long)range.location);
         return nil;
     }
 
@@ -163,7 +165,7 @@
     }
     if (remainderToRead != 0)
     {
-        NSLog(@"Did not seek-read all ZIP range? %ld vs. %ld", remainderToRead, bytesToRead);
+        NSLog(@"Did not seek-read all ZIP range? %d vs. %ld", remainderToRead, bytesToRead);
         return nil;
     }
 
@@ -184,6 +186,11 @@
 }
 
 
+- (void)dealloc {
+	[m_delegate rdpackageResourceWillDeallocate:self];
+}
+
+
 - (NSData *)readAllDataChunks {
 
     if (m_bytesCount == 0)
@@ -198,7 +205,6 @@
 
         if (chunk != nil) {
             [md appendData:chunk];
-            [chunk release];
         }
         else {
             break;
@@ -212,59 +218,36 @@
 
     if (DEBUGLOG)
     {
-        NSLog(@"ByteStream WHOLE: %ld (%@)", m_bytesCount, m_relativePath);
+        NSLog(@"ByteStream WHOLE: %d (%@)", m_bytesCount, m_relativePath);
     }
 
     return md;
 }
 
-- (void)dealloc {
-	//[m_delegate rdpackageResourceWillDeallocate:self];
-
-    // calls Close() on ByteStream destruction
-    if (m_byteStream != nullptr)
-    {
-        if (DEBUGLOG)
-        {
-            NSLog(@"DEALLOC BYTESTREAM");
-            NSLog(@"BYTESTREAM DEALLOC %p", m_byteStream);
-        }
-        delete m_byteStream;
-        m_byteStream = nullptr;
-    }
-
-	[m_relativePath release];
-
-	[super dealloc];
-}
-
 
 - (id)
-    initWithByteStream://(id <RDPackageResourceDelegate>)delegate
-	(void *)byteStream
+	initWithDelegate:(id <RDPackageResourceDelegate>)delegate
+	byteStream:(void *)byteStream
+	package:(RDPackage *)package
 	relativePath:(NSString *)relativePath
-    pack:(RDPackage *)package
 {
-	if (byteStream == nil || relativePath == nil || relativePath.length == 0) {
-		[self release];
+	if (byteStream == nil || package == nil || relativePath == nil || relativePath.length == 0) {
 		return nil;
 	}
 
 	if (self = [super init]) {
 		m_byteStream = (ePub3::ByteStream *)byteStream;
-        m_relativePath = [relativePath retain];
-        m_bytesCount = [RDPackageResource bytesAvailable:m_byteStream pack:package path:m_relativePath];
+		m_delegate = delegate;
+		m_relativePath = relativePath;
+		m_bytesCount = [RDPackageResource bytesAvailable:m_byteStream pack:package path:relativePath];
 
-        if (m_bytesCount == 0)
-        {
-            NSLog(@"m_bytesCount == 0 ???? %@", m_relativePath);
-        }
-
-		//m_delegate = delegate;
+		if (m_bytesCount == 0) {
+			NSLog(@"m_bytesCount == 0 ???? %@", m_relativePath);
+		}
 
         if (DEBUGLOG)
         {
-            NSLog(@"INIT ByteStream: %@ (%ld)", m_relativePath, m_bytesCount);
+            NSLog(@"INIT ByteStream: %@ (%d)", m_relativePath, m_bytesCount);
             NSLog(@"BYTESTREAM INIT %p", m_byteStream);
         }
 	}

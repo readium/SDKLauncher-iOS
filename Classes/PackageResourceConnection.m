@@ -9,17 +9,15 @@
 #import "PackageResourceConnection.h"
 #import "PackageResourceResponseOperation.h"
 #import "RDPackage.h"
+#import "RDPackageResource.h"
 #import "PackageResourceServer.h"
+
 
 static RDPackage *m_package = nil;
 
 
 @implementation PackageResourceConnection
 
-
-- (void)dealloc {
-	[super dealloc];
-}
 
 - (BOOL) supportsPipelinedRequests
 {
@@ -33,7 +31,7 @@ static RDPackage *m_package = nil;
 		return nil;
 	}
 
-	NSURL *url = [(id)CFHTTPMessageCopyRequestURL(request) autorelease];
+	NSURL *url = CFBridgingRelease(CFHTTPMessageCopyRequestURL(request));
 
 	if (url == nil) {
 		return [super responseOperationForRequest:request];
@@ -44,14 +42,15 @@ static RDPackage *m_package = nil;
 
 	PackageResourceResponseOperation *op = nil;
 
-    // TODO: Costly I/O operation! (invoked frequently for partial HTTP range requests, e.g. audio / video media)
 	if ([[NSFileManager defaultManager] fileExistsAtPath:fileSystemPath]) {
 		op = [[PackageResourceResponseOperation alloc]
 			initWithRequest:request
 			socket:self.socket
 			ranges:nil
-			forConnection:self];
-        [op initialiseData:m_package resource:nil filePath:fileSystemPath];
+			forConnection:self
+			package:m_package
+			resource:nil
+			filePath:fileSystemPath];
 	}
 	else {
 		NSString *path = url.path;
@@ -66,8 +65,8 @@ static RDPackage *m_package = nil;
         });
 
 		if (resource != nil) {
-			NSString *rangeHeader = [(id)CFHTTPMessageCopyHeaderFieldValue(
-				request, CFSTR("Range")) autorelease];
+			NSString *rangeHeader = CFBridgingRelease(
+				CFHTTPMessageCopyHeaderFieldValue(request, CFSTR("Range")));
 
 			NSArray *ranges = nil;
 
@@ -75,24 +74,23 @@ static RDPackage *m_package = nil;
 				ranges = [self parseRangeRequest:rangeHeader withContentLength:resource.bytesCount];
 			}
 
-            op = [[PackageResourceResponseOperation alloc] initWithRequest: request socket: self.socket ranges: ranges forConnection: self];
-            [op initialiseData:m_package resource:resource filePath:nil];
-        }
+			op = [[PackageResourceResponseOperation alloc]
+				initWithRequest:request
+				socket:self.socket
+				ranges:ranges
+				forConnection:self
+				package:m_package
+				resource:resource
+				filePath:nil];
+		}
 	}
 
-#if USING_MRR
-//#error "THIS SHOULD FAIL AT COMPILE TIME"
-    [op autorelease];
-#endif
 	return op;
 }
 
 
 + (void)setPackage:(RDPackage *)package {
-	if (m_package != package) {
-		[m_package release];
-		m_package = [package retain];
-	}
+	m_package = package;
 }
 
 

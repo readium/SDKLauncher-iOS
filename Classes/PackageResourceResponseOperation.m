@@ -11,78 +11,46 @@
 #import "RDPackage.h"
 #import "RDPackageResource.h"
 
-@implementation PackageResourceResponseOperation {
-    RDPackage * m_package;
-    RDPackageResource * m_resource;
-    NSString * m_filePath;
+
+@interface PackageResourceResponseOperation () {
+	@private NSString *m_filePath;
+	@private RDPackage *m_package;
+	@private RDPackageResource *m_resource;
 }
 
-- (void)initialiseData:(RDPackage *)package resource:(RDPackageResource *)resource filePath:(NSString *)fileSystemPath
+@end
+
+
+@implementation PackageResourceResponseOperation
+
+
+- (id)
+	initWithRequest:(CFHTTPMessageRef)request
+	socket:(AQSocket *)socket
+	ranges:(NSArray *)ranges
+	forConnection:(AQHTTPConnection *)connection
+	package:(RDPackage *)package
+	resource:(RDPackageResource *)resource
+	filePath:(NSString *)filePath
 {
-    if (m_package != nil)
-    {
-        [m_package release];
-        m_package = nil;
-    }
-    m_package = package;
-    [m_package retain];
+	if (package == nil) {
+		return nil;
+	}
 
-    if (m_resource != nil)
-    {
-        [m_resource release];
-        m_resource = nil;
-    }
-    m_resource = resource;
-    [m_resource retain];
+	if (self = [super
+		initWithRequest:request
+		socket:socket
+		ranges:ranges
+		forConnection:connection])
+	{
+		m_filePath = filePath;
+		m_package = package;
+		m_resource = resource;
+	}
 
-    if (m_filePath != nil)
-    {
-        [m_filePath release];
-        m_filePath = nil;
-    }
-    m_filePath = fileSystemPath;
-    [m_filePath retain];
-
-    if (DEBUGLOG)
-    {
-        if (m_resource != nil)
-        {
-            NSLog(@"LOXHTTPResponseOperation: %@", m_resource.relativePath);
-            NSLog(@"LOXHTTPResponseOperation: %ld", m_resource.bytesCount);
-        }
-        if (m_filePath != nil)
-        {
-            NSLog(@"LOXHTTPResponseOperation: %@ (FS)", m_filePath);
-        }
-        NSLog(@"LOXHTTPResponseOperation: %@", self);
-    }
+	return self;
 }
 
-- (void)dealloc {
-    if (DEBUGLOG)
-    {
-        NSLog(@"DEALLOC LOXHTTPResponseOperation");
-        NSLog(@"DEALLOC LOXHTTPResponseOperation: %@", m_resource.relativePath);
-        NSLog(@"DEALLOC LOXHTTPResponseOperation: %@", self);
-    }
-
-    if (m_package != nil)
-    {
-        [m_package release];
-    }
-
-    if (m_resource != nil)
-    {
-        [m_resource release];
-    }
-
-    if (m_filePath != nil)
-    {
-        [m_filePath release];
-    }
-
-    [super dealloc];
-}
 
 - (NSUInteger) statusCodeForItemAtPath: (NSString *) rootRelativePath
 {
@@ -146,22 +114,23 @@
 
 - (NSData *) readDataFromByteRange: (DDRange) range
 {
-    if (m_resource == nil)
-    {
-        NSLog(@"NOT READY?!");
-        return [NSData data];
-    }
+	if (m_resource == nil)
+	{
+		NSLog(@"NOT READY?!");
+		return [NSData data];
+	}
 
-    if (DEBUGLOG)
-    {
-        NSLog(@"[%ld ... %ld] (%ld / %ld)", range.location, range.location+range.length-1, range.length, m_resource.bytesCount);
-    }
+	if (DEBUGLOG)
+	{
+		NSLog(@"[%llu ... %llu] (%llu / %d)",
+			range.location, range.location + range.length - 1, range.length, m_resource.bytesCount);
+	}
 
-    if (range.length == 0 || m_resource.bytesCount == 0)
-    {
-        NSLog(@"WTF?!");
-        return [NSData data];
-    }
+	if (range.length == 0 || m_resource.bytesCount == 0)
+	{
+		NSLog(@"The range length is zero, or the resource bytes count is zero!");
+		return [NSData data];
+	}
 
     __block NSData * result = nil;
 

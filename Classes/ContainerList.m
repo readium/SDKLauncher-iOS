@@ -38,18 +38,12 @@ NSString * const kSDKLauncherContainerListDidChange = @"SDKLauncherContainerList
 	}
 
 	if (didChange) {
-		[m_paths release];
-		m_paths = [pathsCurr retain];
+		m_paths = pathsCurr;
 		[[NSNotificationCenter defaultCenter] postNotificationName:
 			kSDKLauncherContainerListDidChange object:self];
 	}
 
 	[self performSelector:@selector(checkForChanges) withObject:nil afterDelay:1];
-}
-
-
-- (void)dealloc {
-	[super dealloc];
 }
 
 
@@ -71,7 +65,7 @@ NSString * const kSDKLauncherContainerListDidChange = @"SDKLauncherContainerList
 			}
 		}
 
-		m_paths = [self.paths retain];
+		m_paths = self.paths;
 		[self performSelector:@selector(checkForChanges) withObject:nil afterDelay:0];
 	}
 

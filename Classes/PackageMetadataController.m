@@ -21,7 +21,7 @@
 
 
 - (UILabel *)addLabelWithText:(NSString *)text {
-	UILabel *label = [[[UILabel alloc] init] autorelease];
+	UILabel *label = [[UILabel alloc] init];
 	label.backgroundColor = [UIColor clearColor];
 	label.font = [UIFont systemFontOfSize:16];
 	label.numberOfLines = 0;
@@ -32,36 +32,13 @@
 }
 
 
-- (void)cleanUp {
-	m_labelAuthors = nil;
-	m_labelCopyrightOwner = nil;
-	m_labelFullTitle = nil;
-	m_labelISBN = nil;
-	m_labelLanguage = nil;
-	m_labelModificationDate = nil;
-	m_labelPackageID = nil;
-	m_labelSource = nil;
-	m_labelSubjects = nil;
-	m_labelSubtitle = nil;
-	m_labelTitle = nil;
-	m_scroll = nil;
-}
-
-
-- (void)dealloc {
-	[m_package release];
-	[super dealloc];
-}
-
-
 - (id)initWithPackage:(RDPackage *)package {
 	if (package == nil) {
-		[self release];
 		return nil;
 	}
 
 	if (self = [super initWithTitle:LocStr(@"METADATA") navBarHidden:NO]) {
-		m_package = [package retain];
+		m_package = package;
 	}
 
 	return self;
@@ -69,12 +46,13 @@
 
 
 - (void)loadView {
-	self.view = [[[UIView alloc] init] autorelease];
+	self.view = [[UIView alloc] init];
 	self.view.backgroundColor = [UIColor whiteColor];
 
-	m_scroll = [[[UIScrollView alloc] init] autorelease];
-	m_scroll.alwaysBounceVertical = YES;
-	[self.view addSubview:m_scroll];
+	UIScrollView *scroll = [[UIScrollView alloc] init];
+	m_scroll = scroll;
+	scroll.alwaysBounceVertical = YES;
+	[self.view addSubview:scroll];
 
 	m_labelTitle = [self addLabelWithText:
 		LocStr(@"METADATA_TITLE", m_package.title)];

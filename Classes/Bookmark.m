@@ -24,15 +24,6 @@
 @synthesize title = m_title;
 
 
-- (void)dealloc {
-	[m_cfi release];
-	[m_containerPath release];
-	[m_idref release];
-	[m_title release];
-	[super dealloc];
-}
-
-
 - (NSString *)description {
 	return [@"Bookmark " stringByAppendingString:self.dictionary.description];
 }
@@ -61,7 +52,6 @@
 		idref == nil ||
 		idref.length == 0)
 	{
-		[self release];
 		return nil;
 	}
 
@@ -70,10 +60,10 @@
 	}
 
 	if (self = [super init]) {
-		m_cfi = [cfi retain];
-		m_containerPath = [containerPath retain];
-		m_idref = [idref retain];
-		m_title = [title retain];
+		m_cfi = cfi;
+		m_containerPath = containerPath;
+		m_idref = idref;
+		m_title = title;
 	}
 
 	return self;
@@ -82,7 +72,6 @@
 
 - (id)initWithDictionary:(NSDictionary *)dictionary {
 	if (dictionary == nil) {
-		[self release];
 		return nil;
 	}
 

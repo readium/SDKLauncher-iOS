@@ -33,17 +33,11 @@
 			m_bodyDictionary = [[NSDictionary alloc] init];
 		}
 		else {
-			m_bodyDictionary = [[self parseTreeSequence:sequence] retain];
+			m_bodyDictionary = [self parseTreeSequence:sequence];
 		}
 	}
 
 	return m_bodyDictionary;
-}
-
-
-- (void)dealloc {
-	[m_bodyDictionary release];
-	[super dealloc];
 }
 
 
@@ -81,7 +75,6 @@
 
 - (id)initWithSmilData:(void *)smilData {
 	if (smilData == nil) {
-		[self release];
 		return nil;
 	}
 

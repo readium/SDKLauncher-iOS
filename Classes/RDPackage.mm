@@ -13,11 +13,12 @@
 #import <ePub3/utilities/byte_stream.h>
 #import "RDMediaOverlaysSmilModel.h"
 #import "RDNavigationElement.h"
+#import "RDPackageResource.h"
 #import "RDSpineItem.h"
 
 
-@interface RDPackage() {
-	//@private std::vector<std::unique_ptr<ePub3::ByteStream>> m_byteStreamVector;
+@interface RDPackage() <RDPackageResourceDelegate> {
+	@private std::vector<std::unique_ptr<ePub3::ByteStream>> m_byteStreamVector;
 	@private ePub3::Package *m_package;
 	@private std::vector<std::shared_ptr<ePub3::SpineItem>> m_spineItemVector;
 }
@@ -31,7 +32,6 @@
 
 
 @synthesize packageUUID = m_packageUUID;
-@synthesize rootURL = m_rootURL;
 @synthesize spineItems = m_spineItems;
 @synthesize subjects = m_subjects;
 
@@ -54,25 +54,10 @@
 }
 
 
-- (void)dealloc {
-	[m_mediaOverlaysSmilModel release];
-	[m_navElemListOfFigures release];
-	[m_navElemListOfIllustrations release];
-	[m_navElemListOfTables release];
-	[m_navElemPageList release];
-	[m_navElemTableOfContents release];
-	[m_packageUUID release];
-	[m_rootURL release];
-	[m_spineItems release];
-	[m_subjects release];
-	[super dealloc];
-}
-
-
 - (NSDictionary *)dictionary {
 	NSMutableDictionary *dictRoot = [NSMutableDictionary dictionary];
 
-	NSString *rootURL = (m_rootURL == nil ? @"" : m_rootURL);
+	NSString *rootURL = (self.rootURL == nil ? @"" : self.rootURL);
 	[dictRoot setObject:rootURL forKey:@"rootUrl"];
 
 	[dictRoot setObject:self.mediaOverlaysSmilModel.dictionary forKey:@"media_overlay"];
@@ -117,7 +102,6 @@
 
 - (id)initWithPackage:(void *)package {
 	if (package == nil) {
-		[self release];
 		return nil;
 	}
 
@@ -127,7 +111,7 @@
 		// Package ID.
 
 		CFUUIDRef uuid = CFUUIDCreate(NULL);
-		m_packageUUID = (NSString *)CFUUIDCreateString(NULL, uuid);
+		m_packageUUID = CFBridgingRelease(CFUUIDCreateString(NULL, uuid));
 		CFRelease(uuid);
 
 		// Spine items.
@@ -141,7 +125,6 @@
 			m_spineItemVector.push_back(spineItem);
 			RDSpineItem *item = [[RDSpineItem alloc] initWithSpineItem:spineItem.get()];
 			[m_spineItems addObject:item];
-			[item release];
 		}
 
 		// Subjects.
@@ -242,16 +225,16 @@
 }
 
 
-//- (void)rdpackageResourceWillDeallocate:(RDPackageResource *)packageResource {
-//	for (auto i = m_byteStreamVector.begin(); i != m_byteStreamVector.end(); i++) {
-//		if (i->get() == packageResource.byteStream) {
-//			m_byteStreamVector.erase(i);
-//			return;
-//		}
-//	}
-//
-//	NSLog(@"The byte stream was not found!");
-//}
+- (void)rdpackageResourceWillDeallocate:(RDPackageResource *)packageResource {
+	for (auto i = m_byteStreamVector.begin(); i != m_byteStreamVector.end(); i++) {
+		if (i->get() == packageResource.byteStream) {
+			m_byteStreamVector.erase(i);
+			return;
+		}
+	}
+
+	NSLog(@"The byte stream was not found!");
+}
 
 
 - (NSString *)renditionLayout {
@@ -279,14 +262,15 @@
 		return nil;
 	}
 
-	RDPackageResource *resource = [[[RDPackageResource alloc]
-            initWithByteStream:byteStream.release()
-		relativePath:relativePath
-        pack:self] autorelease];
+	RDPackageResource *resource = [[RDPackageResource alloc]
+		initWithDelegate:self
+		byteStream:byteStream.get()
+		package:self
+		relativePath:relativePath];
 
-//	if (resource != nil) {
-//		m_byteStreamVector.push_back(std::move(byteStream));
-//	}
+	if (resource != nil) {
+		m_byteStreamVector.push_back(std::move(byteStream));
+	}
 
 	return resource;
 }

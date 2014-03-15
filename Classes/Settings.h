@@ -10,7 +10,7 @@
 
 @interface Settings : NSObject
 
-@property (nonatomic, retain) NSDictionary *bookmarks;
+@property (nonatomic, strong) NSDictionary *bookmarks;
 @property (nonatomic, assign) CGFloat columnGap;
 @property (nonatomic, assign) CGFloat fontScale;
 @property (nonatomic, assign) BOOL isSyntheticSpread;

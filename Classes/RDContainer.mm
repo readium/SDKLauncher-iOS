@@ -27,13 +27,6 @@
 @synthesize path = m_path;
 
 
-- (void)dealloc {
-	[m_packages release];
-	[m_path release];
-	[super dealloc];
-}
-
-
 + (void)initialize {
     ePub3::InitializeSdk();
     ePub3::PopulateFilterManager();
@@ -42,16 +35,14 @@
 
 - (id)initWithPath:(NSString *)path {
 	if (path == nil || ![[NSFileManager defaultManager] fileExistsAtPath:path]) {
-		[self release];
 		return nil;
 	}
 
 	if (self = [super init]) {
-		m_path = [path retain];
+		m_path = path;
 		m_container = ePub3::Container::OpenContainer(path.UTF8String);
 
 		if (m_container == nullptr) {
-			[self release];
 			return nil;
 		}
 
@@ -61,7 +52,6 @@
 		for (auto i = m_packageList.begin(); i != m_packageList.end(); i++) {
 			RDPackage *package = [[RDPackage alloc] initWithPackage:i->get()];
 			[m_packages addObject:package];
-			[package release];
 		}
 	}
 

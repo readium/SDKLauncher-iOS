@@ -32,7 +32,7 @@
 
 	if (containerPath != nil && containerPath.length > 0) {
 		for (NSDictionary *dict in [[Settings shared].bookmarks objectForKey:containerPath]) {
-			Bookmark *b = [[[Bookmark alloc] initWithDictionary:dict] autorelease];
+			Bookmark *b = [[Bookmark alloc] initWithDictionary:dict];
 
 			if (b == nil) {
 				NSLog(@"The bookmark is nil!");
@@ -60,7 +60,7 @@
 
 	for (int i = 0; i < array.count; i++) {
 		NSDictionary *d = [array objectAtIndex:i];
-		Bookmark *b = [[[Bookmark alloc] initWithDictionary:d] autorelease];
+		Bookmark *b = [[Bookmark alloc] initWithDictionary:d];
 
 		if (b == nil) {
 			NSLog(@"The bookmark is nil!");

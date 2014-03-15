@@ -12,61 +12,46 @@
 #import "RDPackage.h"
 #import "RDPackageResource.h"
 
+
 static dispatch_semaphore_t m_byteStreamResourceLock = NULL;
 
+
 @implementation PackageResourceServer
+
 
 + (dispatch_semaphore_t) byteStreamResourceLock
 {
     return m_byteStreamResourceLock;
 }
 
+
 - (void)dealloc {
-
-#if DISPATCH_USES_ARC == 0
-
-    if ( m_byteStreamResourceLock != NULL )
-    {
-        //dispatch_semaphore_signal(m_byteStreamResourceLock);
-        dispatch_release(m_byteStreamResourceLock);
-        m_byteStreamResourceLock = NULL;
-    }
-#endif
-
-	if (m_httpServer != nil) {
-		if (m_httpServer.isListening) {
-			[m_httpServer stop];
-		}
-
-		[m_httpServer release];
-		m_httpServer = nil;
+	if (m_httpServer != nil && m_httpServer.isListening) {
+		[m_httpServer stop];
 	}
 
 	[PackageResourceConnection setPackage:nil];
-	[m_package release];
+}
 
-	[super dealloc];
+
++ (void)initialize {
+	m_byteStreamResourceLock = dispatch_semaphore_create(1);
 }
 
 
 - (id)initWithPackage:(RDPackage *)package {
 	if (package == nil) {
-		[self release];
 		return nil;
 	}
 
 	if (self = [super init]) {
-		m_package = [package retain];
-
-        // create a critical section lock
-        m_byteStreamResourceLock = dispatch_semaphore_create(1);
+		m_package = package;
 
 		m_httpServer = [[AQHTTPServer alloc] initWithAddress:@"localhost"
 			root:[NSBundle mainBundle].resourceURL];
 
 		if (m_httpServer == nil) {
 			NSLog(@"The HTTP server is nil!");
-			[self release];
 			return nil;
 		}
 
@@ -80,7 +65,6 @@ static dispatch_semaphore_t m_byteStreamResourceLock = NULL;
 				NSLog(@"Could not start the HTTP server! %@", error);
 			}
 
-			[self release];
 			return nil;
 		}
 

@@ -11,19 +11,19 @@
 @class RDPackage;
 
 @interface PackageMetadataController : BaseViewController {
-	@private UILabel *m_labelAuthors;
-	@private UILabel *m_labelCopyrightOwner;
-	@private UILabel *m_labelFullTitle;
-	@private UILabel *m_labelISBN;
-	@private UILabel *m_labelLanguage;
-	@private UILabel *m_labelModificationDate;
-	@private UILabel *m_labelPackageID;
-	@private UILabel *m_labelSource;
-	@private UILabel *m_labelSubjects;
-	@private UILabel *m_labelSubtitle;
-	@private UILabel *m_labelTitle;
+	@private __weak UILabel *m_labelAuthors;
+	@private __weak UILabel *m_labelCopyrightOwner;
+	@private __weak UILabel *m_labelFullTitle;
+	@private __weak UILabel *m_labelISBN;
+	@private __weak UILabel *m_labelLanguage;
+	@private __weak UILabel *m_labelModificationDate;
+	@private __weak UILabel *m_labelPackageID;
+	@private __weak UILabel *m_labelSource;
+	@private __weak UILabel *m_labelSubjects;
+	@private __weak UILabel *m_labelSubtitle;
+	@private __weak UILabel *m_labelTitle;
 	@private RDPackage *m_package;
-	@private UIScrollView *m_scroll;
+	@private __weak UIScrollView *m_scroll;
 }
 
 - (id)initWithPackage:(RDPackage *)package;

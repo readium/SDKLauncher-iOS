@@ -19,14 +19,14 @@ NSString * const kSDKLauncherContainerListDidChange = @"SDKLauncherContainerList
 	NSArray *pathsCurr = self.paths;
 	BOOL didChange = NO;
 
-	int countCurr = pathsCurr.count;
-	int countPrev = (m_paths == nil) ? 0 : m_paths.count;
+	NSUInteger countCurr = pathsCurr.count;
+	NSUInteger countPrev = (m_paths == nil) ? 0 : m_paths.count;
 
 	if (countCurr != countPrev) {
 		didChange = YES;
 	}
 	else if (countCurr > 0) {
-		for (int i = 0; i < countCurr; i++) {
+		for (NSUInteger i = 0; i < countCurr; i++) {
 			NSString *pathCurr = [pathsCurr objectAtIndex:i];
 			NSString *pathPrev = [m_paths objectAtIndex:i];
 

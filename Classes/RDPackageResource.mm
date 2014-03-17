@@ -94,7 +94,8 @@
 		[md appendBytes:m_buffer length:count];
 
 		if (count != thisLength) {
-			NSLog(@"Did not read the expected number of bytes! (%lu %d)", count, thisLength);
+			NSLog(@"Did not read the expected number of bytes! (%lu %lu)",
+				count, (unsigned long)thisLength);
 			break;
 		}
 	}

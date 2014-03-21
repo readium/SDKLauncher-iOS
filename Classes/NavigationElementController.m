@@ -8,13 +8,38 @@
 
 #import "NavigationElementController.h"
 #import "EPubViewController.h"
+#import "NavigationElementItem.h"
 #import "RDContainer.h"
 #import "RDNavigationElement.h"
 #import "RDPackage.h"
 #import "RDSpineItem.h"
 
 
+@interface NavigationElementController () {
+	@private NSMutableArray *m_items;
+}
+
+- (void)addItem:(NavigationElementItem *)item;
+
+@end
+
+
 @implementation NavigationElementController
+
+
+- (void)addItem:(NavigationElementItem *)item {
+	if (item.level >= 16) {
+		NSLog(@"There are too many levels!");
+		return;
+	}
+
+	[m_items addObject:item];
+
+	for (RDNavigationElement *e in item.element.children) {
+		[self addItem:[[NavigationElementItem alloc]
+			initWithNavigationElement:e level:item.level + 1]];
+	}
+}
 
 
 - (id)
@@ -30,7 +55,12 @@
 	if (self = [super initWithTitle:title navBarHidden:NO]) {
 		m_container = container;
 		m_element = element;
+		m_items = [[NSMutableArray alloc] init];
 		m_package = package;
+
+		for (RDNavigationElement *e in element.children) {
+			[self addItem:[[NavigationElementItem alloc] initWithNavigationElement:e level:0]];
+		}
 	}
 
 	return self;
@@ -48,40 +78,28 @@
 }
 
 
-- (void)
-	tableView:(UITableView *)tableView
-	accessoryButtonTappedForRowWithIndexPath:(NSIndexPath *)indexPath
-{
-	RDNavigationElement *element = [m_element.children objectAtIndex:indexPath.row];
-
-	NavigationElementController *c = [[NavigationElementController alloc]
-		initWithNavigationElement:element
-		container:m_container
-		package:m_package
-		title:element.title];
-
-	if (c != nil) {
-		[self.navigationController pushViewController:c animated:YES];
-	}
-}
-
-
 - (UITableViewCell *)
 	tableView:(UITableView *)tableView
 	cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
 	UITableViewCell *cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault
 		reuseIdentifier:nil];
-	RDNavigationElement *element = [m_element.children objectAtIndex:indexPath.row];
 
-	if (element.children.count > 0) {
-		cell.accessoryType = UITableViewCellAccessoryDetailDisclosureButton;
+	NavigationElementItem *item = [m_items objectAtIndex:indexPath.row];
+
+	cell.indentationLevel = item.level;
+
+	cell.textLabel.text = [item.element.title stringByTrimmingCharactersInSet:[NSCharacterSet
+		whitespaceAndNewlineCharacterSet]];
+
+	if (item.element.content == nil || item.element.content.length == 0) {
+		cell.selectionStyle = UITableViewCellSelectionStyleNone;
+		cell.textLabel.textColor = [UIColor colorWithWhite:0 alpha:0.5];
 	}
 	else {
 		cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
 	}
 
-	cell.textLabel.text = element.title;
 	return cell;
 }
 
@@ -90,18 +108,18 @@
 	tableView:(UITableView *)tableView
 	didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-	RDNavigationElement *element = [m_element.children objectAtIndex:indexPath.row];
+	NavigationElementItem *item = [m_items objectAtIndex:indexPath.row];
 
-	EPubViewController *c = [[EPubViewController alloc]
-		initWithContainer:m_container
-		package:m_package
-		navElement:element];
+	if (item.element.content != nil && item.element.content.length > 0) {
+		EPubViewController *c = [[EPubViewController alloc]
+			initWithContainer:m_container
+			package:m_package
+			navElement:item.element];
 
-	if (c != nil) {
-		[self.navigationController pushViewController:c animated:YES];
+		if (c != nil) {
+			[self.navigationController pushViewController:c animated:YES];
+		}
 	}
-
-	[tableView deselectRowAtIndexPath:indexPath animated:YES];
 }
 
 
@@ -109,7 +127,7 @@
 	tableView:(UITableView *)tableView
 	numberOfRowsInSection:(NSInteger)section
 {
-	return m_element.children.count;
+	return m_items.count;
 }
 
 

@@ -26,6 +26,7 @@
 		3413981016C03062000912C1 /* RDPackage.mm in Sources */ = {isa = PBXBuildFile; fileRef = 3413980F16C03062000912C1 /* RDPackage.mm */; };
 		341652A316C2F85700AFDB8B /* PackageMetadataController.m in Sources */ = {isa = PBXBuildFile; fileRef = 341652A216C2F85700AFDB8B /* PackageMetadataController.m */; };
 		341652A816C2F9E700AFDB8B /* SpineItemListController.m in Sources */ = {isa = PBXBuildFile; fileRef = 341652A716C2F9E700AFDB8B /* SpineItemListController.m */; };
+		342817DD18DBC48700C8434E /* NavigationElementItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 342817DC18DBC48700C8434E /* NavigationElementItem.m */; };
 		3434215818D4E826001D4279 /* PackageResourceResponse.m in Sources */ = {isa = PBXBuildFile; fileRef = 3434215718D4E826001D4279 /* PackageResourceResponse.m */; };
 		3436EB2A1790C3F300246925 /* host_app_feedback.js in Resources */ = {isa = PBXBuildFile; fileRef = 341A1F701790BC6800E603C4 /* host_app_feedback.js */; };
 		345CA3E516C00F0500B8B56A /* RDContainer.mm in Sources */ = {isa = PBXBuildFile; fileRef = 345CA3E416C00F0500B8B56A /* RDContainer.mm */; };
@@ -169,6 +170,8 @@
 		341652A616C2F9E700AFDB8B /* SpineItemListController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SpineItemListController.h; sourceTree = "<group>"; };
 		341652A716C2F9E700AFDB8B /* SpineItemListController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SpineItemListController.m; sourceTree = "<group>"; };
 		341A1F701790BC6800E603C4 /* host_app_feedback.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = host_app_feedback.js; sourceTree = "<group>"; };
+		342817DB18DBC48700C8434E /* NavigationElementItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NavigationElementItem.h; sourceTree = "<group>"; };
+		342817DC18DBC48700C8434E /* NavigationElementItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NavigationElementItem.m; sourceTree = "<group>"; };
 		3434215618D4E826001D4279 /* PackageResourceResponse.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PackageResourceResponse.h; sourceTree = "<group>"; };
 		3434215718D4E826001D4279 /* PackageResourceResponse.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PackageResourceResponse.m; sourceTree = "<group>"; };
 		345CA3E316C00F0500B8B56A /* RDContainer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RDContainer.h; sourceTree = "<group>"; };
@@ -405,6 +408,8 @@
 				3462FBBC16BC3C43003C79E1 /* main.m */,
 				34CE0B1D1720D8FE00F55192 /* NavigationElementController.h */,
 				34CE0B1E1720D8FE00F55192 /* NavigationElementController.m */,
+				342817DB18DBC48700C8434E /* NavigationElementItem.h */,
+				342817DC18DBC48700C8434E /* NavigationElementItem.m */,
 				341652A116C2F85700AFDB8B /* PackageMetadataController.h */,
 				341652A216C2F85700AFDB8B /* PackageMetadataController.m */,
 				34B56B4D1722E54A00A5A4B8 /* Settings.h */,
@@ -834,6 +839,7 @@
 				34DAC6DF18D4BB96004F926A /* HTTPFileResponse.m in Sources */,
 				341652A816C2F9E700AFDB8B /* SpineItemListController.m in Sources */,
 				34DAC6DB18D4BB96004F926A /* HTTPAsyncFileResponse.m in Sources */,
+				342817DD18DBC48700C8434E /* NavigationElementItem.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

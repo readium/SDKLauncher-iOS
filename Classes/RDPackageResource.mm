@@ -75,7 +75,7 @@
 		m_relativePath = relativePath;
 
 		if (m_contentLength == 0) {
-			NSLog(@"The resource content length is zero!");
+			NSLog(@"The resource content length is zero! %@", m_relativePath);
 		}
 	}
 

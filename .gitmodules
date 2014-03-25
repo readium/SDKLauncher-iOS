@@ -4,6 +4,3 @@
 [submodule "Resources/readium-shared-js"]
 	path = Resources/readium-shared-js
 	url = https://github.com/readium/readium-shared-js.git
-[submodule "SimpleHTTPServer"]
-	path = SimpleHTTPServer
-	url = https://github.com/readium/SimpleHTTPServer.git

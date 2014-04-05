@@ -14,7 +14,6 @@
 #import "RDContainer.h"
 #import "RDNavigationElement.h"
 #import "RDPackage.h"
-#import "RDPackageResource.h"
 #import "RDPackageResourceServer.h"
 #import "RDSpineItem.h"
 

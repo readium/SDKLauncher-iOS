@@ -12,7 +12,6 @@
 		340535AA16BC5DD100D4A802 /* BaseViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 340535A916BC5DD100D4A802 /* BaseViewController.m */; };
 		340535AD16BC5F4700D4A802 /* ContainerListController.m in Sources */ = {isa = PBXBuildFile; fileRef = 340535AC16BC5F4700D4A802 /* ContainerListController.m */; };
 		340535B216BC608900D4A802 /* LocStr.m in Sources */ = {isa = PBXBuildFile; fileRef = 340535AF16BC608900D4A802 /* LocStr.m */; };
-		340535B316BC608900D4A802 /* LocStrError.m in Sources */ = {isa = PBXBuildFile; fileRef = 340535B116BC608900D4A802 /* LocStrError.m */; };
 		340535B616BC669C00D4A802 /* ContainerList.m in Sources */ = {isa = PBXBuildFile; fileRef = 340535B516BC669C00D4A802 /* ContainerList.m */; };
 		340535B916BC729200D4A802 /* moby-dick-20120118.epub in Resources */ = {isa = PBXBuildFile; fileRef = 340535B816BC729200D4A802 /* moby-dick-20120118.epub */; };
 		340535BB16BC793700D4A802 /* wasteland-20120118.epub in Resources */ = {isa = PBXBuildFile; fileRef = 340535BA16BC793700D4A802 /* wasteland-20120118.epub */; };
@@ -144,8 +143,6 @@
 		340535AC16BC5F4700D4A802 /* ContainerListController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ContainerListController.m; sourceTree = "<group>"; };
 		340535AE16BC608900D4A802 /* LocStr.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LocStr.h; sourceTree = "<group>"; };
 		340535AF16BC608900D4A802 /* LocStr.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LocStr.m; sourceTree = "<group>"; };
-		340535B016BC608900D4A802 /* LocStrError.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LocStrError.h; sourceTree = "<group>"; };
-		340535B116BC608900D4A802 /* LocStrError.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LocStrError.m; sourceTree = "<group>"; };
 		340535B416BC669C00D4A802 /* ContainerList.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ContainerList.h; sourceTree = "<group>"; };
 		340535B516BC669C00D4A802 /* ContainerList.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ContainerList.m; sourceTree = "<group>"; };
 		340535B816BC729200D4A802 /* moby-dick-20120118.epub */ = {isa = PBXFileReference; lastKnownFileType = file; path = "moby-dick-20120118.epub"; sourceTree = "<group>"; };
@@ -566,8 +563,6 @@
 				3411DF02175FACC000FCE6D9 /* EPubViewController.m */,
 				340535AE16BC608900D4A802 /* LocStr.h */,
 				340535AF16BC608900D4A802 /* LocStr.m */,
-				340535B016BC608900D4A802 /* LocStrError.h */,
-				340535B116BC608900D4A802 /* LocStrError.m */,
 				3462FBBC16BC3C43003C79E1 /* main.m */,
 				34CE0B1D1720D8FE00F55192 /* NavigationElementController.h */,
 				34CE0B1E1720D8FE00F55192 /* NavigationElementController.m */,
@@ -811,7 +806,6 @@
 				34212FC318F0649500A9109F /* HTTPServer.m in Sources */,
 				340535B216BC608900D4A802 /* LocStr.m in Sources */,
 				34212FB718F0649500A9109F /* RDPackageResource.mm in Sources */,
-				340535B316BC608900D4A802 /* LocStrError.m in Sources */,
 				34212FC918F0649500A9109F /* HTTPDynamicFileResponse.m in Sources */,
 				34212FB818F0649500A9109F /* RDPackageResourceConnection.m in Sources */,
 				34212FBB18F0649500A9109F /* RDSmilData.mm in Sources */,

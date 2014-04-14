@@ -23,6 +23,7 @@
 
 @synthesize renditionLayout = m_renditionLayout;
 @synthesize mediaOverlayId = m_mediaOverlayId;
+@synthesize mediaType = m_mediaType;
 
 
 - (NSString *)baseHref {
@@ -65,6 +66,11 @@
 	if (self.mediaOverlayId != nil) {
 		[dict setObject:self.mediaOverlayId forKey:@"media_overlay_id"];
 	}
+    
+    if(self.mediaType != nil) {
+        [dict setObject:self.mediaType forKey:@"media_type"];
+    }
+       
 
 	return dict;
 }
@@ -94,6 +100,9 @@
 
 		auto mediaOverlayID = m_spineItem->ManifestItem()->MediaOverlayID();
 		m_mediaOverlayId = [[NSString alloc] initWithUTF8String: mediaOverlayID.c_str()];
+        
+        auto mediaType = m_spineItem->ManifestItem()->MediaType();
+        m_mediaType = [NSString stringWithUTF8String:mediaType.c_str()];
 	}
 
 	return self;

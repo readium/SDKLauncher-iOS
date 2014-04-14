@@ -19,6 +19,7 @@
 @property (nonatomic, readonly) NSString *pageSpread;
 @property (nonatomic, readonly) NSString *renditionLayout;
 @property (nonatomic, readonly) NSString *mediaOverlayId;
+@property (nonatomic, readonly) NSString *mediaType;
 
 - (id)initWithSpineItem:(void *)spineItem;
 

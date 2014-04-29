@@ -7,7 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		2DC070A8190AB6070018A6F9 /* PackageDataResponse.m in Sources */ = {isa = PBXBuildFile; fileRef = 2DC070A7190AB6070018A6F9 /* PackageDataResponse.m */; };
 		3403516516CE93F2009E3B88 /* reader.css in Resources */ = {isa = PBXBuildFile; fileRef = 3403516116CE93F2009E3B88 /* reader.css */; };
 		3403516616CE93F2009E3B88 /* reader.html in Resources */ = {isa = PBXBuildFile; fileRef = 3403516216CE93F2009E3B88 /* reader.html */; };
 		340535AA16BC5DD100D4A802 /* BaseViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 340535A916BC5DD100D4A802 /* BaseViewController.m */; };
@@ -58,6 +57,7 @@
 		34212FD518F0649500A9109F /* DDTTYLogger.m in Sources */ = {isa = PBXBuildFile; fileRef = 34212FAC18F0649500A9109F /* DDTTYLogger.m */; };
 		34212FD618F0649500A9109F /* ContextFilterLogFormatter.m in Sources */ = {isa = PBXBuildFile; fileRef = 34212FAF18F0649500A9109F /* ContextFilterLogFormatter.m */; };
 		34212FD718F0649500A9109F /* DispatchQueueLogFormatter.m in Sources */ = {isa = PBXBuildFile; fileRef = 34212FB118F0649500A9109F /* DispatchQueueLogFormatter.m */; };
+		34269C5C190F55DA00D315ED /* RDPackageResourceDataResponse.m in Sources */ = {isa = PBXBuildFile; fileRef = 34269C5B190F55DA00D315ED /* RDPackageResourceDataResponse.m */; };
 		342817DD18DBC48700C8434E /* NavigationElementItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 342817DC18DBC48700C8434E /* NavigationElementItem.m */; };
 		3436EB2A1790C3F300246925 /* host_app_feedback.js in Resources */ = {isa = PBXBuildFile; fileRef = 341A1F701790BC6800E603C4 /* host_app_feedback.js */; };
 		3462FBBD16BC3C43003C79E1 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 3462FBBB16BC3C43003C79E1 /* AppDelegate.m */; };
@@ -136,8 +136,6 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		2DC070A6190AB6070018A6F9 /* PackageDataResponse.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PackageDataResponse.h; sourceTree = "<group>"; };
-		2DC070A7190AB6070018A6F9 /* PackageDataResponse.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PackageDataResponse.m; sourceTree = "<group>"; };
 		3403516116CE93F2009E3B88 /* reader.css */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.css; path = reader.css; sourceTree = "<group>"; };
 		3403516216CE93F2009E3B88 /* reader.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = reader.html; sourceTree = "<group>"; };
 		340535A816BC5DD100D4A802 /* BaseViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BaseViewController.h; sourceTree = "<group>"; };
@@ -235,6 +233,8 @@
 		34212FAF18F0649500A9109F /* ContextFilterLogFormatter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ContextFilterLogFormatter.m; sourceTree = "<group>"; };
 		34212FB018F0649500A9109F /* DispatchQueueLogFormatter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DispatchQueueLogFormatter.h; sourceTree = "<group>"; };
 		34212FB118F0649500A9109F /* DispatchQueueLogFormatter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DispatchQueueLogFormatter.m; sourceTree = "<group>"; };
+		34269C5A190F55DA00D315ED /* RDPackageResourceDataResponse.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RDPackageResourceDataResponse.h; sourceTree = "<group>"; };
+		34269C5B190F55DA00D315ED /* RDPackageResourceDataResponse.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RDPackageResourceDataResponse.m; sourceTree = "<group>"; };
 		342817DB18DBC48700C8434E /* NavigationElementItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NavigationElementItem.h; sourceTree = "<group>"; };
 		342817DC18DBC48700C8434E /* NavigationElementItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NavigationElementItem.m; sourceTree = "<group>"; };
 		3462FBBA16BC3C43003C79E1 /* AppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
@@ -396,6 +396,8 @@
 				34212F6718F0649500A9109F /* RDPackageResource.mm */,
 				34212F6818F0649500A9109F /* RDPackageResourceConnection.h */,
 				34212F6918F0649500A9109F /* RDPackageResourceConnection.m */,
+				34269C5A190F55DA00D315ED /* RDPackageResourceDataResponse.h */,
+				34269C5B190F55DA00D315ED /* RDPackageResourceDataResponse.m */,
 				34212F6A18F0649500A9109F /* RDPackageResourceResponse.h */,
 				34212F6B18F0649500A9109F /* RDPackageResourceResponse.m */,
 				34212F6C18F0649500A9109F /* RDPackageResourceServer.h */,
@@ -794,6 +796,7 @@
 				34212FBC18F0649500A9109F /* RDSpineItem.mm in Sources */,
 				34B56B5C17230FDF00A5A4B8 /* BookmarkListController.m in Sources */,
 				34212FC818F0649500A9109F /* HTTPDataResponse.m in Sources */,
+				34269C5C190F55DA00D315ED /* RDPackageResourceDataResponse.m in Sources */,
 				3413980B16C02DE7000912C1 /* ContainerController.m in Sources */,
 				340535B616BC669C00D4A802 /* ContainerList.m in Sources */,
 				34212FC418F0649500A9109F /* MultipartFormDataParser.m in Sources */,
@@ -803,7 +806,6 @@
 				34212FD318F0649500A9109F /* DDFileLogger.m in Sources */,
 				34212FBA18F0649500A9109F /* RDPackageResourceServer.m in Sources */,
 				34C4064317A43A1700354C33 /* EPubSettingsController.m in Sources */,
-				2DC070A8190AB6070018A6F9 /* PackageDataResponse.m in Sources */,
 				3411DF03175FACC000FCE6D9 /* EPubViewController.m in Sources */,
 				34212FB418F0649500A9109F /* RDMediaOverlaysSmilModel.mm in Sources */,
 				34212FB318F0649500A9109F /* RDContainer.mm in Sources */,

@@ -33,6 +33,8 @@
 // The relative path associated with this resource.
 @property (nonatomic, readonly) NSString *relativePath;
 
+@property (nonatomic, copy) NSString *mimeType;
+
 - (id)
 	initWithDelegate:(id <RDPackageResourceDelegate>)delegate
 	byteStream:(void *)byteStream

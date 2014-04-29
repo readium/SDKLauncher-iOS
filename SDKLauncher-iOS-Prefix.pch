@@ -16,35 +16,4 @@
 
 	#define IS_IPAD (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad)
 	#define SCREEN_SIZE ([UIScreen mainScreen].bounds.size)
-
-	// -----------------------------------------
-	// SimpleHTTPServer requires the following
-
-#define DEBUGLOG false
-
-	# define USING_MRR (!__has_feature(objc_arc))
-
-	# if defined(OS_OBJECT_USE_OBJC) && OS_OBJECT_USE_OBJC
-	#  define DISPATCH_USES_ARC !USING_MRR
-	# else
-	#  define DISPATCH_USES_ARC 0
-	# endif
-
-	#if __has_feature(objc_arc) && defined(__IPHONE_OS_VERSION_MIN_REQUIRED) && __IPHONE_OS_VERSION_MIN_REQUIRED >= __IPHONE_5_0
-	# define __maybe_weak __weak
-	# define __block_weak __weak
-	# define property_weak weak
-	#elif __has_feature(objc_arc) && defined(MAC_OS_X_VERSION_MIN_REQUIRED) && MAC_OS_X_VERSION_MIN_REQUIRED >= MAC_OS_X_VERSION_10_7
-	# define __maybe_weak __weak
-	# define __block_weak __weak
-	# define property_weak weak
-	#else
-	# define __maybe_weak __unsafe_unretained
-	# define __block_weak __block
-	# define property_weak assign
-	#endif
-
-	// (end SimpleHTTPServer)
-	// -----------------------------------------
-
 #endif

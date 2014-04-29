@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		2DC070A8190AB6070018A6F9 /* PackageDataResponse.m in Sources */ = {isa = PBXBuildFile; fileRef = 2DC070A7190AB6070018A6F9 /* PackageDataResponse.m */; };
 		3403516516CE93F2009E3B88 /* reader.css in Resources */ = {isa = PBXBuildFile; fileRef = 3403516116CE93F2009E3B88 /* reader.css */; };
 		3403516616CE93F2009E3B88 /* reader.html in Resources */ = {isa = PBXBuildFile; fileRef = 3403516216CE93F2009E3B88 /* reader.html */; };
 		340535AA16BC5DD100D4A802 /* BaseViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 340535A916BC5DD100D4A802 /* BaseViewController.m */; };
@@ -135,6 +136,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		2DC070A6190AB6070018A6F9 /* PackageDataResponse.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PackageDataResponse.h; sourceTree = "<group>"; };
+		2DC070A7190AB6070018A6F9 /* PackageDataResponse.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PackageDataResponse.m; sourceTree = "<group>"; };
 		3403516116CE93F2009E3B88 /* reader.css */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.css; path = reader.css; sourceTree = "<group>"; };
 		3403516216CE93F2009E3B88 /* reader.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = reader.html; sourceTree = "<group>"; };
 		340535A816BC5DD100D4A802 /* BaseViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BaseViewController.h; sourceTree = "<group>"; };
@@ -800,6 +803,7 @@
 				34212FD318F0649500A9109F /* DDFileLogger.m in Sources */,
 				34212FBA18F0649500A9109F /* RDPackageResourceServer.m in Sources */,
 				34C4064317A43A1700354C33 /* EPubSettingsController.m in Sources */,
+				2DC070A8190AB6070018A6F9 /* PackageDataResponse.m in Sources */,
 				3411DF03175FACC000FCE6D9 /* EPubViewController.m in Sources */,
 				34212FB418F0649500A9109F /* RDMediaOverlaysSmilModel.mm in Sources */,
 				34212FB318F0649500A9109F /* RDContainer.mm in Sources */,

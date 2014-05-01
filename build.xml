@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Build file for the Launcher iOS -->
+<project name="org.readium.LauncheriOS" default="build.all" basedir=".">
+
+	<property name="build.dir" value="${basedir}" />
+
+	<property name="project" value="SDKLauncher-iOS.xcodeproj"/>
+	<property name="target" value="SDKLauncher-iOS"/>
+	<property name="configuration" value="Release"/>
+
+	<!-- this builds Launcher-iOS -->
+	<target name ="build.all" depends="init" description="Invoke xcodebuild to do a full build" >
+		<exec executable="xcodebuild" spawn="false" failonerror="true">
+			<arg value="-project" />
+			<arg value="${project}" />
+			<arg value="-target" />
+			<arg value="${target}" />
+			<arg value="-configuration" />
+			<arg value="${configuration}" />
+		 </exec>
+	</target>
+
+	<target name="init" >
+	</target>
+
+	<target name="clean" depends="init" description="Clean the workspace">
+		<exec executable="xcodebuild" spawn="false" dir="${build.dir}" failonerror="true">
+			<arg value="-project" />
+				<arg value="${project}" />
+				<arg value="-target" />
+				<arg value="${target}" />
+				<arg value="-configuration" />
+				<arg value="${configuration}" />
+		</exec>
+		<echo> Cleaned ${xcworkspace} ! </echo>
+	</target>
+</project>

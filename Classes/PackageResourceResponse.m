@@ -87,4 +87,15 @@
 }
 
 
+- (NSDictionary *)httpHeaders {
+    NSString *contentType = self->m_resource.mimeType;
+    if (contentType) {
+        return @{@"Content-Type": contentType};
+    }
+    else {
+        return @{};
+    }
+}
+
+
 @end

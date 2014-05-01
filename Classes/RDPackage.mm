@@ -3,8 +3,29 @@
 //  SDKLauncher-iOS
 //
 //  Created by Shane Meyer on 2/4/13.
-//  Copyright (c) 2012-2013 The Readium Foundation.
-//
+//  Copyright (c) 2014 Readium Foundation and/or its licensees. All rights reserved.
+//  
+//  Redistribution and use in source and binary forms, with or without modification, 
+//  are permitted provided that the following conditions are met:
+//  1. Redistributions of source code must retain the above copyright notice, this 
+//  list of conditions and the following disclaimer.
+//  2. Redistributions in binary form must reproduce the above copyright notice, 
+//  this list of conditions and the following disclaimer in the documentation and/or 
+//  other materials provided with the distribution.
+//  3. Neither the name of the organization nor the names of its contributors may be 
+//  used to endorse or promote products derived from this software without specific 
+//  prior written permission.
+//  
+//  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
+//  ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED 
+//  WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. 
+//  IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, 
+//  INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, 
+//  BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, 
+//  DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF 
+//  LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE 
+//  OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED 
+//  OF THE POSSIBILITY OF SUCH DAMAGE.
 
 #import "RDPackage.h"
 #import <ePub3/media-overlays_smil_model.h>
@@ -13,11 +34,12 @@
 #import <ePub3/utilities/byte_stream.h>
 #import "RDMediaOverlaysSmilModel.h"
 #import "RDNavigationElement.h"
+#import "RDPackageResource.h"
 #import "RDSpineItem.h"
 
 
-@interface RDPackage() {
-	//@private std::vector<std::unique_ptr<ePub3::ByteStream>> m_byteStreamVector;
+@interface RDPackage() <RDPackageResourceDelegate> {
+	@private std::vector<std::unique_ptr<ePub3::ByteStream>> m_byteStreamVector;
 	@private ePub3::Package *m_package;
 	@private std::vector<std::shared_ptr<ePub3::SpineItem>> m_spineItemVector;
 }
@@ -53,24 +75,11 @@
 }
 
 
-- (void)dealloc {
-	[m_mediaOverlaysSmilModel release];
-	[m_navElemListOfFigures release];
-	[m_navElemListOfIllustrations release];
-	[m_navElemListOfTables release];
-	[m_navElemPageList release];
-	[m_navElemTableOfContents release];
-	[m_packageUUID release];
-	[m_spineItems release];
-	[m_subjects release];
-	[super dealloc];
-}
-
-
 - (NSDictionary *)dictionary {
 	NSMutableDictionary *dictRoot = [NSMutableDictionary dictionary];
 
-	[dictRoot setObject:@"/" forKey:@"rootUrl"];
+	NSString *rootURL = (self.rootURL == nil ? @"" : self.rootURL);
+	[dictRoot setObject:rootURL forKey:@"rootUrl"];
 
 	[dictRoot setObject:self.mediaOverlaysSmilModel.dictionary forKey:@"media_overlay"];
 
@@ -114,7 +123,6 @@
 
 - (id)initWithPackage:(void *)package {
 	if (package == nil) {
-		[self release];
 		return nil;
 	}
 
@@ -124,7 +132,7 @@
 		// Package ID.
 
 		CFUUIDRef uuid = CFUUIDCreate(NULL);
-		m_packageUUID = (NSString *)CFUUIDCreateString(NULL, uuid);
+		m_packageUUID = CFBridgingRelease(CFUUIDCreateString(NULL, uuid));
 		CFRelease(uuid);
 
 		// Spine items.
@@ -138,7 +146,6 @@
 			m_spineItemVector.push_back(spineItem);
 			RDSpineItem *item = [[RDSpineItem alloc] initWithSpineItem:spineItem.get()];
 			[m_spineItems addObject:item];
-			[item release];
 		}
 
 		// Subjects.
@@ -239,16 +246,16 @@
 }
 
 
-//- (void)rdpackageResourceWillDeallocate:(RDPackageResource *)packageResource {
-//	for (auto i = m_byteStreamVector.begin(); i != m_byteStreamVector.end(); i++) {
-//		if (i->get() == packageResource.byteStream) {
-//			m_byteStreamVector.erase(i);
-//			return;
-//		}
-//	}
-//
-//	NSLog(@"The byte stream was not found!");
-//}
+- (void)rdpackageResourceWillDeallocate:(RDPackageResource *)packageResource {
+	for (auto i = m_byteStreamVector.begin(); i != m_byteStreamVector.end(); i++) {
+		if (i->get() == packageResource.byteStream) {
+			m_byteStreamVector.erase(i);
+			return;
+		}
+	}
+
+	NSLog(@"The byte stream was not found!");
+}
 
 
 - (NSString *)renditionLayout {
@@ -276,14 +283,22 @@
 		return nil;
 	}
 
-	RDPackageResource *resource = [[[RDPackageResource alloc]
-            initWithByteStream:byteStream.release()
-		relativePath:relativePath
-        pack:self] autorelease];
+	RDPackageResource *resource = [[RDPackageResource alloc]
+		initWithDelegate:self
+		byteStream:byteStream.get()
+		package:self
+		relativePath:relativePath];
 
-//	if (resource != nil) {
-//		m_byteStreamVector.push_back(std::move(byteStream));
-//	}
+	if (resource != nil) {
+		m_byteStreamVector.push_back(std::move(byteStream));
+        
+        ePub3::ConstManifestItemPtr item = m_package->ManifestItemAtRelativePath(s);
+        
+        if (item) {
+            const ePub3::ManifestItem::MimeType &mediaType = item->MediaType();
+            resource.mimeType = [NSString stringWithUTF8String:mediaType.c_str()];
+        }
+	}
 
 	return resource;
 }
@@ -328,9 +343,5 @@
 	return [NSString stringWithUTF8String:s.c_str()];
 }
 
--(void*) sdkPackage
-{
-    return m_package;
-}
 
 @end

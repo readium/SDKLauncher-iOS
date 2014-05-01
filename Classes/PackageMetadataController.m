@@ -3,8 +3,29 @@
 //  SDKLauncher-iOS
 //
 //  Created by Shane Meyer on 2/6/13.
-//  Copyright (c) 2012-2013 The Readium Foundation.
-//
+//  Copyright (c) 2014 Readium Foundation and/or its licensees. All rights reserved.
+//  
+//  Redistribution and use in source and binary forms, with or without modification, 
+//  are permitted provided that the following conditions are met:
+//  1. Redistributions of source code must retain the above copyright notice, this 
+//  list of conditions and the following disclaimer.
+//  2. Redistributions in binary form must reproduce the above copyright notice, 
+//  this list of conditions and the following disclaimer in the documentation and/or 
+//  other materials provided with the distribution.
+//  3. Neither the name of the organization nor the names of its contributors may be 
+//  used to endorse or promote products derived from this software without specific 
+//  prior written permission.
+//  
+//  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
+//  ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED 
+//  WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. 
+//  IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, 
+//  INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, 
+//  BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, 
+//  DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF 
+//  LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE 
+//  OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED 
+//  OF THE POSSIBILITY OF SUCH DAMAGE.
 
 #import "PackageMetadataController.h"
 #import "RDPackage.h"
@@ -21,7 +42,7 @@
 
 
 - (UILabel *)addLabelWithText:(NSString *)text {
-	UILabel *label = [[[UILabel alloc] init] autorelease];
+	UILabel *label = [[UILabel alloc] init];
 	label.backgroundColor = [UIColor clearColor];
 	label.font = [UIFont systemFontOfSize:16];
 	label.numberOfLines = 0;
@@ -32,36 +53,13 @@
 }
 
 
-- (void)cleanUp {
-	m_labelAuthors = nil;
-	m_labelCopyrightOwner = nil;
-	m_labelFullTitle = nil;
-	m_labelISBN = nil;
-	m_labelLanguage = nil;
-	m_labelModificationDate = nil;
-	m_labelPackageID = nil;
-	m_labelSource = nil;
-	m_labelSubjects = nil;
-	m_labelSubtitle = nil;
-	m_labelTitle = nil;
-	m_scroll = nil;
-}
-
-
-- (void)dealloc {
-	[m_package release];
-	[super dealloc];
-}
-
-
 - (id)initWithPackage:(RDPackage *)package {
 	if (package == nil) {
-		[self release];
 		return nil;
 	}
 
 	if (self = [super initWithTitle:LocStr(@"METADATA") navBarHidden:NO]) {
-		m_package = [package retain];
+		m_package = package;
 	}
 
 	return self;
@@ -69,12 +67,13 @@
 
 
 - (void)loadView {
-	self.view = [[[UIView alloc] init] autorelease];
+	self.view = [[UIView alloc] init];
 	self.view.backgroundColor = [UIColor whiteColor];
 
-	m_scroll = [[[UIScrollView alloc] init] autorelease];
-	m_scroll.alwaysBounceVertical = YES;
-	[self.view addSubview:m_scroll];
+	UIScrollView *scroll = [[UIScrollView alloc] init];
+	m_scroll = scroll;
+	scroll.alwaysBounceVertical = YES;
+	[self.view addSubview:scroll];
 
 	m_labelTitle = [self addLabelWithText:
 		LocStr(@"METADATA_TITLE", m_package.title)];

@@ -3,8 +3,29 @@
 //  SDKLauncher-iOS
 //
 //  Created by Shane Meyer on 4/20/13.
-//  Copyright (c) 2013 The Readium Foundation. All rights reserved.
-//
+//  Copyright (c) 2014 Readium Foundation and/or its licensees. All rights reserved.
+//  
+//  Redistribution and use in source and binary forms, with or without modification, 
+//  are permitted provided that the following conditions are met:
+//  1. Redistributions of source code must retain the above copyright notice, this 
+//  list of conditions and the following disclaimer.
+//  2. Redistributions in binary form must reproduce the above copyright notice, 
+//  this list of conditions and the following disclaimer in the documentation and/or 
+//  other materials provided with the distribution.
+//  3. Neither the name of the organization nor the names of its contributors may be 
+//  used to endorse or promote products derived from this software without specific 
+//  prior written permission.
+//  
+//  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
+//  ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED 
+//  WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. 
+//  IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, 
+//  INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, 
+//  BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, 
+//  DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF 
+//  LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE 
+//  OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED 
+//  OF THE POSSIBILITY OF SUCH DAMAGE.
 
 #import "BookmarkListController.h"
 #import "Bookmark.h"
@@ -24,30 +45,15 @@
 @implementation BookmarkListController
 
 
-- (void)cleanUp {
-	m_table = nil;
-}
-
-
-- (void)dealloc {
-	[m_bookmarks release];
-	[m_container release];
-	[m_package release];
-	[super dealloc];
-}
-
-
 - (id)initWithContainer:(RDContainer *)container package:(RDPackage *)package {
 	if (container == nil || package == nil) {
-		[self release];
 		return nil;
 	}
 
 	if (self = [super initWithTitle:LocStr(@"BOOKMARKS") navBarHidden:NO]) {
-		m_bookmarks = [[[BookmarkDatabase shared]
-			bookmarksForContainerPath:container.path] retain];
-		m_container = [container retain];
-		m_package = [package retain];
+		m_bookmarks = [[BookmarkDatabase shared] bookmarksForContainerPath:container.path];
+		m_container = container;
+		m_package = package;
 	}
 
 	return self;
@@ -55,13 +61,13 @@
 
 
 - (void)loadView {
-	self.view = [[[UIView alloc] init] autorelease];
+	self.view = [[UIView alloc] init];
 
-	m_table = [[[UITableView alloc] initWithFrame:CGRectZero style:UITableViewStylePlain]
-		autorelease];
-	m_table.dataSource = self;
-	m_table.delegate = self;
-	[self.view addSubview:m_table];
+	UITableView *table = [[UITableView alloc] initWithFrame:CGRectZero style:UITableViewStylePlain];
+	m_table = table;
+	table.dataSource = self;
+	table.delegate = self;
+	[self.view addSubview:table];
 
 	[self updateEditDoneButton];
 }
@@ -83,8 +89,8 @@
 	tableView:(UITableView *)tableView
 	cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-	UITableViewCell *cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault
-		reuseIdentifier:nil] autorelease];
+	UITableViewCell *cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault
+		reuseIdentifier:nil];
 	cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
 	Bookmark *bookmark = [m_bookmarks objectAtIndex:indexPath.row];
 	cell.textLabel.text = bookmark.title;
@@ -101,9 +107,7 @@
 		Bookmark *bookmark = [m_bookmarks objectAtIndex:indexPath.row];
 		[[BookmarkDatabase shared] deleteBookmark:bookmark];
 
-		[m_bookmarks release];
-		m_bookmarks = [[[BookmarkDatabase shared]
-			bookmarksForContainerPath:m_container.path] retain];
+		m_bookmarks = [[BookmarkDatabase shared] bookmarksForContainerPath:m_container.path];
 
 		[tableView deleteRowsAtIndexPaths:@[ indexPath ]
 			withRowAnimation:UITableViewRowAnimationAutomatic];
@@ -123,10 +127,10 @@
 {
 	Bookmark *bookmark = [m_bookmarks objectAtIndex:indexPath.row];
 
-	EPubViewController *c = [[[EPubViewController alloc]
+	EPubViewController *c = [[EPubViewController alloc]
 		initWithContainer:m_container
 		package:m_package
-		bookmark:bookmark] autorelease];
+		bookmark:bookmark];
 
 	if (c != nil) {
 		[self.navigationController pushViewController:c animated:YES];
@@ -147,16 +151,16 @@
 		self.navigationItem.rightBarButtonItem = nil;
 	}
 	else if (m_table.isEditing) {
-		self.navigationItem.rightBarButtonItem = [[[UIBarButtonItem alloc]
+		self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc]
 			initWithBarButtonSystemItem:UIBarButtonSystemItemDone
 			target:self
-			action:@selector(onClickDone)] autorelease];
+			action:@selector(onClickDone)];
 	}
 	else {
-		self.navigationItem.rightBarButtonItem = [[[UIBarButtonItem alloc]
+		self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc]
 			initWithBarButtonSystemItem:UIBarButtonSystemItemEdit
 			target:self
-			action:@selector(onClickEdit)] autorelease];
+			action:@selector(onClickEdit)];
 	}
 }
 
@@ -176,8 +180,7 @@
 		}
 	}
 	else {
-		[m_bookmarks release];
-		m_bookmarks = [bookmarks retain];
+		m_bookmarks = bookmarks;
 		[m_table reloadData];
 	}
 }

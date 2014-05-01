@@ -3,8 +3,29 @@
 //  SDKLauncher-iOS
 //
 //  Created by Shane Meyer on 2/6/13.
-//  Copyright (c) 2012-2013 The Readium Foundation.
-//
+//  Copyright (c) 2014 Readium Foundation and/or its licensees. All rights reserved.
+//  
+//  Redistribution and use in source and binary forms, with or without modification, 
+//  are permitted provided that the following conditions are met:
+//  1. Redistributions of source code must retain the above copyright notice, this 
+//  list of conditions and the following disclaimer.
+//  2. Redistributions in binary form must reproduce the above copyright notice, 
+//  this list of conditions and the following disclaimer in the documentation and/or 
+//  other materials provided with the distribution.
+//  3. Neither the name of the organization nor the names of its contributors may be 
+//  used to endorse or promote products derived from this software without specific 
+//  prior written permission.
+//  
+//  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
+//  ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED 
+//  WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. 
+//  IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, 
+//  INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, 
+//  BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, 
+//  DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF 
+//  LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE 
+//  OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED 
+//  OF THE POSSIBILITY OF SUCH DAMAGE.
 
 #import "SpineItemListController.h"
 #import "EPubViewController.h"
@@ -16,27 +37,14 @@
 @implementation SpineItemListController
 
 
-- (void)cleanUp {
-	m_table = nil;
-}
-
-
-- (void)dealloc {
-	[m_container release];
-	[m_package release];
-	[super dealloc];
-}
-
-
 - (id)initWithContainer:(RDContainer *)container package:(RDPackage *)package {
 	if (container == nil || package == nil) {
-		[self release];
 		return nil;
 	}
 
 	if (self = [super initWithTitle:LocStr(@"SPINE_ITEMS") navBarHidden:NO]) {
-		m_container = [container retain];
-		m_package = [package retain];
+		m_container = container;
+		m_package = package;
 	}
 
 	return self;
@@ -44,13 +52,13 @@
 
 
 - (void)loadView {
-	self.view = [[[UIView alloc] init] autorelease];
+	self.view = [[UIView alloc] init];
 
-	m_table = [[[UITableView alloc] initWithFrame:CGRectZero style:UITableViewStylePlain]
-		autorelease];
-	m_table.dataSource = self;
-	m_table.delegate = self;
-	[self.view addSubview:m_table];
+	UITableView *table = [[UITableView alloc] initWithFrame:CGRectZero style:UITableViewStylePlain];
+	m_table = table;
+	table.dataSource = self;
+	table.delegate = self;
+	[self.view addSubview:table];
 }
 
 
@@ -58,8 +66,8 @@
 	tableView:(UITableView *)tableView
 	cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-	UITableViewCell *cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault
-		reuseIdentifier:nil] autorelease];
+	UITableViewCell *cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault
+		reuseIdentifier:nil];
 	cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
 	RDSpineItem *spineItem = [m_package.spineItems objectAtIndex:indexPath.row];
 	cell.textLabel.text = spineItem.idref;
@@ -72,11 +80,11 @@
 	didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
 	RDSpineItem *spineItem = [m_package.spineItems objectAtIndex:indexPath.row];
-	EPubViewController *c = [[[EPubViewController alloc]
+	EPubViewController *c = [[EPubViewController alloc]
 		initWithContainer:m_container
 		package:m_package
 		spineItem:spineItem
-		cfi:nil] autorelease];
+		cfi:nil];
 	[self.navigationController pushViewController:c animated:YES];
 }
 

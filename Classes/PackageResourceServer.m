@@ -3,73 +3,69 @@
 //  SDKLauncher-iOS
 //
 //  Created by Shane Meyer on 2/28/13.
-//  Copyright (c) 2013 The Readium Foundation. All rights reserved.
-//
+//  Copyright (c) 2014 Readium Foundation and/or its licensees. All rights reserved.
+//  
+//  Redistribution and use in source and binary forms, with or without modification, 
+//  are permitted provided that the following conditions are met:
+//  1. Redistributions of source code must retain the above copyright notice, this 
+//  list of conditions and the following disclaimer.
+//  2. Redistributions in binary form must reproduce the above copyright notice, 
+//  this list of conditions and the following disclaimer in the documentation and/or 
+//  other materials provided with the distribution.
+//  3. Neither the name of the organization nor the names of its contributors may be 
+//  used to endorse or promote products derived from this software without specific 
+//  prior written permission.
+//  
+//  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
+//  ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED 
+//  WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. 
+//  IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, 
+//  INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, 
+//  BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, 
+//  DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF 
+//  LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE 
+//  OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED 
+//  OF THE POSSIBILITY OF SUCH DAMAGE.
 
 #import "PackageResourceServer.h"
-#import "AQHTTPServer.h"
+#import "HTTPServer.h"
 #import "PackageResourceConnection.h"
 #import "RDPackage.h"
 #import "RDPackageResource.h"
 
-static dispatch_semaphore_t m_byteStreamResourceLock = NULL;
+
+static id m_resourceLock = nil;
+
 
 @implementation PackageResourceServer
 
-+ (dispatch_semaphore_t) byteStreamResourceLock
-{
-    return m_byteStreamResourceLock;
-}
 
 - (void)dealloc {
-
-#if DISPATCH_USES_ARC == 0
-
-    if ( m_byteStreamResourceLock != NULL )
-    {
-        //dispatch_semaphore_signal(m_byteStreamResourceLock);
-        dispatch_release(m_byteStreamResourceLock);
-        m_byteStreamResourceLock = NULL;
-    }
-#endif
-
-	if (m_httpServer != nil) {
-		if (m_httpServer.isListening) {
-			[m_httpServer stop];
-		}
-
-		[m_httpServer release];
-		m_httpServer = nil;
-	}
-
+	[m_httpServer stop];
 	[PackageResourceConnection setPackage:nil];
-	[m_package release];
+}
 
-	[super dealloc];
+
++ (void)initialize {
+	m_resourceLock = [[NSObject alloc] init];
 }
 
 
 - (id)initWithPackage:(RDPackage *)package {
 	if (package == nil) {
-		[self release];
 		return nil;
 	}
 
 	if (self = [super init]) {
-		m_package = [package retain];
-
-        // create a critical section lock
-        m_byteStreamResourceLock = dispatch_semaphore_create(1);
-
-		m_httpServer = [[AQHTTPServer alloc] initWithAddress:@"localhost"
-			root:[NSBundle mainBundle].resourceURL];
+		m_package = package;
+		m_httpServer = [[HTTPServer alloc] init];
 
 		if (m_httpServer == nil) {
 			NSLog(@"The HTTP server is nil!");
-			[self release];
 			return nil;
 		}
 
+		m_httpServer.documentRoot = @"";
 		[m_httpServer setConnectionClass:[PackageResourceConnection class]];
 
 		NSError *error = nil;
@@ -80,7 +76,6 @@ static dispatch_semaphore_t m_byteStreamResourceLock = NULL;
 				NSLog(@"Could not start the HTTP server! %@", error);
 			}
 
-			[self release];
 			return nil;
 		}
 
@@ -92,9 +87,12 @@ static dispatch_semaphore_t m_byteStreamResourceLock = NULL;
 
 
 - (int)port {
-	NSString *s = m_httpServer.serverAddress;
-	NSRange range = [s rangeOfString:@":"];
-	return range.location == NSNotFound ? 0 : [s substringFromIndex:range.location + 1].intValue;
+	return m_httpServer.listeningPort;
+}
+
+
++ (id)resourceLock {
+	return m_resourceLock;
 }
 
 

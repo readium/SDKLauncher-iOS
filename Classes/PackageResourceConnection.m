@@ -3,13 +3,37 @@
 //  SDKLauncher-iOS
 //
 //  Created by Shane Meyer on 11/23/13.
-//  Copyright (c) 2013 The Readium Foundation. All rights reserved.
-//
+//  Copyright (c) 2014 Readium Foundation and/or its licensees. All rights reserved.
+//  
+//  Redistribution and use in source and binary forms, with or without modification, 
+//  are permitted provided that the following conditions are met:
+//  1. Redistributions of source code must retain the above copyright notice, this 
+//  list of conditions and the following disclaimer.
+//  2. Redistributions in binary form must reproduce the above copyright notice, 
+//  this list of conditions and the following disclaimer in the documentation and/or 
+//  other materials provided with the distribution.
+//  3. Neither the name of the organization nor the names of its contributors may be 
+//  used to endorse or promote products derived from this software without specific 
+//  prior written permission.
+//  
+//  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
+//  ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED 
+//  WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. 
+//  IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, 
+//  INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, 
+//  BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, 
+//  DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF 
+//  LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE 
+//  OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED 
+//  OF THE POSSIBILITY OF SUCH DAMAGE.
 
 #import "PackageResourceConnection.h"
-#import "PackageResourceResponseOperation.h"
-#import "RDPackage.h"
+#import "PackageDataResponse.h"
+#import "PackageResourceResponse.h"
 #import "PackageResourceServer.h"
+#import "RDPackage.h"
+#import "RDPackageResource.h"
+
 
 static RDPackage *m_package = nil;
 
@@ -17,82 +41,58 @@ static RDPackage *m_package = nil;
 @implementation PackageResourceConnection
 
 
-- (void)dealloc {
-	[super dealloc];
-}
-
-- (BOOL) supportsPipelinedRequests
-{
-    return YES;
-}
-
-
-- (AQHTTPResponseOperation *)responseOperationForRequest:(CFHTTPMessageRef)request {
-	if (m_package == nil) {
-		NSLog(@"The package is nil!");
+- (NSObject <HTTPResponse> *)httpResponseForMethod:(NSString *)method URI:(NSString *)path {
+	if (m_package == nil ||
+		method == nil ||
+		![method isEqualToString:@"GET"] ||
+		path == nil ||
+		path.length == 0)
+	{
 		return nil;
 	}
 
-	NSURL *url = [(id)CFHTTPMessageCopyRequestURL(request) autorelease];
-
-	if (url == nil) {
-		return [super responseOperationForRequest:request];
+	if (path != nil && [path hasPrefix:@"/"]) {
+		path = [path substringFromIndex:1];
 	}
 
-	NSString *fileSystemPath = [[NSBundle mainBundle].resourcePath
-		stringByAppendingPathComponent:url.path];
+    NSObject <HTTPResponse> *response = nil;
 
-	PackageResourceResponseOperation *op = nil;
+	// Synchronize using a process-level lock to guard against multiple threads accessing a
+	// resource byte stream, which may lead to instability.
 
-    // TODO: Costly I/O operation! (invoked frequently for partial HTTP range requests, e.g. audio / video media)
-	if ([[NSFileManager defaultManager] fileExistsAtPath:fileSystemPath]) {
-		op = [[PackageResourceResponseOperation alloc]
-			initWithRequest:request
-			socket:self.socket
-			ranges:nil
-			forConnection:self];
-        [op initialiseData:m_package resource:nil filePath:fileSystemPath];
-	}
-	else {
-		NSString *path = url.path;
+	@synchronized ([PackageResourceServer resourceLock]) {
+		RDPackageResource *resource = [m_package resourceAtRelativePath:path];
 
-		if (path != nil && [path hasPrefix:@"/"]) {
-			path = [path substringFromIndex:1];
+		if (resource == nil) {
+			NSLog(@"No resource found! (%@)", path);
 		}
+		else if (resource.contentLength < 1000000) {
 
-        __block RDPackageResource *resource =nil;
-        LOCK_BYTESTREAM(^{
-            resource = [m_package resourceAtRelativePath:path];
-        });
+			// This resource is small enough that we can just fetch the entire thing in memory,
+			// which simplifies access into the byte stream.  Adjust the threshold to taste.
 
-		if (resource != nil) {
-			NSString *rangeHeader = [(id)CFHTTPMessageCopyHeaderFieldValue(
-				request, CFSTR("Range")) autorelease];
+			NSData *data = resource.data;
 
-			NSArray *ranges = nil;
-
-			if (rangeHeader != nil && rangeHeader.length > 0) {
-				ranges = [self parseRangeRequest:rangeHeader withContentLength:resource.bytesCount];
+			if (data != nil) {
+				PackageDataResponse *dataResponse = [[PackageDataResponse alloc] initWithData:data];
+                if (resource.mimeType) {
+                    dataResponse.contentType = resource.mimeType;
+                }
+                response = dataResponse;
 			}
-
-            op = [[PackageResourceResponseOperation alloc] initWithRequest: request socket: self.socket ranges: ranges forConnection: self];
-            [op initialiseData:m_package resource:resource filePath:nil];
-        }
+		}
+		else {
+			PackageResourceResponse *resourceResponse = [[PackageResourceResponse alloc] initWithResource:resource];
+            response = resourceResponse;
+		}
 	}
 
-#if USING_MRR
-//#error "THIS SHOULD FAIL AT COMPILE TIME"
-    [op autorelease];
-#endif
-	return op;
+	return response;
 }
 
 
 + (void)setPackage:(RDPackage *)package {
-	if (m_package != package) {
-		[m_package release];
-		m_package = [package retain];
-	}
+	m_package = package;
 }
 
 

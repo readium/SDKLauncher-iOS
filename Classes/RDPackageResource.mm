@@ -3,273 +3,135 @@
 //  SDKLauncher-iOS
 //
 //  Created by Shane Meyer on 2/28/13.
-//  Copyright (c) 2012-2013 The Readium Foundation.
-//
+//  Copyright (c) 2014 Readium Foundation and/or its licensees. All rights reserved.
+//  
+//  Redistribution and use in source and binary forms, with or without modification, 
+//  are permitted provided that the following conditions are met:
+//  1. Redistributions of source code must retain the above copyright notice, this 
+//  list of conditions and the following disclaimer.
+//  2. Redistributions in binary form must reproduce the above copyright notice, 
+//  this list of conditions and the following disclaimer in the documentation and/or 
+//  other materials provided with the distribution.
+//  3. Neither the name of the organization nor the names of its contributors may be 
+//  used to endorse or promote products derived from this software without specific 
+//  prior written permission.
+//  
+//  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
+//  ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED 
+//  WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. 
+//  IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, 
+//  INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, 
+//  BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, 
+//  DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF 
+//  LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE 
+//  OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED 
+//  OF THE POSSIBILITY OF SUCH DAMAGE.
 
 #import "RDPackageResource.h"
-#import "RDPackage.h"
-
 #import <ePub3/archive.h>
 #import <ePub3/package.h>
 #import <ePub3/utilities/byte_stream.h>
+#import "RDPackage.h"
+
 
 @interface RDPackageResource() {
 	@private ePub3::ByteStream *m_byteStream;
-    @private int m_bytesCount;
+	@private NSUInteger m_contentLength;
 }
-
-- (NSData *)createNextChunkByReading;
 
 @end
 
 
 @implementation RDPackageResource
 
-+ (std::size_t)bytesAvailable:(ePub3::ByteStream*)byteStream pack:(RDPackage *)package path:(NSString *)relPath {
-    std::size_t size = byteStream->BytesAvailable();
-    if (size == 0)
-    {
-        NSLog(@"BYTESTREAM zero BytesAvailable!");
-    }
-    else
-    {
-        return size;
-    }
 
-    //std::unique_ptr<ePub3::ArchiveReader> reader = _sdkPackage->ReaderForRelativePath(s);
-    //reader->read(<#(void*)p#>, <#(size_t)len#>)
-
-    std::shared_ptr<ePub3::Archive> archive = ((ePub3::Package*)[package sdkPackage])->Archive();
-
-    try
-    {
-        //ZipItemInfo
-        ePub3::ArchiveItemInfo info = archive->InfoAtPath(((ePub3::Package*)[package sdkPackage])->BasePath() + [relPath UTF8String]);
-        size = info.UncompressedSize();
-    }
-    catch (std::exception& e)
-    {
-        auto msg = e.what();
-        NSLog(@"!!! [ArchiveItemInfo] ZIP file not found (corrupted archive?): %@ (%@)", relPath, [NSString stringWithUTF8String:msg]);
-    }
-    catch (...) {
-        throw;
-    }
-
-    archive = nullptr;
-
-
-
-    std::string s = [relPath UTF8String];
-    std::unique_ptr<ePub3::ArchiveReader> reader = ((ePub3::Package*)[package sdkPackage])->ReaderForRelativePath(s);
-
-    if (reader == nullptr)
-    {
-        NSLog(@"!!! [ArchiveReader] ZIP file not found (corrupted archive?): %@", relPath);
-    }
-    else
-    {
-        UInt8 buffer[kSDKLauncherPackageResourceBufferSize];
-        std::size_t total = 0;
-        std::size_t count = 0;
-        while ((count = reader->read(buffer, sizeof(buffer))) > 0)
-        {
-            total += count;
-        }
-
-        if (total > 0)
-        {
-            // ByteStream bug??! zip_fread works with ArchiveReader, why not ByteStream?
-            NSLog(@"WTF??!");
-
-            if (total != size)
-            {
-                NSLog(@"Oh dear...");
-            }
-        }
-    }
-
-    reader = nullptr;
-
-    return size;
-}
-
-//@synthesize byteStream = m_byteStream;
-@synthesize bytesCount = m_bytesCount;
+@synthesize byteStream = m_byteStream;
+@synthesize contentLength = m_contentLength;
+@synthesize package = m_package;
 @synthesize relativePath = m_relativePath;
 
 
-- (NSData *)createChunkByReadingRange:(NSRange)range package:(RDPackage *)package {
+- (NSData *)data {
+	if (m_data == nil) {
+		NSMutableData *md = [[NSMutableData alloc] initWithCapacity:
+			m_contentLength == 0 ? 1 : m_contentLength];
 
-    if (m_bytesCount == 0)
-    {
-        return [NSData data];
-    }
+		while (YES) {
+			std::size_t count = m_byteStream->ReadBytes(m_buffer, sizeof(m_buffer));
 
-    if (DEBUGLOG)
-    {
-        NSLog(@"BYTESTREAM READ %p", m_byteStream);
-    }
+			if (count == 0) {
+				break;
+			}
 
-    if (range.length == 0) {
-        return [NSData data];
-    }
+			[md appendBytes:m_buffer length:count];
+		}
 
-    if (DEBUGLOG)
-    {
-        NSLog(@"ByteStream Range %@", m_relativePath);
-        NSLog(@"%ld - %ld", range.location, range.length);
-    }
+		m_data = md;
+	}
 
-    if (DEBUGLOG)
-    {
-        NSLog(@"ByteStream COUNT: %ld", m_bytesCount);
-    }
-
-    if (NSMaxRange(range) > m_bytesCount) {
-        NSLog(@"The requested data range is out of bounds!");
-        return nil;
-    }
-
-    UInt32 bytesToRead = range.length;
-
-    if (DEBUGLOG)
-    {
-        NSLog(@"TOTAL %ld", m_bytesCount);
-        NSLog(@"ByteStream TO READ: %ld", bytesToRead);
-    }
-
-    NSMutableData *md = [NSMutableData dataWithCapacity:bytesToRead];
-
-    int bufSize = sizeof(m_buffer);
-    std::size_t count = 0;
-
-    //ePub3::SeekableByteStream* seekStream = std::dynamic_pointer_cast<ePub3::SeekableByteStream>(m_byteStream);
-    ePub3::SeekableByteStream* seekStream = dynamic_cast<ePub3::SeekableByteStream*>(m_byteStream);
-
-    ePub3::ByteStream::size_type pos = seekStream->Seek(range.location, std::ios::beg);
-    if (pos != range.location)
-    {
-        NSLog(@"Unable to ZIP seek! %ld vs. %ld", pos, range.location);
-        return nil;
-    }
-
-    int remainderToRead = bytesToRead;
-    int toRead = 0;
-    while ((toRead = remainderToRead < bufSize ? remainderToRead : bufSize) > 0 && (count = m_byteStream->ReadBytes(m_buffer, toRead)) > 0)
-    {
-        [md appendBytes:m_buffer length:count];
-        remainderToRead -= count;
-    }
-    if (remainderToRead != 0)
-    {
-        NSLog(@"Did not seek-read all ZIP range? %ld vs. %ld", remainderToRead, bytesToRead);
-        return nil;
-    }
-
-
-    return md;
+	return m_data;
 }
 
-- (NSData *)createNextChunkByReading {
-
-    if (m_bytesCount == 0)
-    {
-        return [NSData data];
-    }
-
-    std::size_t count = m_byteStream->ReadBytes(m_buffer, sizeof(m_buffer));
-
-    return (count == 0) ? nil : [[NSData alloc] initWithBytes:m_buffer length:count];
-}
-
-
-- (NSData *)readAllDataChunks {
-
-    if (m_bytesCount == 0)
-    {
-        return [NSData data];
-    }
-
-    NSMutableData *md = [NSMutableData data];
-
-    while (YES) {
-        NSData *chunk = [self createNextChunkByReading];
-
-        if (chunk != nil) {
-            [md appendData:chunk];
-            [chunk release];
-        }
-        else {
-            break;
-        }
-    }
-
-    if (DEBUGLOG)
-    {
-        NSLog(@"ByteStream WHOLE read: %@", m_relativePath);
-    }
-
-    if (DEBUGLOG)
-    {
-        NSLog(@"ByteStream WHOLE: %ld (%@)", m_bytesCount, m_relativePath);
-    }
-
-    return md;
-}
 
 - (void)dealloc {
-	//[m_delegate rdpackageResourceWillDeallocate:self];
-
-    // calls Close() on ByteStream destruction
-    if (m_byteStream != nullptr)
-    {
-        if (DEBUGLOG)
-        {
-            NSLog(@"DEALLOC BYTESTREAM");
-            NSLog(@"BYTESTREAM DEALLOC %p", m_byteStream);
-        }
-        delete m_byteStream;
-        m_byteStream = nullptr;
-    }
-
-	[m_relativePath release];
-
-	[super dealloc];
+	[m_delegate rdpackageResourceWillDeallocate:self];
 }
 
 
 - (id)
-    initWithByteStream://(id <RDPackageResourceDelegate>)delegate
-	(void *)byteStream
+	initWithDelegate:(id <RDPackageResourceDelegate>)delegate
+	byteStream:(void *)byteStream
+	package:(RDPackage *)package
 	relativePath:(NSString *)relativePath
-    pack:(RDPackage *)package
 {
-	if (byteStream == nil || relativePath == nil || relativePath.length == 0) {
-		[self release];
+	if (byteStream == nil || package == nil || relativePath == nil || relativePath.length == 0) {
 		return nil;
 	}
 
 	if (self = [super init]) {
 		m_byteStream = (ePub3::ByteStream *)byteStream;
-        m_relativePath = [relativePath retain];
-        m_bytesCount = [RDPackageResource bytesAvailable:m_byteStream pack:package path:m_relativePath];
+		m_contentLength = m_byteStream->BytesAvailable();
+		m_delegate = delegate;
+		m_package = package;
+		m_relativePath = relativePath;
 
-        if (m_bytesCount == 0)
-        {
-            NSLog(@"m_bytesCount == 0 ???? %@", m_relativePath);
-        }
-
-		//m_delegate = delegate;
-
-        if (DEBUGLOG)
-        {
-            NSLog(@"INIT ByteStream: %@ (%ld)", m_relativePath, m_bytesCount);
-            NSLog(@"BYTESTREAM INIT %p", m_byteStream);
-        }
+		if (m_contentLength == 0) {
+			NSLog(@"The resource content length is zero! %@", m_relativePath);
+		}
 	}
 
 	return self;
+}
+
+
+- (NSData *)readDataOfLength:(NSUInteger)length {
+	NSMutableData *md = [[NSMutableData alloc] initWithCapacity:length == 0 ? 1 : length];
+	NSUInteger totalRead = 0;
+
+	while (totalRead < length) {
+		NSUInteger thisLength = MIN(sizeof(m_buffer), length - totalRead);
+		std::size_t count = m_byteStream->ReadBytes(m_buffer, thisLength);
+		totalRead += count;
+		[md appendBytes:m_buffer length:count];
+
+		if (count != thisLength) {
+			NSLog(@"Did not read the expected number of bytes! (%lu %lu)",
+				count, (unsigned long)thisLength);
+			break;
+		}
+	}
+
+	return md;
+}
+
+
+- (void)setOffset:(UInt64)offset {
+	ePub3::SeekableByteStream* seekStream = dynamic_cast<ePub3::SeekableByteStream*>(m_byteStream);
+	ePub3::ByteStream::size_type pos = seekStream->Seek(offset, std::ios::beg);
+
+	if (pos != offset) {
+		NSLog(@"Setting the byte stream offset failed! pos = %lu, offset = %llu", pos, offset);
+	}
 }
 
 

@@ -3,8 +3,29 @@
 //  SDKLauncher-iOS
 //
 //  Created by Shane Meyer on 2/1/13.
-//  Copyright (c) 2012-2013 The Readium Foundation.
-//
+//  Copyright (c) 2014 Readium Foundation and/or its licensees. All rights reserved.
+//  
+//  Redistribution and use in source and binary forms, with or without modification, 
+//  are permitted provided that the following conditions are met:
+//  1. Redistributions of source code must retain the above copyright notice, this 
+//  list of conditions and the following disclaimer.
+//  2. Redistributions in binary form must reproduce the above copyright notice, 
+//  this list of conditions and the following disclaimer in the documentation and/or 
+//  other materials provided with the distribution.
+//  3. Neither the name of the organization nor the names of its contributors may be 
+//  used to endorse or promote products derived from this software without specific 
+//  prior written permission.
+//  
+//  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
+//  ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED 
+//  WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. 
+//  IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, 
+//  INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, 
+//  BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, 
+//  DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF 
+//  LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE 
+//  OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED 
+//  OF THE POSSIBILITY OF SUCH DAMAGE.
 
 #import "ContainerList.h"
 
@@ -19,14 +40,14 @@ NSString * const kSDKLauncherContainerListDidChange = @"SDKLauncherContainerList
 	NSArray *pathsCurr = self.paths;
 	BOOL didChange = NO;
 
-	int countCurr = pathsCurr.count;
-	int countPrev = (m_paths == nil) ? 0 : m_paths.count;
+	NSUInteger countCurr = pathsCurr.count;
+	NSUInteger countPrev = (m_paths == nil) ? 0 : m_paths.count;
 
 	if (countCurr != countPrev) {
 		didChange = YES;
 	}
 	else if (countCurr > 0) {
-		for (int i = 0; i < countCurr; i++) {
+		for (NSUInteger i = 0; i < countCurr; i++) {
 			NSString *pathCurr = [pathsCurr objectAtIndex:i];
 			NSString *pathPrev = [m_paths objectAtIndex:i];
 
@@ -38,18 +59,12 @@ NSString * const kSDKLauncherContainerListDidChange = @"SDKLauncherContainerList
 	}
 
 	if (didChange) {
-		[m_paths release];
-		m_paths = [pathsCurr retain];
+		m_paths = pathsCurr;
 		[[NSNotificationCenter defaultCenter] postNotificationName:
 			kSDKLauncherContainerListDidChange object:self];
 	}
 
 	[self performSelector:@selector(checkForChanges) withObject:nil afterDelay:1];
-}
-
-
-- (void)dealloc {
-	[super dealloc];
 }
 
 
@@ -71,7 +86,7 @@ NSString * const kSDKLauncherContainerListDidChange = @"SDKLauncherContainerList
 			}
 		}
 
-		m_paths = [self.paths retain];
+		m_paths = self.paths;
 		[self performSelector:@selector(checkForChanges) withObject:nil afterDelay:0];
 	}
 

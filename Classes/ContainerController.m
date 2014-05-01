@@ -3,8 +3,29 @@
 //  SDKLauncher-iOS
 //
 //  Created by Shane Meyer on 2/4/13.
-//  Copyright (c) 2012-2013 The Readium Foundation.
-//
+//  Copyright (c) 2014 Readium Foundation and/or its licensees. All rights reserved.
+//  
+//  Redistribution and use in source and binary forms, with or without modification, 
+//  are permitted provided that the following conditions are met:
+//  1. Redistributions of source code must retain the above copyright notice, this 
+//  list of conditions and the following disclaimer.
+//  2. Redistributions in binary form must reproduce the above copyright notice, 
+//  this list of conditions and the following disclaimer in the documentation and/or 
+//  other materials provided with the distribution.
+//  3. Neither the name of the organization nor the names of its contributors may be 
+//  used to endorse or promote products derived from this software without specific 
+//  prior written permission.
+//  
+//  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
+//  ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED 
+//  WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. 
+//  IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, 
+//  INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, 
+//  BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, 
+//  DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF 
+//  LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE 
+//  OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED 
+//  OF THE POSSIBILITY OF SUCH DAMAGE.
 
 #import "ContainerController.h"
 #import "BookmarkDatabase.h"
@@ -19,28 +40,15 @@
 @implementation ContainerController
 
 
-- (void)cleanUp {
-	m_table = nil;
-}
-
-
-- (void)dealloc {
-	[m_container release];
-	[m_package release];
-	[super dealloc];
-}
-
-
 - (id)initWithPath:(NSString *)path {
 	if (self = [super initWithTitle:nil navBarHidden:NO]) {
 		m_container = [[RDContainer alloc] initWithPath:path];
 
 		if (m_container == nil || m_container.packages.count == 0) {
-			[self release];
 			return nil;
 		}
 
-		m_package = [[m_container.packages objectAtIndex:0] retain];
+		m_package = [m_container.packages objectAtIndex:0];
 
 		NSArray *components = path.pathComponents;
 		self.title = (components == nil || components.count == 0) ? @"" : components.lastObject;
@@ -51,13 +59,13 @@
 
 
 - (void)loadView {
-	self.view = [[[UIView alloc] init] autorelease];
+	self.view = [[UIView alloc] init];
 
-	m_table = [[[UITableView alloc] initWithFrame:CGRectZero style:UITableViewStyleGrouped]
-		autorelease];
-	m_table.dataSource = self;
-	m_table.delegate = self;
-	[self.view addSubview:m_table];
+	UITableView *table = [[UITableView alloc] initWithFrame:CGRectZero style:UITableViewStyleGrouped];
+	m_table = table;
+	table.dataSource = self;
+	table.delegate = self;
+	[self.view addSubview:table];
 }
 
 
@@ -70,8 +78,8 @@
 	tableView:(UITableView *)tableView
 	cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-	UITableViewCell *cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault
-		reuseIdentifier:nil] autorelease];
+	UITableViewCell *cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault
+		reuseIdentifier:nil];
 	cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
 
 	if (indexPath.section == 0) {
@@ -116,13 +124,13 @@
 {
 	if (indexPath.section == 0) {
 		if (indexPath.row == 0) {
-			PackageMetadataController *c = [[[PackageMetadataController alloc]
-				initWithPackage:m_package] autorelease];
+			PackageMetadataController *c = [[PackageMetadataController alloc]
+				initWithPackage:m_package];
 			[self.navigationController pushViewController:c animated:YES];
 		}
 		else if (indexPath.row == 1) {
-			SpineItemListController *c = [[[SpineItemListController alloc]
-				initWithContainer:m_container package:m_package] autorelease];
+			SpineItemListController *c = [[SpineItemListController alloc]
+				initWithContainer:m_container package:m_package];
 			[self.navigationController pushViewController:c animated:YES];
 		}
 	}
@@ -131,39 +139,39 @@
 		NSString *title = [tableView cellForRowAtIndexPath:indexPath].textLabel.text;
 
 		if (indexPath.row == 0) {
-			c = [[[NavigationElementController alloc]
+			c = [[NavigationElementController alloc]
 				initWithNavigationElement:m_package.listOfFigures
 				container:m_container
 				package:m_package
-				title:title] autorelease];
+				title:title];
 		}
 		else if (indexPath.row == 1) {
-			c = [[[NavigationElementController alloc]
+			c = [[NavigationElementController alloc]
 				initWithNavigationElement:m_package.listOfIllustrations
 				container:m_container
 				package:m_package
-				title:title] autorelease];
+				title:title];
 		}
 		else if (indexPath.row == 2) {
-			c = [[[NavigationElementController alloc]
+			c = [[NavigationElementController alloc]
 				initWithNavigationElement:m_package.listOfTables
 				container:m_container
 				package:m_package
-				title:title] autorelease];
+				title:title];
 		}
 		else if (indexPath.row == 3) {
-			c = [[[NavigationElementController alloc]
+			c = [[NavigationElementController alloc]
 				initWithNavigationElement:m_package.pageList
 				container:m_container
 				package:m_package
-				title:title] autorelease];
+				title:title];
 		}
 		else if (indexPath.row == 4) {
-			c = [[[NavigationElementController alloc]
+			c = [[NavigationElementController alloc]
 				initWithNavigationElement:m_package.tableOfContents
 				container:m_container
 				package:m_package
-				title:title] autorelease];
+				title:title];
 		}
 
 		if (c == nil) {
@@ -175,8 +183,8 @@
 	}
 	if (indexPath.section == 2) {
 		if (indexPath.row == 0) {
-			BookmarkListController *c = [[[BookmarkListController alloc]
-				initWithContainer:m_container package:m_package] autorelease];
+			BookmarkListController *c = [[BookmarkListController alloc]
+				initWithContainer:m_container package:m_package];
 
 			if (c != nil) {
 				[self.navigationController pushViewController:c animated:YES];

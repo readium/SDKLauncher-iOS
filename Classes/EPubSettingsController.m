@@ -31,7 +31,23 @@
 #import "EPubSettings.h"
 
 
-@interface EPubSettingsController ()
+@interface EPubSettingsController () <
+	UITableViewDataSource,
+	UITableViewDelegate>
+{
+	@private UITableViewCell *m_cellColumnGap;
+	@private UITableViewCell *m_cellFontScale;
+	@private UITableViewCell *m_cellScroll;
+	@private UITableViewCell *m_cellScrollAuto;
+	@private UITableViewCell *m_cellScrollContinuous;
+	@private UITableViewCell *m_cellScrollDoc;
+	@private UITableViewCell *m_cellSyntheticSpread;
+	@private UITableViewCell *m_cellSyntheticSpreadAuto;
+	@private UITableViewCell *m_cellSyntheticSpreadDouble;
+	@private UITableViewCell *m_cellSyntheticSpreadSingle;
+	@private NSArray *m_cells;
+	@private __weak UITableView *m_table;
+}
 
 - (void)updateCells;
 
@@ -52,34 +68,8 @@
 			self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc]
 				initWithBarButtonSystemItem:UIBarButtonSystemItemDone
 				target:self
-				action:@selector(onClickDone)];
+				action:@selector(onTapDone)];
 		}
-
-		// Synthetic spread
-
-		UISwitch *sw = [[UISwitch alloc] init];
-		sw.on = [EPubSettings shared].isSyntheticSpread;
-		[sw addTarget:self action:@selector(onIsSyntheticSpreadDidChange:)
-			forControlEvents:UIControlEventValueChanged];
-
-		m_cellIsSyntheticSpread = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault
-			reuseIdentifier:nil];
-		m_cellIsSyntheticSpread.accessoryView = sw;
-		m_cellIsSyntheticSpread.textLabel.text = LocStr(@"EPUB_SETTINGS_IS_SYNTHETIC_SPREAD");
-
-		// Font scale
-
-		UIStepper *stepper = [[UIStepper alloc] init];
-		stepper.minimumValue = 0.2;
-		stepper.maximumValue = 5;
-		stepper.stepValue = 0.1;
-		stepper.value = [EPubSettings shared].fontScale;
-		[stepper addTarget:self action:@selector(onFontScaleDidChange:)
-			forControlEvents:UIControlEventValueChanged];
-
-		m_cellFontScale = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault
-			reuseIdentifier:nil];
-		m_cellFontScale.accessoryView = stepper;
 
 		// Column gap
 
@@ -90,7 +80,7 @@
 			maxValue--;
 		}
 
-		stepper = [[UIStepper alloc] init];
+		UIStepper *stepper = [[UIStepper alloc] init];
 		stepper.minimumValue = 0;
 		stepper.maximumValue = maxValue;
 		stepper.stepValue = stepValue;
@@ -101,11 +91,78 @@
 		m_cellColumnGap = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault
 			reuseIdentifier:nil];
 		m_cellColumnGap.accessoryView = stepper;
+		m_cellColumnGap.selectionStyle = UITableViewCellSelectionStyleNone;
+
+		// Font scale
+
+		stepper = [[UIStepper alloc] init];
+		stepper.minimumValue = 0.2;
+		stepper.maximumValue = 5;
+		stepper.stepValue = 0.1;
+		stepper.value = [EPubSettings shared].fontScale;
+		[stepper addTarget:self action:@selector(onFontScaleDidChange:)
+			forControlEvents:UIControlEventValueChanged];
+
+		m_cellFontScale = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault
+			reuseIdentifier:nil];
+		m_cellFontScale.accessoryView = stepper;
+		m_cellFontScale.selectionStyle = UITableViewCellSelectionStyleNone;
+
+		// Scroll
+
+		m_cellScroll = [[UITableViewCell alloc] initWithStyle:
+			UITableViewCellStyleDefault reuseIdentifier:nil];
+		m_cellScroll.selectionStyle = UITableViewCellSelectionStyleNone;
+		m_cellScroll.textLabel.text = LocStr(@"EPUB_SETTINGS_SCROLL");
+
+		m_cellScrollAuto = [[UITableViewCell alloc] initWithStyle:
+			UITableViewCellStyleDefault reuseIdentifier:nil];
+		m_cellScrollAuto.indentationLevel = 1;
+		m_cellScrollAuto.textLabel.text = LocStr(@"EPUB_SETTINGS_SCROLL_AUTO");
+
+		m_cellScrollContinuous = [[UITableViewCell alloc] initWithStyle:
+			UITableViewCellStyleDefault reuseIdentifier:nil];
+		m_cellScrollContinuous.indentationLevel = 1;
+		m_cellScrollContinuous.textLabel.text = LocStr(@"EPUB_SETTINGS_SCROLL_CONTINUOUS");
+
+		m_cellScrollDoc = [[UITableViewCell alloc] initWithStyle:
+			UITableViewCellStyleDefault reuseIdentifier:nil];
+		m_cellScrollDoc.indentationLevel = 1;
+		m_cellScrollDoc.textLabel.text = LocStr(@"EPUB_SETTINGS_SCROLL_DOC");
+
+		// Synthetic spread
+
+		m_cellSyntheticSpread = [[UITableViewCell alloc] initWithStyle:
+			UITableViewCellStyleDefault reuseIdentifier:nil];
+		m_cellSyntheticSpread.selectionStyle = UITableViewCellSelectionStyleNone;
+		m_cellSyntheticSpread.textLabel.text = LocStr(@"EPUB_SETTINGS_SYNTHETIC_SPREAD");
+
+		m_cellSyntheticSpreadAuto = [[UITableViewCell alloc] initWithStyle:
+			UITableViewCellStyleDefault reuseIdentifier:nil];
+		m_cellSyntheticSpreadAuto.indentationLevel = 1;
+		m_cellSyntheticSpreadAuto.textLabel.text = LocStr(@"EPUB_SETTINGS_SYNTHETIC_SPREAD_AUTO");
+
+		m_cellSyntheticSpreadDouble = [[UITableViewCell alloc] initWithStyle:
+			UITableViewCellStyleDefault reuseIdentifier:nil];
+		m_cellSyntheticSpreadDouble.indentationLevel = 1;
+		m_cellSyntheticSpreadDouble.textLabel.text = LocStr(@"EPUB_SETTINGS_SYNTHETIC_SPREAD_DOUBLE");
+
+		m_cellSyntheticSpreadSingle = [[UITableViewCell alloc] initWithStyle:
+			UITableViewCellStyleDefault reuseIdentifier:nil];
+		m_cellSyntheticSpreadSingle.indentationLevel = 1;
+		m_cellSyntheticSpreadSingle.textLabel.text = LocStr(@"EPUB_SETTINGS_SYNTHETIC_SPREAD_SINGLE");
 
 		// Finish up
 
 		m_cells = @[
-			m_cellIsSyntheticSpread,
+			m_cellScroll,
+			m_cellScrollAuto,
+			m_cellScrollDoc,
+			m_cellScrollContinuous,
+			m_cellSyntheticSpread,
+			m_cellSyntheticSpreadAuto,
+			m_cellSyntheticSpreadSingle,
+			m_cellSyntheticSpreadDouble,
 			m_cellFontScale,
 			m_cellColumnGap
 		];
@@ -131,12 +188,8 @@
 	UITableView *table = [[UITableView alloc] initWithFrame:CGRectZero style:UITableViewStylePlain];
 	m_table = table;
 	table.dataSource = self;
+	table.delegate = self;
 	[self.view addSubview:table];
-}
-
-
-- (void)onClickDone {
-	[self dismissViewControllerAnimated:YES completion:nil];
 }
 
 
@@ -150,8 +203,8 @@
 }
 
 
-- (void)onIsSyntheticSpreadDidChange:(UISwitch *)sw {
-	[EPubSettings shared].isSyntheticSpread = sw.on;
+- (void)onTapDone {
+	[self dismissViewControllerAnimated:YES completion:nil];
 }
 
 
@@ -160,6 +213,34 @@
 	cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
 	return [m_cells objectAtIndex:indexPath.row];
+}
+
+
+- (void)
+	tableView:(UITableView *)tableView
+	didSelectRowAtIndexPath:(NSIndexPath *)indexPath
+{
+	[tableView deselectRowAtIndexPath:indexPath animated:YES];
+	UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
+
+	if (cell == m_cellScrollAuto) {
+		[EPubSettings shared].scroll = EPubSettingsScrollAuto;
+	}
+	else if (cell == m_cellScrollContinuous) {
+		[EPubSettings shared].scroll = EPubSettingsScrollContinuous;
+	}
+	else if (cell == m_cellScrollDoc) {
+		[EPubSettings shared].scroll = EPubSettingsScrollDoc;
+	}
+	else if (cell == m_cellSyntheticSpreadAuto) {
+		[EPubSettings shared].syntheticSpread = EPubSettingsSyntheticSpreadAuto;
+	}
+	else if (cell == m_cellSyntheticSpreadDouble) {
+		[EPubSettings shared].syntheticSpread = EPubSettingsSyntheticSpreadDouble;
+	}
+	else if (cell == m_cellSyntheticSpreadSingle) {
+		[EPubSettings shared].syntheticSpread = EPubSettingsSyntheticSpreadSingle;
+	}
 }
 
 
@@ -179,6 +260,30 @@
 
 	m_cellFontScale.textLabel.text = LocStr(@"EPUB_SETTINGS_FONT_SCALE",
 		(int)round(100.0 * settings.fontScale));
+
+	m_cellScrollAuto.accessoryType =
+		(settings.scroll == EPubSettingsScrollAuto) ?
+		UITableViewCellAccessoryCheckmark : UITableViewCellAccessoryNone;
+
+	m_cellScrollContinuous.accessoryType =
+		(settings.scroll == EPubSettingsScrollContinuous) ?
+		UITableViewCellAccessoryCheckmark : UITableViewCellAccessoryNone;
+
+	m_cellScrollDoc.accessoryType =
+		(settings.scroll == EPubSettingsScrollDoc) ?
+		UITableViewCellAccessoryCheckmark : UITableViewCellAccessoryNone;
+
+	m_cellSyntheticSpreadAuto.accessoryType =
+		(settings.syntheticSpread == EPubSettingsSyntheticSpreadAuto) ?
+		UITableViewCellAccessoryCheckmark : UITableViewCellAccessoryNone;
+
+	m_cellSyntheticSpreadDouble.accessoryType =
+		(settings.syntheticSpread == EPubSettingsSyntheticSpreadDouble) ?
+		UITableViewCellAccessoryCheckmark : UITableViewCellAccessoryNone;
+
+	m_cellSyntheticSpreadSingle.accessoryType =
+		(settings.syntheticSpread == EPubSettingsSyntheticSpreadSingle) ?
+		UITableViewCellAccessoryCheckmark : UITableViewCellAccessoryNone;
 }
 
 

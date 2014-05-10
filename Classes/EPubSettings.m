@@ -33,7 +33,8 @@
 
 #define kKeyColumnGap @"columnGap"
 #define kKeyFontScale @"fontSize"
-#define kKeyIsSyntheticSpread @"isSyntheticSpread"
+#define kKeyScroll @"scroll"
+#define kKeySyntheticSpread @"syntheticSpread"
 
 
 NSString * const kSDKLauncherEPubSettingsDidChange = @"SDKLauncherEPubSettingsDidChange";
@@ -55,10 +56,18 @@ NSString * const kSDKLauncherEPubSettingsDidChange = @"SDKLauncherEPubSettingsDi
 
 
 - (NSDictionary *)dictionary {
+	EPubSettingsScroll scroll = [Settings shared].scroll;
+	EPubSettingsSyntheticSpread syntheticSpread = [Settings shared].syntheticSpread;
+
 	return @{
 		kKeyColumnGap : [NSNumber numberWithInt:round(self.columnGap)],
 		kKeyFontScale : [NSNumber numberWithInt:round(100.0 * self.fontScale)],
-		kKeyIsSyntheticSpread : [NSNumber numberWithBool:self.isSyntheticSpread],
+		kKeyScroll :
+			scroll == EPubSettingsScrollContinuous ? @"scroll-continuous" :
+			scroll == EPubSettingsScrollDoc        ? @"scroll-doc" : @"auto",
+		kKeySyntheticSpread :
+			syntheticSpread == EPubSettingsSyntheticSpreadDouble ? @"double" :
+			syntheticSpread == EPubSettingsSyntheticSpreadSingle ? @"single" : @"auto",
 	};
 }
 
@@ -68,14 +77,14 @@ NSString * const kSDKLauncherEPubSettingsDidChange = @"SDKLauncherEPubSettingsDi
 }
 
 
-- (BOOL)isSyntheticSpread {
-	return [Settings shared].isSyntheticSpread;
-}
-
-
 - (void)postNotification {
 	[[NSNotificationCenter defaultCenter] postNotificationName:
 		kSDKLauncherEPubSettingsDidChange object:self];
+}
+
+
+- (EPubSettingsScroll)scroll {
+	return [Settings shared].scroll;
 }
 
 
@@ -95,9 +104,17 @@ NSString * const kSDKLauncherEPubSettingsDidChange = @"SDKLauncherEPubSettingsDi
 }
 
 
-- (void)setIsSyntheticSpread:(BOOL)isSyntheticSpread {
-	if ([Settings shared].isSyntheticSpread != isSyntheticSpread) {
-		[Settings shared].isSyntheticSpread = isSyntheticSpread;
+- (void)setScroll:(EPubSettingsScroll)scroll {
+	if ([Settings shared].scroll != scroll) {
+		[Settings shared].scroll = scroll;
+		[self postNotification];
+	}
+}
+
+
+- (void)setSyntheticSpread:(EPubSettingsSyntheticSpread)syntheticSpread {
+	if ([Settings shared].syntheticSpread != syntheticSpread) {
+		[Settings shared].syntheticSpread = syntheticSpread;
 		[self postNotification];
 	}
 }
@@ -107,10 +124,15 @@ NSString * const kSDKLauncherEPubSettingsDidChange = @"SDKLauncherEPubSettingsDi
 	static EPubSettings *shared = nil;
 
 	if (shared == nil) {
-		shared = [[EPubSettings alloc] init];
+		shared = [[self alloc] init];
 	}
 
 	return shared;
+}
+
+
+- (EPubSettingsSyntheticSpread)syntheticSpread {
+	return [Settings shared].syntheticSpread;
 }
 
 

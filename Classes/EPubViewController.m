@@ -32,18 +32,11 @@
 #import "BookmarkDatabase.h"
 #import "EPubSettings.h"
 #import "EPubSettingsController.h"
-#import "PackageResourceServer.h"
 #import "RDContainer.h"
 #import "RDNavigationElement.h"
 #import "RDPackage.h"
-#import "RDPackageResource.h"
+#import "RDPackageResourceServer.h"
 #import "RDSpineItem.h"
-
-#include <assert.h>
-#include <stdbool.h>
-#include <sys/types.h>
-#include <unistd.h>
-#include <sys/sysctl.h>
 
 
 @interface EPubViewController ()
@@ -168,7 +161,7 @@
 		m_navElement = navElement;
 		m_package = package;
 		m_spineItem = spineItem;
-		m_resourceServer = [[PackageResourceServer alloc] initWithPackage:package];
+		m_resourceServer = [[RDPackageResourceServer alloc] initWithPackage:package];
 		[self updateNavigationItems];
 	}
 
@@ -201,7 +194,7 @@
 		m_container = container;
 		m_initialCFI = cfi;
 		m_package = package;
-		m_resourceServer = [[PackageResourceServer alloc] initWithPackage:package];
+		m_resourceServer = [[RDPackageResourceServer alloc] initWithPackage:package];
 		m_spineItem = spineItem;
 		[self updateNavigationItems];
 	}

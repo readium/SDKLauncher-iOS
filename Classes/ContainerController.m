@@ -43,12 +43,11 @@
 - (id)initWithPath:(NSString *)path {
 	if (self = [super initWithTitle:nil navBarHidden:NO]) {
 		m_container = [[RDContainer alloc] initWithPath:path];
+		m_package = m_container.firstPackage;
 
-		if (m_container == nil || m_container.packages.count == 0) {
+		if (m_package == nil) {
 			return nil;
 		}
-
-		m_package = [m_container.packages objectAtIndex:0];
 
 		NSArray *components = path.pathComponents;
 		self.title = (components == nil || components.count == 0) ? @"" : components.lastObject;

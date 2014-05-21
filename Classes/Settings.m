@@ -33,7 +33,8 @@
 #define kKeyBookmarks @"SDKLauncherBookmarks"
 #define kKeyColumnGap @"SDKLauncherColumnGap"
 #define kKeyFontScale @"SDKLauncherFontScale"
-#define kKeyIsSyntheticSpread @"SDKLauncherIsSyntheticSpread"
+#define kKeyScroll @"SDKLauncherScroll"
+#define kKeySyntheticSpread @"SDKLauncherSyntheticSpread"
 
 
 @interface Settings ()
@@ -89,8 +90,11 @@
 }
 
 
-- (BOOL)isSyntheticSpread {
-	return [self boolForKey:kKeyIsSyntheticSpread defaultValue:NO];
+- (EPubSettingsScroll)scroll {
+	NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+	NSNumber *number = [defaults objectForKey:kKeyScroll];
+	return (number == nil || ![number isKindOfClass:[NSNumber class]]) ?
+		EPubSettingsScrollAuto : number.integerValue;
 }
 
 
@@ -124,8 +128,13 @@
 }
 
 
-- (void)setIsSyntheticSpread:(BOOL)value {
-	[[NSUserDefaults standardUserDefaults] setBool:value forKey:kKeyIsSyntheticSpread];
+- (void)setScroll:(EPubSettingsScroll)value {
+	[[NSUserDefaults standardUserDefaults] setInteger:value forKey:kKeyScroll];
+}
+
+
+- (void)setSyntheticSpread:(EPubSettingsSyntheticSpread)value {
+	[[NSUserDefaults standardUserDefaults] setInteger:value forKey:kKeySyntheticSpread];
 }
 
 
@@ -137,6 +146,14 @@
 	}
 
 	return shared;
+}
+
+
+- (EPubSettingsSyntheticSpread)syntheticSpread {
+	NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+	NSNumber *number = [defaults objectForKey:kKeySyntheticSpread];
+	return (number == nil || ![number isKindOfClass:[NSNumber class]]) ?
+		EPubSettingsSyntheticSpreadAuto : number.integerValue;
 }
 
 

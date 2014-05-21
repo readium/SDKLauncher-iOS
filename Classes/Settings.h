@@ -28,13 +28,15 @@
 //  OF THE POSSIBILITY OF SUCH DAMAGE.
 
 #import <Foundation/Foundation.h>
+#import "EPubSettings.h"
 
 @interface Settings : NSObject
 
 @property (nonatomic, strong) NSDictionary *bookmarks;
 @property (nonatomic, assign) CGFloat columnGap;
 @property (nonatomic, assign) CGFloat fontScale;
-@property (nonatomic, assign) BOOL isSyntheticSpread;
+@property (nonatomic, assign) EPubSettingsScroll scroll;
+@property (nonatomic, assign) EPubSettingsSyntheticSpread syntheticSpread;
 
 + (Settings *)shared;
 

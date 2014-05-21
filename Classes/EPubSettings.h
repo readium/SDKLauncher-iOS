@@ -31,12 +31,25 @@
 
 extern NSString * const kSDKLauncherEPubSettingsDidChange;
 
+typedef enum {
+	EPubSettingsScrollAuto,
+	EPubSettingsScrollContinuous,
+	EPubSettingsScrollDoc,
+} EPubSettingsScroll;
+
+typedef enum {
+	EPubSettingsSyntheticSpreadAuto,
+	EPubSettingsSyntheticSpreadDouble,
+	EPubSettingsSyntheticSpreadSingle,
+} EPubSettingsSyntheticSpread;
+
 @interface EPubSettings : NSObject
 
 @property (nonatomic, assign) CGFloat columnGap;
 @property (nonatomic, readonly) NSDictionary *dictionary;
 @property (nonatomic, assign) CGFloat fontScale;
-@property (nonatomic, assign) BOOL isSyntheticSpread;
+@property (nonatomic, assign) EPubSettingsScroll scroll;
+@property (nonatomic, assign) EPubSettingsSyntheticSpread syntheticSpread;
 
 + (EPubSettings *)shared;
 

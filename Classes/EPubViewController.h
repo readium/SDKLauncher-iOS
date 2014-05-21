@@ -30,10 +30,10 @@
 #import "BaseViewController.h"
 
 @class Bookmark;
-@class PackageResourceServer;
 @class RDContainer;
 @class RDNavigationElement;
 @class RDPackage;
+@class RDPackageResourceServer;
 @class RDSpineItem;
 
 @interface EPubViewController : BaseViewController <
@@ -53,7 +53,7 @@
 	@private RDNavigationElement *m_navElement;
 	@private RDPackage *m_package;
 	@private UIPopoverController *m_popover;
-	@private PackageResourceServer *m_resourceServer;
+	@private RDPackageResourceServer *m_resourceServer;
 	@private RDSpineItem *m_spineItem;
 	@private __weak UIWebView *m_webView;
 }

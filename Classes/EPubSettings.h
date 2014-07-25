@@ -52,5 +52,6 @@ typedef enum {
 @property (nonatomic, assign) EPubSettingsSyntheticSpread syntheticSpread;
 
 + (EPubSettings *)shared;
+- (void) update;
 
 @end

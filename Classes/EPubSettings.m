@@ -55,6 +55,10 @@ NSString * const kSDKLauncherEPubSettingsDidChange = @"SDKLauncherEPubSettingsDi
 }
 
 
+- (void) update {
+    [self postNotification];
+}
+
 - (NSDictionary *)dictionary {
 	EPubSettingsScroll scroll = [Settings shared].scroll;
 	EPubSettingsSyntheticSpread syntheticSpread = [Settings shared].syntheticSpread;
@@ -91,7 +95,6 @@ NSString * const kSDKLauncherEPubSettingsDidChange = @"SDKLauncherEPubSettingsDi
 - (void)setColumnGap:(CGFloat)columnGap {
 	if ([Settings shared].columnGap != columnGap) {
 		[Settings shared].columnGap = columnGap;
-		[self postNotification];
 	}
 }
 
@@ -99,7 +102,6 @@ NSString * const kSDKLauncherEPubSettingsDidChange = @"SDKLauncherEPubSettingsDi
 - (void)setFontScale:(CGFloat)fontScale {
 	if ([Settings shared].fontScale != fontScale) {
 		[Settings shared].fontScale = fontScale;
-		[self postNotification];
 	}
 }
 
@@ -107,7 +109,6 @@ NSString * const kSDKLauncherEPubSettingsDidChange = @"SDKLauncherEPubSettingsDi
 - (void)setScroll:(EPubSettingsScroll)scroll {
 	if ([Settings shared].scroll != scroll) {
 		[Settings shared].scroll = scroll;
-		[self postNotification];
 	}
 }
 
@@ -115,7 +116,6 @@ NSString * const kSDKLauncherEPubSettingsDidChange = @"SDKLauncherEPubSettingsDi
 - (void)setSyntheticSpread:(EPubSettingsSyntheticSpread)syntheticSpread {
 	if ([Settings shared].syntheticSpread != syntheticSpread) {
 		[Settings shared].syntheticSpread = syntheticSpread;
-		[self postNotification];
 	}
 }
 

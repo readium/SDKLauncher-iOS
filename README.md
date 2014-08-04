@@ -1,6 +1,7 @@
 ## SDKLauncher-iOS
 
 A small iOS application to serve as a launcher/testbed for the Readium SDK.
+Build instructions can be found [here](https://docs.google.com/a/shape.dk/document/d/1DphaTO2fu7mQoBKalzyfphIlOB2Ncp7yHbIbbti92CE/edit#)
 
 ## Jenkins build status
 

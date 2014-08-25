@@ -99,6 +99,8 @@
 		34E12BA9180301A2004DCB68 /* Icon-72@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 34E12B9C180301A2004DCB68 /* Icon-72@2x.png */; };
 		34E12BAA180301A2004DCB68 /* Icon-76.png in Resources */ = {isa = PBXBuildFile; fileRef = 34E12B9D180301A2004DCB68 /* Icon-76.png */; };
 		34E12BAB180301A2004DCB68 /* Icon-76@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 34E12B9E180301A2004DCB68 /* Icon-76@2x.png */; };
+		5A2CECB419AB6F5400006F30 /* FootnoteViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5A2CECB219AB6F5400006F30 /* FootnoteViewController.m */; };
+		5A2CECB519AB6F5400006F30 /* FootnoteViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5A2CECB319AB6F5400006F30 /* FootnoteViewController.xib */; };
 		85DE51A117FDDCAC00F55130 /* page-blanche-20130322.epub in Resources */ = {isa = PBXBuildFile; fileRef = 85DE51A017FDDCAC00F55130 /* page-blanche-20130322.epub */; };
 		A250D5FFC597F4E5EB74D3AC /* epub30-test-0120-20131022.epub in Resources */ = {isa = PBXBuildFile; fileRef = A250D58D34D67FC218608A1F /* epub30-test-0120-20131022.epub */; };
 		A250D8E19073D0C5B921BA5F /* epub30-test-0220-20131022.epub in Resources */ = {isa = PBXBuildFile; fileRef = A250D54A5C423A86C6099037 /* epub30-test-0220-20131022.epub */; };
@@ -286,6 +288,9 @@
 		34E12B9C180301A2004DCB68 /* Icon-72@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon-72@2x.png"; sourceTree = "<group>"; };
 		34E12B9D180301A2004DCB68 /* Icon-76.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon-76.png"; sourceTree = "<group>"; };
 		34E12B9E180301A2004DCB68 /* Icon-76@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon-76@2x.png"; sourceTree = "<group>"; };
+		5A2CECB119AB6F5400006F30 /* FootnoteViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FootnoteViewController.h; sourceTree = "<group>"; };
+		5A2CECB219AB6F5400006F30 /* FootnoteViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FootnoteViewController.m; sourceTree = "<group>"; };
+		5A2CECB319AB6F5400006F30 /* FootnoteViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = FootnoteViewController.xib; sourceTree = "<group>"; };
 		85DE51A017FDDCAC00F55130 /* page-blanche-20130322.epub */ = {isa = PBXFileReference; lastKnownFileType = file; path = "page-blanche-20130322.epub"; sourceTree = "<group>"; };
 		A250D54A5C423A86C6099037 /* epub30-test-0220-20131022.epub */ = {isa = PBXFileReference; lastKnownFileType = file.epub; path = "epub30-test-0220-20131022.epub"; sourceTree = "<group>"; };
 		A250D58D34D67FC218608A1F /* epub30-test-0120-20131022.epub */ = {isa = PBXFileReference; lastKnownFileType = file.epub; path = "epub30-test-0120-20131022.epub"; sourceTree = "<group>"; };
@@ -579,6 +584,9 @@
 				34B56B4E1722E54A00A5A4B8 /* Settings.m */,
 				341652A616C2F9E700AFDB8B /* SpineItemListController.h */,
 				341652A716C2F9E700AFDB8B /* SpineItemListController.m */,
+				5A2CECB119AB6F5400006F30 /* FootnoteViewController.h */,
+				5A2CECB219AB6F5400006F30 /* FootnoteViewController.m */,
+				5A2CECB319AB6F5400006F30 /* FootnoteViewController.xib */,
 			);
 			name = Main;
 			sourceTree = "<group>";
@@ -762,6 +770,7 @@
 				34E12BA0180301A2004DCB68 /* Icon-29@2x.png in Resources */,
 				3462FBC816BC3C8F003C79E1 /* Localizable.strings in Resources */,
 				340535B916BC729200D4A802 /* moby-dick-20120118.epub in Resources */,
+				5A2CECB519AB6F5400006F30 /* FootnoteViewController.xib in Resources */,
 				3403516516CE93F2009E3B88 /* reader.css in Resources */,
 				3403516616CE93F2009E3B88 /* reader.html in Resources */,
 				85DE51A117FDDCAC00F55130 /* page-blanche-20130322.epub in Resources */,
@@ -824,6 +833,7 @@
 				34212FBF18F0649500A9109F /* DDRange.m in Sources */,
 				34212FD118F0649500A9109F /* DDAbstractDatabaseLogger.m in Sources */,
 				341652A316C2F85700AFDB8B /* PackageMetadataController.m in Sources */,
+				5A2CECB419AB6F5400006F30 /* FootnoteViewController.m in Sources */,
 				34212FD218F0649500A9109F /* DDASLLogger.m in Sources */,
 				34212FB918F0649500A9109F /* RDPackageResourceResponse.m in Sources */,
 				34212FC518F0649500A9109F /* MultipartMessageHeader.m in Sources */,

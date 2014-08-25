@@ -32,6 +32,7 @@
 #import "BookmarkDatabase.h"
 #import "EPubSettings.h"
 #import "EPubSettingsController.h"
+#import "FootnoteViewController.h"
 #import "RDContainer.h"
 #import "RDNavigationElement.h"
 #import "RDPackage.h"
@@ -479,140 +480,170 @@
 	navigationType:(UIWebViewNavigationType)navigationType
 {
 	BOOL shouldLoad = YES;
-	NSString *url = request.URL.absoluteString;
-	NSString *s = @"epubobjc:";
-
-	if ([url hasPrefix:s]) {
-		url = [url substringFromIndex:s.length];
+    NSURL *url = request.URL;
+    
+    if ([url.scheme isEqualToString:@"epubobjc"]) {
 		shouldLoad = NO;
-
-		if ([url isEqualToString:@"readerDidInitialize"]) {
-			NSMutableDictionary *dict = [NSMutableDictionary dictionary];
-
-			//
-			// Important!  Rather than "localhost", "127.0.0.1" is specified in the following URL to work
-			// around an issue introduced in iOS 7.0.  When an iOS 7 device is offline (Wi-Fi off, or
-			// airplane mode on), audio and video refuses to be served by UIWebView / QuickTime, even
-			// though being offline is irrelevant for an embedded HTTP server like ours.  Daniel suggested
-			// trying 127.0.0.1 in case the underlying issue was host name resolution, and it worked!
-			//
-			//   -- Shane
-			//
-
-			if (m_package.rootURL == nil || m_package.rootURL.length == 0) {
-				m_package.rootURL = [NSString stringWithFormat:
-					@"http://127.0.0.1:%d/", m_resourceServer.port];
-			}
-
-			[dict setObject:m_package.dictionary forKey:@"package"];
-			[dict setObject:[EPubSettings shared].dictionary forKey:@"settings"];
-
-			NSDictionary *pageDict = nil;
-
-			if (m_spineItem == nil) {
-			}
-			else if (m_initialCFI != nil && m_initialCFI.length > 0) {
-				pageDict = @{
-					@"idref" : m_spineItem.idref,
-					@"elementCfi" : m_initialCFI
-				};
-			}
-			else if (m_navElement.content != nil && m_navElement.content.length > 0) {
-				pageDict = @{
-					@"contentRefUrl" : m_navElement.content,
-					@"sourceFileHref" : (m_navElement.sourceHref == nil ?
-						@"" : m_navElement.sourceHref)
-				};
-			}
-			else {
-				pageDict = @{
-					@"idref" : m_spineItem.idref
-				};
-			}
-
-			if (pageDict != nil) {
-				[dict setObject:pageDict forKey:@"openPageRequest"];
-			}
-
-			NSData *data = [NSJSONSerialization dataWithJSONObject:dict options:0 error:nil];
-
-			if (data != nil) {
-				NSString *arg = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
-				[m_webView stringByEvaluatingJavaScriptFromString:[NSString
-					stringWithFormat:@"ReadiumSDK.reader.openBook(%@)", arg]];
-			}
-
-			return shouldLoad;
-		}
-
-		s = @"pageDidChange?q=";
-
-		if ([url hasPrefix:s]) {
-			s = [url substringFromIndex:s.length];
-			s = [s stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
-
-			NSData *data = [s dataUsingEncoding:NSUTF8StringEncoding];
-			NSError *error;
-
-			NSDictionary *dict = [NSJSONSerialization JSONObjectWithData:data
-				options:0 error:&error];
-
-			NSString *direction = [dict objectForKey:@"pageProgressionDirection"];
-
-			if ([direction isKindOfClass:[NSString class]]) {
-				m_currentPageProgressionIsLTR = ![direction isEqualToString:@"rtl"];
-			}
-			else {
-				m_currentPageProgressionIsLTR = YES;
-			}
-
-			m_currentOpenPageCount = 0;
-
-			for (NSDictionary *pageDict in [dict objectForKey:@"openPages"]) {
-				m_currentOpenPageCount++;
-
-				if (m_currentOpenPageCount == 1) {
-					NSNumber *number = [pageDict objectForKey:@"spineItemPageCount"];
-					m_currentPageCount = number.intValue;
-
-					number = [pageDict objectForKey:@"spineItemPageIndex"];
-					m_currentPageIndex = number.intValue;
-
-					number = [pageDict objectForKey:@"spineItemIndex"];
-					m_currentSpineItemIndex = number.intValue;
-				}
-			}
-
-			m_webView.hidden = NO;
-			[self updateToolbar];
-			return shouldLoad;
-		}
-
-		s = @"mediaOverlayStatusDidChange?q=";
-
-		if ([url hasPrefix:s]) {
-			s = [url substringFromIndex:s.length];
-			s = [s stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
-
-			NSData *data = [s dataUsingEncoding:NSUTF8StringEncoding];
-			NSError *error;
-
-			NSDictionary *dict = [NSJSONSerialization JSONObjectWithData:data
-				options:0 error:&error];
-
-			NSNumber *number = [dict objectForKey:@"isPlaying"];
-
-			if (number != nil) {
-				m_moIsPlaying = number.boolValue;
-			}
-
-			[self updateToolbar];
-			return shouldLoad;
-		}
+        
+        // parses notification name and argument
+        NSString *name = url.host;
+        id argument = [self splitQueryValues:url.query][@"q"];
+        
+        NSArray *eventWhiteList = @[
+            @"readerDidInitialize",
+            @"pageDidChange",
+            @"mediaOverlayStatusDidChange",
+            @"footnoteClicked"
+        ];
+        
+        if (name && [eventWhiteList containsObject:name]) {
+            NSString *action = argument ? [NSString stringWithFormat:@"%@:", name] : name;
+            SEL selector = NSSelectorFromString(action);
+            if ([self respondsToSelector:selector])
+                [self performSelectorOnMainThread:selector withObject:argument waitUntilDone:YES];
+        }
 	}
 
 	return shouldLoad;
 }
 
+
+//////////////////////////////////////////////////////////////////////
+#pragma mark - Notifications
+
+- (void)readerDidInitialize
+{
+    NSMutableDictionary *dict = [NSMutableDictionary dictionary];
+
+    //
+    // Important!  Rather than "localhost", "127.0.0.1" is specified in the following URL to work
+    // around an issue introduced in iOS 7.0.  When an iOS 7 device is offline (Wi-Fi off, or
+    // airplane mode on), audio and video refuses to be served by UIWebView / QuickTime, even
+    // though being offline is irrelevant for an embedded HTTP server like ours.  Daniel suggested
+    // trying 127.0.0.1 in case the underlying issue was host name resolution, and it worked!
+    //
+    //   -- Shane
+    //
+
+    if (m_package.rootURL == nil || m_package.rootURL.length == 0) {
+        m_package.rootURL = [NSString stringWithFormat:
+            @"http://127.0.0.1:%d/", m_resourceServer.port];
+    }
+
+    dict[@"package"] = m_package.dictionary;
+    dict[@"settings"] = [EPubSettings shared].dictionary;
+
+    NSDictionary *pageDict = nil;
+
+    if (m_spineItem == nil) {
+    }
+    
+    else if (m_initialCFI != nil && m_initialCFI.length > 0) {
+        pageDict = @{
+            @"idref" : m_spineItem.idref,
+            @"elementCfi" : m_initialCFI
+        };
+    }
+    
+    else if (m_navElement.content != nil && m_navElement.content.length > 0) {
+        pageDict = @{
+            @"contentRefUrl" : m_navElement.content,
+            @"sourceFileHref" : (m_navElement.sourceHref == nil ?
+                @"" : m_navElement.sourceHref)
+        };
+    }
+    
+    else {
+        pageDict = @{
+            @"idref" : m_spineItem.idref
+        };
+    }
+
+    if (pageDict != nil) {
+        dict[@"openPageRequest"] = pageDict;
+    }
+
+    NSData *data = [NSJSONSerialization dataWithJSONObject:dict options:0 error:nil];
+
+    if (data != nil) {
+        NSString *arg = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
+        [m_webView stringByEvaluatingJavaScriptFromString:[NSString
+            stringWithFormat:@"ReadiumSDK.reader.openBook(%@)", arg]];
+    }
+}
+
+- (void)pageDidChange:(NSDictionary *)paginationInfo
+{
+    NSString *direction = paginationInfo[@"pageProgressionDirection"];
+
+    if ([direction isKindOfClass:[NSString class]]) {
+        m_currentPageProgressionIsLTR = ![direction isEqualToString:@"rtl"];
+    } else {
+        m_currentPageProgressionIsLTR = YES;
+    }
+    
+    m_currentOpenPageCount = 0;
+
+    for (NSDictionary *pageDict in paginationInfo[@"openPages"]) {
+        m_currentOpenPageCount++;
+
+        if (m_currentOpenPageCount == 1) {
+            m_currentPageCount = [pageDict[@"spineItemPageCount"] integerValue];
+            m_currentPageIndex = [pageDict[@"spineItemPageIndex"] integerValue];
+            m_currentSpineItemIndex = [pageDict[@"spineItemIndex"] integerValue];
+        }
+    }
+
+    m_webView.hidden = NO;
+    [self updateToolbar];
+}
+
+- (void)mediaOverlayStatusDidChange:(NSDictionary *)status
+{
+    NSNumber *isPlaying = status[@"isPlaying"];
+    if (isPlaying)
+        m_moIsPlaying = [isPlaying boolValue];
+    
+    [self updateToolbar];
+}
+
+- (void)footnoteClicked:(NSDictionary *)footnote
+{
+    NSString *title = footnote[@"title"];
+    NSString *content = footnote[@"content"];
+    if (title && content) {
+        FootnoteViewController *footnoteVC = [[FootnoteViewController alloc] initWithTitle:title content:content];
+        [footnoteVC showWithHost:self];
+    }
+}
+
+
+//////////////////////////////////////////////////////////////////////
+#pragma mark - Tools
+
+- (NSDictionary *)splitQueryValues:(NSString *)query
+{
+    NSMutableDictionary *values = [NSMutableDictionary dictionary];
+    
+    NSArray *pairs = [query componentsSeparatedByString:@";"];
+    for (NSString *pair in pairs) {
+        NSArray *elements = [pair componentsSeparatedByString:@"="];
+        if ([elements count] == 2) {
+            NSString *key = [[elements objectAtIndex:0] stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+            id val = [[elements objectAtIndex:1] stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+            
+            NSData *data = [val dataUsingEncoding:NSUTF8StringEncoding];
+            NSError *error;
+            val = [NSJSONSerialization JSONObjectWithData:data options:0 error:&error];
+            
+            if (val)
+                values[key] = val;
+            else
+                NSLog(@"JSON error: %@", error);
+        }
+    }
+    
+    return values;
+}
 
 @end

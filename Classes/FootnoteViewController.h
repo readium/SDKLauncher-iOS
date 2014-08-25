@@ -1,6 +1,8 @@
-//  LauncherOSX
 //
-//  Created by Boris Schneiderman.
+//  FootnoteViewController.h
+//  SDKLauncher-iOS
+//
+//  Created by Mickaël Menu on 8/25/14.
 //  Copyright (c) 2014 Readium Foundation and/or its licensees. All rights reserved.
 //  
 //  Redistribution and use in source and binary forms, with or without modification, 
@@ -25,37 +27,18 @@
 //  OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED 
 //  OF THE POSSIBILITY OF SUCH DAMAGE.
 
-ReadiumSDK.HostAppFeedback = function() {
-	ReadiumSDK.on(ReadiumSDK.Events.READER_INITIALIZED, function() {
-                  
-        window.navigator.epubReadingSystem.name = "Launcher-iOS";
-        window.navigator.epubReadingSystem.version = "0.0.1";
-                  
-                  
-		ReadiumSDK.reader.on(ReadiumSDK.Events.PAGINATION_CHANGED, notifyHost("pageDidChange", "paginationInfo"), this);
-		ReadiumSDK.reader.on(ReadiumSDK.Events.SETTINGS_APPLIED, notifyHost("settingsDidApply"), this);
-        ReadiumSDK.reader.on(ReadiumSDK.Events.MEDIA_OVERLAY_STATUS_CHANGED, notifyHost("mediaOverlayStatusDidChange"), this);
-        ReadiumSDK.reader.on(ReadiumSDK.Events.MEDIA_OVERLAY_TTS_SPEAK, notifyHost("mediaOverlayTTSDoSpeak"), this);
-        ReadiumSDK.reader.on(ReadiumSDK.Events.MEDIA_OVERLAY_TTS_STOP, notifyHost("mediaOverlayTTSDoStop"), this);
-        ReadiumSDK.reader.on(ReadiumSDK.Events.FOOTNOTE_CLICKED, notifyHost("footnoteClicked"), this);
-        
-        notifyHost("readerDidInitialize")();
-	}, this);
-}();
 
-/**
- * Returns a function to be called when a Backbone event is triggered.
- */
-function notifyHost(name, infoSubKey) {
-    return function(info) {
-        var uri = "epubobjc://" + name;
-        if (info) {
-            if (infoSubKey)
-                info = info[infoSubKey];
-            uri += "?q=" + encodeURIComponent(JSON.stringify(info));
-        }
-        
-//        console.log("EVENT: " + uri);
-        window.location.href = uri;
-    };
-}
+@interface FootnoteViewController : UIViewController <UIWebViewDelegate>
+
+@property (weak, nonatomic) IBOutlet UINavigationBar *titleBar;
+@property (weak, nonatomic) IBOutlet UIWebView *webView;
+@property (weak, nonatomic) IBOutlet UIButton *closeButton;
+@property (weak, nonatomic) IBOutlet UIActivityIndicatorView *loadingIndicator;
+
+- (id)initWithTitle:(NSString *)title content:(NSString *)content;
+
+- (void)showWithHost:(UIViewController *)hostViewController;
+
+- (IBAction)close:(id)sender;
+
+@end

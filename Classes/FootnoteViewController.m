@@ -1,6 +1,8 @@
-//  LauncherOSX
 //
-//  Created by Boris Schneiderman.
+//  FootnoteViewController.m
+//  SDKLauncher-iOS
+//
+//  Created by Mickaël Menu on 8/25/14.
 //  Copyright (c) 2014 Readium Foundation and/or its licensees. All rights reserved.
 //  
 //  Redistribution and use in source and binary forms, with or without modification, 
@@ -25,37 +27,62 @@
 //  OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED 
 //  OF THE POSSIBILITY OF SUCH DAMAGE.
 
-ReadiumSDK.HostAppFeedback = function() {
-	ReadiumSDK.on(ReadiumSDK.Events.READER_INITIALIZED, function() {
-                  
-        window.navigator.epubReadingSystem.name = "Launcher-iOS";
-        window.navigator.epubReadingSystem.version = "0.0.1";
-                  
-                  
-		ReadiumSDK.reader.on(ReadiumSDK.Events.PAGINATION_CHANGED, notifyHost("pageDidChange", "paginationInfo"), this);
-		ReadiumSDK.reader.on(ReadiumSDK.Events.SETTINGS_APPLIED, notifyHost("settingsDidApply"), this);
-        ReadiumSDK.reader.on(ReadiumSDK.Events.MEDIA_OVERLAY_STATUS_CHANGED, notifyHost("mediaOverlayStatusDidChange"), this);
-        ReadiumSDK.reader.on(ReadiumSDK.Events.MEDIA_OVERLAY_TTS_SPEAK, notifyHost("mediaOverlayTTSDoSpeak"), this);
-        ReadiumSDK.reader.on(ReadiumSDK.Events.MEDIA_OVERLAY_TTS_STOP, notifyHost("mediaOverlayTTSDoStop"), this);
-        ReadiumSDK.reader.on(ReadiumSDK.Events.FOOTNOTE_CLICKED, notifyHost("footnoteClicked"), this);
-        
-        notifyHost("readerDidInitialize")();
-	}, this);
-}();
+#import "FootnoteViewController.h"
 
-/**
- * Returns a function to be called when a Backbone event is triggered.
- */
-function notifyHost(name, infoSubKey) {
-    return function(info) {
-        var uri = "epubobjc://" + name;
-        if (info) {
-            if (infoSubKey)
-                info = info[infoSubKey];
-            uri += "?q=" + encodeURIComponent(JSON.stringify(info));
-        }
+static NSString *const HTMLContentTemplate = @"<html><body style='text-align: justify;'>%@</body></html>";
+
+@interface FootnoteViewController ()
+@property (copy, nonatomic) NSString *content;
+@property (strong, nonatomic) UIViewController *hostViewController;
+@end
+
+@implementation FootnoteViewController
+
+- (id)initWithTitle:(NSString *)title content:(NSString *)content
+{
+    self = [super initWithNibName:nil bundle:nil];
+    if (self) {
+        _content = [content copy];
         
-//        console.log("EVENT: " + uri);
-        window.location.href = uri;
-    };
+        self.title = title;
+        self.modalPresentationStyle = UIModalPresentationFormSheet;
+        self.modalTransitionStyle = UIModalTransitionStyleCoverVertical;
+    }
+    
+    return self;
 }
+
+- (void)viewDidLoad
+{
+    [self.titleBar.topItem setTitle:self.title];
+    
+    [self.loadingIndicator startAnimating];
+    [self.webView loadHTMLString:self.content baseURL:nil];
+}
+
+- (void)close:(id)sender
+{
+    [self.hostViewController dismissViewControllerAnimated:YES completion:nil];
+}
+
+- (void)showWithHost:(UIViewController *)hostViewController
+{
+    _hostViewController = hostViewController;
+    [hostViewController presentViewController:self animated:YES completion:nil];
+}
+
+
+//////////////////////////////////////////////////////////////////////
+#pragma mark - Web view delegate
+
+- (void)webViewDidFinishLoad:(UIWebView *)webView
+{
+    [self.loadingIndicator stopAnimating];
+}
+
+- (void)webView:(UIWebView *)webView didFailLoadWithError:(NSError *)error
+{
+    [self.loadingIndicator stopAnimating];
+}
+
+@end

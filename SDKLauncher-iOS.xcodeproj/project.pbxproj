@@ -99,6 +99,7 @@
 		34E12BA9180301A2004DCB68 /* Icon-72@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 34E12B9C180301A2004DCB68 /* Icon-72@2x.png */; };
 		34E12BAA180301A2004DCB68 /* Icon-76.png in Resources */ = {isa = PBXBuildFile; fileRef = 34E12B9D180301A2004DCB68 /* Icon-76.png */; };
 		34E12BAB180301A2004DCB68 /* Icon-76@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 34E12B9E180301A2004DCB68 /* Icon-76@2x.png */; };
+		8307EC6919E3DE4A00B00468 /* mathjax in Resources */ = {isa = PBXBuildFile; fileRef = 8307EC6719E3DDEC00B00468 /* mathjax */; };
 		85DE51A117FDDCAC00F55130 /* page-blanche-20130322.epub in Resources */ = {isa = PBXBuildFile; fileRef = 85DE51A017FDDCAC00F55130 /* page-blanche-20130322.epub */; };
 		A250D5FFC597F4E5EB74D3AC /* epub30-test-0120-20131022.epub in Resources */ = {isa = PBXBuildFile; fileRef = A250D58D34D67FC218608A1F /* epub30-test-0120-20131022.epub */; };
 		A250D8E19073D0C5B921BA5F /* epub30-test-0220-20131022.epub in Resources */ = {isa = PBXBuildFile; fileRef = A250D54A5C423A86C6099037 /* epub30-test-0220-20131022.epub */; };
@@ -286,6 +287,7 @@
 		34E12B9C180301A2004DCB68 /* Icon-72@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon-72@2x.png"; sourceTree = "<group>"; };
 		34E12B9D180301A2004DCB68 /* Icon-76.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon-76.png"; sourceTree = "<group>"; };
 		34E12B9E180301A2004DCB68 /* Icon-76@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon-76@2x.png"; sourceTree = "<group>"; };
+		8307EC6719E3DDEC00B00468 /* mathjax */ = {isa = PBXFileReference; lastKnownFileType = folder; path = mathjax; sourceTree = "<group>"; };
 		85DE51A017FDDCAC00F55130 /* page-blanche-20130322.epub */ = {isa = PBXFileReference; lastKnownFileType = file; path = "page-blanche-20130322.epub"; sourceTree = "<group>"; };
 		A250D54A5C423A86C6099037 /* epub30-test-0220-20131022.epub */ = {isa = PBXFileReference; lastKnownFileType = file.epub; path = "epub30-test-0220-20131022.epub"; sourceTree = "<group>"; };
 		A250D58D34D67FC218608A1F /* epub30-test-0120-20131022.epub */ = {isa = PBXFileReference; lastKnownFileType = file.epub; path = "epub30-test-0120-20131022.epub"; sourceTree = "<group>"; };
@@ -315,6 +317,7 @@
 		3403515F16CE9362009E3B88 /* Injection */ = {
 			isa = PBXGroup;
 			children = (
+				8307EC6719E3DDEC00B00468 /* mathjax */,
 				341A1F701790BC6800E603C4 /* host_app_feedback.js */,
 				3403516116CE93F2009E3B88 /* reader.css */,
 				3403516216CE93F2009E3B88 /* reader.html */,
@@ -740,6 +743,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				8307EC6919E3DE4A00B00468 /* mathjax in Resources */,
 				34B56B5E1723158E00A5A4B8 /* childrens-literature-20130206.epub in Resources */,
 				3462FBEB16BC40F9003C79E1 /* Default.png in Resources */,
 				34E12BA9180301A2004DCB68 /* Icon-72@2x.png in Resources */,

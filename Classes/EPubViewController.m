@@ -38,6 +38,65 @@
 #import "RDPackageResourceServer.h"
 #import "RDSpineItem.h"
 
+@interface NSURLCacheInterceptor : NSURLCache {
+@private __weak UIWebView *m_webView;
+}
+-(id)initWithWebView:(__weak UIWebView*)webView;
+@end
+
+@implementation NSURLCacheInterceptor
+
+-(id)initWithWebView:(__weak UIWebView*)webView {
+    m_webView = webView;
+    return [self initWithMemoryCapacity:0 diskCapacity:0 diskPath:nil];
+}
+
+-(NSCachedURLResponse *)cachedResponseForRequest:(NSURLRequest *)request {
+
+    // Fake script request, immediately invoked after epubReadingSystem hook is in place,
+    // => push the global window.navigator.epubReadingSystem into the iframe(s)
+    NSString * eprs = @"/readium_epubReadingSystem_inject.js";
+
+    NSURL *url = [request URL];
+    NSString *str = [url absoluteString];
+
+    //NSLog(@"cachedResponseForRequest: %@", str);
+
+    if ([str hasSuffix:eprs]) {
+
+        /*
+        NSURLResponse *response =
+                [[NSURLResponse alloc] initWithURL:url
+                                          MIMEType:@"text/plain"
+                             expectedContentLength:1
+                                  textEncodingName:nil];
+        NSCachedURLResponse *cachedResponse =
+                [[NSCachedURLResponse alloc] initWithResponse:response
+                                                         data:[NSData dataWithBytes:" " length:1]];
+        [super storeCachedResponse:cachedResponse forRequest:request];
+        */
+
+
+        // Previous method was fetching JS code directly from the "inject" script, but was I/O costly, and separation of concerns was not clear.
+        // NSString *filePath = [[NSBundle mainBundle] pathForResource:@"epubReadingSystem_inject" ofType:@"js" inDirectory:@"Scripts"];
+        // NSString *code = [NSString stringWithContentsOfFile:filePath encoding:NSUTF8StringEncoding error:nil];
+
+        // Iterate top-level iframes, inject global window.navigator.epubReadingSystem if the expected hook function exists ( readium_set_epubReadingSystem() ).
+        __block NSString* cmd = @"for (var i = 0; i < window.frames.length; i++) { var iframe = window.frames[i]; if (iframe.readium_set_epubReadingSystem) { iframe.readium_set_epubReadingSystem(window.navigator.epubReadingSystem); }}";
+
+        // does not work as expected:
+        // WebScriptObject* script = [sender windowScriptObject];
+        // [script evaluateWebScript:cmd];
+
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [m_webView stringByEvaluatingJavaScriptFromString:cmd];
+        });
+    }
+
+    return [super cachedResponseForRequest:request];
+}
+
+@end
 
 @interface EPubViewController ()
 
@@ -226,6 +285,8 @@
 
 	NSURL *url = [[NSBundle mainBundle] URLForResource:@"reader.html" withExtension:nil];
 	[webView loadRequest:[NSURLRequest requestWithURL:url]];
+
+    [NSURLCache setSharedURLCache:[[NSURLCacheInterceptor alloc] initWithWebView:m_webView]];
 }
 
 
@@ -472,6 +533,19 @@
 	}
 }
 
+// Below method only available in OSX, not iOS
+// ...thus why we are using NSURLCache to intercept UIWebView requests
+// See NSURLCacheInterceptor
+/*
+- (NSURLRequest*) webView:(WebView*)sender
+                 resource:(id)identifier
+          willSendRequest:(NSURLRequest*)request
+         redirectResponse:(NSURLResponse*)redirectResponse
+           fromDataSource:(WebDataSource*)dataSource
+{
+...
+}
+*/
 
 - (BOOL)
 	webView:(UIWebView *)webView
@@ -480,7 +554,8 @@
 {
 	BOOL shouldLoad = YES;
 	NSString *url = request.URL.absoluteString;
-	NSString *s = @"epubobjc:";
+
+    NSString *s = @"epubobjc:";
 
 	if ([url hasPrefix:s]) {
 		url = [url substringFromIndex:s.length];

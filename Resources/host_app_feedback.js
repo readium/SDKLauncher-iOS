@@ -41,6 +41,10 @@ ReadiumSDK.HostAppFeedback = function() {
 	}, this);
 
 	this.onPaginationChanged = function(pageChangeData) {
+
+        pageChangeData.paginationInfo.canGoLeft_ = pageChangeData.paginationInfo.canGoLeft();
+        pageChangeData.paginationInfo.canGoRight_ = pageChangeData.paginationInfo.canGoRight();
+
 		window.location.href = "epubobjc:pageDidChange?q=" +
 			encodeURIComponent(JSON.stringify(pageChangeData.paginationInfo));
 	};

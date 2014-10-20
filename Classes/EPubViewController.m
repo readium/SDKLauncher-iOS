@@ -378,20 +378,42 @@
 	label.font = [UIFont systemFontOfSize:16];
 	label.textColor = [UIColor blackColor];
 
-	if (m_currentPageCount == 0) {
+    BOOL canGoNext = m_currentPageProgressionIsLTR ? m_currentPageCanGoRight : m_currentPageCanGoLeft;
+    BOOL canGoPrevious = m_currentPageProgressionIsLTR ? m_currentPageCanGoLeft : m_currentPageCanGoRight;
+
+    itemNext.enabled = canGoNext;
+    itemPrev.enabled = canGoPrevious;
+
+	if (m_currentPageOpenPagesArray == nil || [m_currentPageOpenPagesArray count] <= 0) {
 		label.text = @"";
-		itemNext.enabled = NO;
-		itemPrev.enabled = NO;
 	}
 	else {
-		label.text = LocStr(@"PAGE_X_OF_Y", m_currentPageIndex + 1, m_currentPageCount);
 
-		itemNext.enabled = !(
-			(m_currentSpineItemIndex + 1 == m_package.spineItems.count) &&
-			(m_currentPageIndex + m_currentOpenPageCount + 1 > m_currentPageCount)
-		);
+        NSMutableArray *pageNumbers = [NSMutableArray array];
 
-		itemPrev.enabled = !(m_currentSpineItemIndex == 0 && m_currentPageIndex == 0);
+        for (NSDictionary *pageDict in m_currentPageOpenPagesArray) {
+
+            NSNumber *spineItemIndex = [pageDict valueForKey:@"spineItemIndex"];
+            NSNumber *spineItemPageIndex = [pageDict valueForKey:@"spineItemPageIndex"];
+
+            int pageIndex = m_currentPageIsFixedLayout ? spineItemIndex.intValue : spineItemPageIndex.intValue;
+
+            [pageNumbers addObject: [NSNumber numberWithInt:pageIndex + 1]];
+        }
+
+        NSString* currentPages = [NSString stringWithFormat:@"%@", [pageNumbers componentsJoinedByString:@"-"]];
+
+        int pageCount = 0;
+        if ([m_currentPageOpenPagesArray count] > 0)
+        {
+            NSDictionary *firstOpenPageDict = [m_currentPageOpenPagesArray objectAtIndex:0];
+            NSNumber *number = [firstOpenPageDict valueForKey:@"spineItemPageCount"];
+
+            pageCount = m_currentPageIsFixedLayout ? m_currentPageSpineItemCount: number.intValue;
+        }
+        NSString* totalPages = [NSString stringWithFormat:@"%d", pageCount];
+
+        label.text = LocStr(@"PAGE_X_OF_Y", [currentPages UTF8String], [totalPages UTF8String], m_currentPageIsFixedLayout?[@"FXL" UTF8String]:[@"reflow" UTF8String]);
 	}
 
 	[label sizeToFit];
@@ -557,31 +579,16 @@
 			NSDictionary *dict = [NSJSONSerialization JSONObjectWithData:data
 				options:0 error:&error];
 
-			NSString *direction = [dict objectForKey:@"pageProgressionDirection"];
+            m_currentPageCanGoLeft = ([[dict valueForKey:@"canGoLeft_"] isEqual:[NSNumber numberWithBool:YES]] ? YES : NO);
+            m_currentPageCanGoRight = ([[dict valueForKey:@"canGoRight_"] isEqual:[NSNumber numberWithBool:YES]] ? YES : NO);
 
-			if ([direction isKindOfClass:[NSString class]]) {
-				m_currentPageProgressionIsLTR = ![direction isEqualToString:@"rtl"];
-			}
-			else {
-				m_currentPageProgressionIsLTR = YES;
-			}
+            m_currentPageProgressionIsLTR = ([[dict valueForKey:@"isRightToLeft"] isEqual:[NSNumber numberWithBool:YES]] ? NO : YES);
 
-			m_currentOpenPageCount = 0;
+            m_currentPageIsFixedLayout = ([[dict valueForKey:@"isFixedLayout"] isEqual:[NSNumber numberWithBool:YES]] ? YES : NO);
 
-			for (NSDictionary *pageDict in [dict objectForKey:@"openPages"]) {
-				m_currentOpenPageCount++;
+            m_currentPageSpineItemCount = [((NSNumber*)[dict valueForKey:@"spineItemCount"]) intValue];
 
-				if (m_currentOpenPageCount == 1) {
-					NSNumber *number = [pageDict objectForKey:@"spineItemPageCount"];
-					m_currentPageCount = number.intValue;
-
-					number = [pageDict objectForKey:@"spineItemPageIndex"];
-					m_currentPageIndex = number.intValue;
-
-					number = [pageDict objectForKey:@"spineItemIndex"];
-					m_currentSpineItemIndex = number.intValue;
-				}
-			}
+            m_currentPageOpenPagesArray = (NSArray*)[dict objectForKey:@"openPages"];
 
 			m_webView.hidden = NO;
 			[self updateToolbar];

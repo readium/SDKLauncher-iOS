@@ -576,8 +576,7 @@
 {
 	BOOL shouldLoad = YES;
 	NSString *url = request.URL.absoluteString;
-
-    NSString *s = @"epubobjc:";
+	NSString *s = @"epubobjc:";
 
 	if ([url hasPrefix:s]) {
 		url = [url substringFromIndex:s.length];

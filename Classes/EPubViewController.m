@@ -77,7 +77,10 @@
 
 @end
 
-@interface EPubViewController ()
+@interface EPubViewController () {
+@private NSData* m_specialPayload_AnnotationsCSS;
+@private NSData* m_specialPayload_MathJaxJS;
+}
 
 - (void)passSettingsToJavaScript;
 - (void)updateNavigationItems;
@@ -88,6 +91,35 @@
 
 @implementation EPubViewController
 
+- (void)initializeSpecialPayloads {
+
+    // May be set to NIL if desired.
+    // m_specialPayload_AnnotationsCSS = nil;
+    // m_specialPayload_MathJaxJS = nil;
+
+
+    NSString *filePath = [[NSBundle mainBundle] pathForResource:@"MathJax" ofType:@"js" inDirectory:@"mathjax"];
+    if (filePath != nil) {
+        NSString *code = [NSString stringWithContentsOfFile:filePath encoding:NSUTF8StringEncoding error:nil];
+        if (code != nil) {
+            NSData *data = [code dataUsingEncoding:NSUTF8StringEncoding];
+            if (data != nil) {
+                m_specialPayload_MathJaxJS = data;
+            }
+        }
+    }
+
+    filePath = [[NSBundle mainBundle] pathForResource:@"annotations" ofType:@"css"];
+    if (filePath != nil) {
+        NSString *code = [NSString stringWithContentsOfFile:filePath encoding:NSUTF8StringEncoding error:nil];
+        if (code != nil) {
+            NSData *data = [code dataUsingEncoding:NSUTF8StringEncoding];
+            if (data != nil) {
+                m_specialPayload_AnnotationsCSS = data;
+            }
+        }
+    }
+}
 
 - (void)alertView:(UIAlertView *)alertView didDismissWithButtonIndex:(NSInteger)buttonIndex {
 	m_alertAddBookmark = nil;
@@ -171,7 +203,6 @@
 		cfi:bookmark.cfi];
 }
 
-
 - (id)
 	initWithContainer:(RDContainer *)container
 	package:(RDPackage *)package
@@ -199,9 +230,14 @@
 		m_navElement = navElement;
 		m_package = package;
 		m_spineItem = spineItem;
-		m_resourceServer = [[RDPackageResourceServer alloc] initWithPackage:package];
-        [m_resourceServer setJavascriptExecutor:m_JavascriptExecutor];
-		[self updateNavigationItems];
+
+        [self initializeSpecialPayloads];
+		m_resourceServer = [[RDPackageResourceServer alloc] initWithPackage:package specialPayload_MathJaxJS:m_specialPayload_MathJaxJS specialPayload_AnnotationsCSS:m_specialPayload_AnnotationsCSS];
+
+        // NIL at this stage! (see self.loadView where m_JavascriptExecutor is instantiated)
+        //[m_resourceServer setJavascriptExecutor:m_JavascriptExecutor];
+
+        [self updateNavigationItems];
 	}
 
 	return self;
@@ -229,13 +265,16 @@
 		return nil;
 	}
 
-	if (self = [super initWithTitle:package.title navBarHidden:NO]) {
+    if (self = [super initWithTitle:package.title navBarHidden:NO]) {
 		m_container = container;
 		m_initialCFI = cfi;
 		m_package = package;
 
-		m_resourceServer = [[RDPackageResourceServer alloc] initWithPackage:package];
-        [m_resourceServer setJavascriptExecutor:m_JavascriptExecutor];
+        [self initializeSpecialPayloads];
+		m_resourceServer = [[RDPackageResourceServer alloc] initWithPackage:package specialPayload_MathJaxJS:m_specialPayload_MathJaxJS specialPayload_AnnotationsCSS:m_specialPayload_AnnotationsCSS];
+
+        // NIL at this stage! (see self.loadView where m_JavascriptExecutor is instantiated)
+        //[m_resourceServer setJavascriptExecutor:m_JavascriptExecutor];
 
 		m_spineItem = spineItem;
 		[self updateNavigationItems];

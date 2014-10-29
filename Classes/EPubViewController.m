@@ -38,48 +38,10 @@
 #import "RDPackageResourceServer.h"
 #import "RDSpineItem.h"
 
-// TODO: extract in its own file
-//#import "RDJavascriptExecutor.h"
 
-@interface JavascriptExecutor : RDJavascriptExecutor {
-@private __weak UIWebView *m_webView;
-}
--(id)initWithWebView:(__weak UIWebView*)webView;
-@end
-
-@implementation JavascriptExecutor
-
--(id)initWithWebView:(__weak UIWebView*)webView {
-
-    if (webView == nil) {
-        return nil;
-    }
-
-    if (self = [super init]) {
-        m_webView = webView;
-    }
-
-    return self;
-}
-
--(void)executeJavascript:(NSString *)js {
-
-    // does not work as expected:
-    // WebScriptObject* script = [sender windowScriptObject];
-    // [script evaluateWebScript:js];
-
-    __block NSString * js_ = [NSString stringWithString:js];
-
-    dispatch_async(dispatch_get_main_queue(), ^{
-        [m_webView stringByEvaluatingJavaScriptFromString:js_];
-    });
-}
-
-@end
-
-@interface EPubViewController () {
-@private NSData* m_specialPayload_AnnotationsCSS;
-@private NSData* m_specialPayload_MathJaxJS;
+@interface EPubViewController () <RDPackageResourceServerDelegate> {
+	@private NSData *m_specialPayload_AnnotationsCSS;
+	@private NSData *m_specialPayload_MathJaxJS;
 }
 
 - (void)passSettingsToJavaScript;
@@ -232,13 +194,19 @@
 		m_package = package;
 		m_spineItem = spineItem;
 
-        [self initializeSpecialPayloads];
-		m_resourceServer = [[RDPackageResourceServer alloc] initWithPackage:package specialPayload_MathJaxJS:m_specialPayload_MathJaxJS specialPayload_AnnotationsCSS:m_specialPayload_AnnotationsCSS];
+		[self initializeSpecialPayloads];
 
-        // NIL at this stage! (see self.loadView where m_JavascriptExecutor is instantiated)
-        //[m_resourceServer setJavascriptExecutor:m_JavascriptExecutor];
+		m_resourceServer = [[RDPackageResourceServer alloc]
+			initWithDelegate:self
+			package:package
+			specialPayloadAnnotationsCSS:m_specialPayload_AnnotationsCSS
+			specialPayloadMathJaxJS:m_specialPayload_MathJaxJS];
 
-        [self updateNavigationItems];
+		if (m_resourceServer == nil) {
+			return nil;
+		}
+
+		[self updateNavigationItems];
 	}
 
 	return self;
@@ -270,14 +238,20 @@
 		m_container = container;
 		m_initialCFI = cfi;
 		m_package = package;
-
-        [self initializeSpecialPayloads];
-		m_resourceServer = [[RDPackageResourceServer alloc] initWithPackage:package specialPayload_MathJaxJS:m_specialPayload_MathJaxJS specialPayload_AnnotationsCSS:m_specialPayload_AnnotationsCSS];
-
-        // NIL at this stage! (see self.loadView where m_JavascriptExecutor is instantiated)
-        //[m_resourceServer setJavascriptExecutor:m_JavascriptExecutor];
-
 		m_spineItem = spineItem;
+
+		[self initializeSpecialPayloads];
+
+		m_resourceServer = [[RDPackageResourceServer alloc]
+			initWithDelegate:self
+			package:package
+			specialPayloadAnnotationsCSS:m_specialPayload_AnnotationsCSS
+			specialPayloadMathJaxJS:m_specialPayload_MathJaxJS];
+
+		if (m_resourceServer == nil) {
+			return nil;
+		}
+
 		[self updateNavigationItems];
 	}
 
@@ -308,9 +282,6 @@
 
 	NSURL *url = [[NSBundle mainBundle] URLForResource:@"reader.html" withExtension:nil];
 	[webView loadRequest:[NSURLRequest requestWithURL:url]];
-
-    m_JavascriptExecutor = [[JavascriptExecutor alloc] initWithWebView:m_webView];
-    [m_resourceServer setJavascriptExecutor:m_JavascriptExecutor];
 }
 
 
@@ -404,6 +375,16 @@
 
 - (void)popoverControllerDidDismissPopover:(UIPopoverController *)popoverController {
 	m_popover = nil;
+}
+
+
+- (void)
+	rdpackageResourceServer:(RDPackageResourceServer *)packageResourceServer
+	executeJavaScript:(NSString *)javaScript
+{
+	dispatch_async(dispatch_get_main_queue(), ^{
+		[m_webView stringByEvaluatingJavaScriptFromString:javaScript];
+	});
 }
 
 

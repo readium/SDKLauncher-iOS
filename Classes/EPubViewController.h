@@ -35,6 +35,7 @@
 @class RDPackage;
 @class RDPackageResourceServer;
 @class RDSpineItem;
+@class RDJavascriptExecutor;
 
 @interface EPubViewController : BaseViewController <
 	UIAlertViewDelegate,
@@ -59,6 +60,8 @@
 	@private RDPackageResourceServer *m_resourceServer;
 	@private RDSpineItem *m_spineItem;
 	@private __weak UIWebView *m_webView;
+
+    @private RDJavascriptExecutor *m_JavascriptExecutor;
 }
 
 - (id)

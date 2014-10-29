@@ -560,20 +560,6 @@
 	}
 }
 
-// Below method only available in OSX, not iOS
-// ...thus why we are using NSURLCache to intercept UIWebView requests
-// See NSURLCacheInterceptor
-/*
-- (NSURLRequest*) webView:(WebView*)sender
-                 resource:(id)identifier
-          willSendRequest:(NSURLRequest*)request
-         redirectResponse:(NSURLResponse*)redirectResponse
-           fromDataSource:(WebDataSource*)dataSource
-{
-...
-}
-*/
-
 - (BOOL)
 	webView:(UIWebView *)webView
 	shouldStartLoadWithRequest:(NSURLRequest *)request

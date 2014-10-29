@@ -93,9 +93,10 @@
 
 - (void)initializeSpecialPayloads {
 
-    // May be set to NIL if desired.
-    // m_specialPayload_AnnotationsCSS = nil;
-    // m_specialPayload_MathJaxJS = nil;
+    // May be left to NIL if desired (in which case MathJax and annotations.css functionality will be disabled).
+    
+    m_specialPayload_AnnotationsCSS = nil;
+    m_specialPayload_MathJaxJS = nil;
 
 
     NSString *filePath = [[NSBundle mainBundle] pathForResource:@"MathJax" ofType:@"js" inDirectory:@"mathjax"];

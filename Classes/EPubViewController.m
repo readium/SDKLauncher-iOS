@@ -199,7 +199,8 @@
 		m_navElement = navElement;
 		m_package = package;
 		m_spineItem = spineItem;
-		m_resourceServer = [[RDPackageResourceServer alloc] initWithPackage:package javascriptExecutor:m_JavascriptExecutor];
+		m_resourceServer = [[RDPackageResourceServer alloc] initWithPackage:package];
+        [m_resourceServer setJavascriptExecutor:m_JavascriptExecutor];
 		[self updateNavigationItems];
 	}
 
@@ -232,7 +233,10 @@
 		m_container = container;
 		m_initialCFI = cfi;
 		m_package = package;
-		m_resourceServer = [[RDPackageResourceServer alloc] initWithPackage:package javascriptExecutor:m_JavascriptExecutor];
+
+		m_resourceServer = [[RDPackageResourceServer alloc] initWithPackage:package];
+        [m_resourceServer setJavascriptExecutor:m_JavascriptExecutor];
+
 		m_spineItem = spineItem;
 		[self updateNavigationItems];
 	}
@@ -266,6 +270,7 @@
 	[webView loadRequest:[NSURLRequest requestWithURL:url]];
 
     m_JavascriptExecutor = [[JavascriptExecutor alloc] initWithWebView:m_webView];
+    [m_resourceServer setJavascriptExecutor:m_JavascriptExecutor];
 }
 
 

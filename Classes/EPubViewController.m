@@ -68,7 +68,7 @@
     // WebScriptObject* script = [sender windowScriptObject];
     // [script evaluateWebScript:js];
 
-    __block js_ = [NSString stringWithString:js];
+    __block NSString * js_ = [NSString stringWithString:js];
 
     dispatch_async(dispatch_get_main_queue(), ^{
         [m_webView stringByEvaluatingJavaScriptFromString:js_];

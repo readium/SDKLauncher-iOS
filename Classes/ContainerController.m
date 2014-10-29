@@ -37,12 +37,21 @@
 #import "SpineItemListController.h"
 
 
+@interface ContainerController() <RDContainerDelegate> {
+}
+@end
+
 @implementation ContainerController
 
+- (void)handleSdkError:(NSString*)message {
+    NSLog(@"READIUM SDK: %@\n", message);
+}
 
 - (id)initWithPath:(NSString *)path {
 	if (self = [super initWithTitle:nil navBarHidden:NO]) {
-		m_container = [[RDContainer alloc] initWithPath:path];
+
+        m_container = [[RDContainer alloc] initWithDelegate:self path:path];
+
 		m_package = m_container.firstPackage;
 
 		if (m_package == nil) {

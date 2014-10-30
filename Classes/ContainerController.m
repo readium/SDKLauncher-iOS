@@ -43,7 +43,7 @@
 
 @implementation ContainerController
 
-- (void)handleSdkError:(NSString*)message {
+- (void)rdcontainer:(RDContainer *)container handleSdkError:(NSString*)message {
     NSLog(@"READIUM SDK: %@\n", message);
 }
 

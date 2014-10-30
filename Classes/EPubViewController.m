@@ -39,9 +39,30 @@
 #import "RDSpineItem.h"
 
 
-@interface EPubViewController () <RDPackageResourceServerDelegate> {
+@interface EPubViewController () <
+	RDPackageResourceServerDelegate,
+	UIAlertViewDelegate,
+	UIPopoverControllerDelegate,
+	UIWebViewDelegate>
+{
+	@private UIAlertView *m_alertAddBookmark;
+	@private RDContainer *m_container;
+	@private BOOL m_currentPageCanGoLeft;
+	@private BOOL m_currentPageCanGoRight;
+	@private BOOL m_currentPageIsFixedLayout;
+	@private NSArray* m_currentPageOpenPagesArray;
+	@private BOOL m_currentPageProgressionIsLTR;
+	@private int m_currentPageSpineItemCount;
+	@private NSString *m_initialCFI;
+	@private BOOL m_moIsPlaying;
+	@private RDNavigationElement *m_navElement;
+	@private RDPackage *m_package;
+	@private UIPopoverController *m_popover;
+	@private RDPackageResourceServer *m_resourceServer;
 	@private NSData *m_specialPayload_AnnotationsCSS;
 	@private NSData *m_specialPayload_MathJaxJS;
+	@private RDSpineItem *m_spineItem;
+	@private __weak UIWebView *m_webView;
 }
 
 - (void)passSettingsToJavaScript;
@@ -137,7 +158,7 @@
 }
 
 
-- (id)
+- (instancetype)
 	initWithContainer:(RDContainer *)container
 	package:(RDPackage *)package
 {
@@ -145,7 +166,7 @@
 }
 
 
-- (id)
+- (instancetype)
 	initWithContainer:(RDContainer *)container
 	package:(RDPackage *)package
 	bookmark:(Bookmark *)bookmark
@@ -166,7 +187,7 @@
 		cfi:bookmark.cfi];
 }
 
-- (id)
+- (instancetype)
 	initWithContainer:(RDContainer *)container
 	package:(RDPackage *)package
 	navElement:(RDNavigationElement *)navElement
@@ -213,7 +234,7 @@
 }
 
 
-- (id)
+- (instancetype)
 	initWithContainer:(RDContainer *)container
 	package:(RDPackage *)package
 	spineItem:(RDSpineItem *)spineItem
@@ -354,6 +375,16 @@
 }
 
 
+- (void)
+	packageResourceServer:(RDPackageResourceServer *)packageResourceServer
+	executeJavaScript:(NSString *)javaScript
+{
+	dispatch_async(dispatch_get_main_queue(), ^{
+		[m_webView stringByEvaluatingJavaScriptFromString:javaScript];
+	});
+}
+
+
 - (void)passSettingsToJavaScript {
 	NSData *data = [NSJSONSerialization dataWithJSONObject:[EPubSettings shared].dictionary
 		options:0 error:nil];
@@ -375,16 +406,6 @@
 
 - (void)popoverControllerDidDismissPopover:(UIPopoverController *)popoverController {
 	m_popover = nil;
-}
-
-
-- (void)
-	rdpackageResourceServer:(RDPackageResourceServer *)packageResourceServer
-	executeJavaScript:(NSString *)javaScript
-{
-	dispatch_async(dispatch_get_main_queue(), ^{
-		[m_webView stringByEvaluatingJavaScriptFromString:javaScript];
-	});
 }
 
 

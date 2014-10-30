@@ -33,49 +33,25 @@
 @class RDContainer;
 @class RDNavigationElement;
 @class RDPackage;
-@class RDPackageResourceServer;
 @class RDSpineItem;
 
-@interface EPubViewController : BaseViewController <
-	UIAlertViewDelegate,
-	UIPopoverControllerDelegate,
-	UIWebViewDelegate>
-{
-	@private UIAlertView *m_alertAddBookmark;
-	@private RDContainer *m_container;
+@interface EPubViewController : BaseViewController
 
-    @private BOOL m_currentPageCanGoLeft;
-    @private BOOL m_currentPageCanGoRight;
-    @private BOOL m_currentPageProgressionIsLTR;
-    @private BOOL m_currentPageIsFixedLayout;
-    @private int m_currentPageSpineItemCount;
-    @private NSArray* m_currentPageOpenPagesArray;
-
-	@private NSString *m_initialCFI;
-	@private BOOL m_moIsPlaying;
-	@private RDNavigationElement *m_navElement;
-	@private RDPackage *m_package;
-	@private UIPopoverController *m_popover;
-	@private RDPackageResourceServer *m_resourceServer;
-	@private RDSpineItem *m_spineItem;
-	@private __weak UIWebView *m_webView;
-}
-
-- (id)
+- (instancetype)
 	initWithContainer:(RDContainer *)container
 	package:(RDPackage *)package;
 
-- (id)
+- (instancetype)
 	initWithContainer:(RDContainer *)container
 	package:(RDPackage *)package
 	bookmark:(Bookmark *)bookmark;
 
-- (id)
+- (instancetype)
 	initWithContainer:(RDContainer *)container
 	package:(RDPackage *)package
 	navElement:(RDNavigationElement *)navElement;
 
-- (id)
+- (instancetype)
 	initWithContainer:(RDContainer *)container
 	package:(RDPackage *)package
 	spineItem:(RDSpineItem *)spineItem

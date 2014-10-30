@@ -39,7 +39,10 @@
 #import "RDSpineItem.h"
 
 
-@interface EPubViewController ()
+@interface EPubViewController () <RDPackageResourceServerDelegate> {
+	@private NSData *m_specialPayload_AnnotationsCSS;
+	@private NSData *m_specialPayload_MathJaxJS;
+}
 
 - (void)passSettingsToJavaScript;
 - (void)updateNavigationItems;
@@ -50,6 +53,36 @@
 
 @implementation EPubViewController
 
+- (void)initializeSpecialPayloads {
+
+    // May be left to NIL if desired (in which case MathJax and annotations.css functionality will be disabled).
+    
+    m_specialPayload_AnnotationsCSS = nil;
+    m_specialPayload_MathJaxJS = nil;
+
+
+    NSString *filePath = [[NSBundle mainBundle] pathForResource:@"MathJax" ofType:@"js" inDirectory:@"mathjax"];
+    if (filePath != nil) {
+        NSString *code = [NSString stringWithContentsOfFile:filePath encoding:NSUTF8StringEncoding error:nil];
+        if (code != nil) {
+            NSData *data = [code dataUsingEncoding:NSUTF8StringEncoding];
+            if (data != nil) {
+                m_specialPayload_MathJaxJS = data;
+            }
+        }
+    }
+
+    filePath = [[NSBundle mainBundle] pathForResource:@"annotations" ofType:@"css"];
+    if (filePath != nil) {
+        NSString *code = [NSString stringWithContentsOfFile:filePath encoding:NSUTF8StringEncoding error:nil];
+        if (code != nil) {
+            NSData *data = [code dataUsingEncoding:NSUTF8StringEncoding];
+            if (data != nil) {
+                m_specialPayload_AnnotationsCSS = data;
+            }
+        }
+    }
+}
 
 - (void)alertView:(UIAlertView *)alertView didDismissWithButtonIndex:(NSInteger)buttonIndex {
 	m_alertAddBookmark = nil;
@@ -133,7 +166,6 @@
 		cfi:bookmark.cfi];
 }
 
-
 - (id)
 	initWithContainer:(RDContainer *)container
 	package:(RDPackage *)package
@@ -161,7 +193,19 @@
 		m_navElement = navElement;
 		m_package = package;
 		m_spineItem = spineItem;
-		m_resourceServer = [[RDPackageResourceServer alloc] initWithPackage:package];
+
+		[self initializeSpecialPayloads];
+
+		m_resourceServer = [[RDPackageResourceServer alloc]
+			initWithDelegate:self
+			package:package
+			specialPayloadAnnotationsCSS:m_specialPayload_AnnotationsCSS
+			specialPayloadMathJaxJS:m_specialPayload_MathJaxJS];
+
+		if (m_resourceServer == nil) {
+			return nil;
+		}
+
 		[self updateNavigationItems];
 	}
 
@@ -190,12 +234,24 @@
 		return nil;
 	}
 
-	if (self = [super initWithTitle:package.title navBarHidden:NO]) {
+    if (self = [super initWithTitle:package.title navBarHidden:NO]) {
 		m_container = container;
 		m_initialCFI = cfi;
 		m_package = package;
-		m_resourceServer = [[RDPackageResourceServer alloc] initWithPackage:package];
 		m_spineItem = spineItem;
+
+		[self initializeSpecialPayloads];
+
+		m_resourceServer = [[RDPackageResourceServer alloc]
+			initWithDelegate:self
+			package:package
+			specialPayloadAnnotationsCSS:m_specialPayload_AnnotationsCSS
+			specialPayloadMathJaxJS:m_specialPayload_MathJaxJS];
+
+		if (m_resourceServer == nil) {
+			return nil;
+		}
+
 		[self updateNavigationItems];
 	}
 
@@ -319,6 +375,16 @@
 
 - (void)popoverControllerDidDismissPopover:(UIPopoverController *)popoverController {
 	m_popover = nil;
+}
+
+
+- (void)
+	rdpackageResourceServer:(RDPackageResourceServer *)packageResourceServer
+	executeJavaScript:(NSString *)javaScript
+{
+	dispatch_async(dispatch_get_main_queue(), ^{
+		[m_webView stringByEvaluatingJavaScriptFromString:javaScript];
+	});
 }
 
 
@@ -493,7 +559,6 @@
 		[self.navigationController setToolbarHidden:YES animated:YES];
 	}
 }
-
 
 - (BOOL)
 	webView:(UIWebView *)webView

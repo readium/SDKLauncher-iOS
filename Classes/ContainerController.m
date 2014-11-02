@@ -37,17 +37,28 @@
 #import "SpineItemListController.h"
 
 
-@interface ContainerController() <RDContainerDelegate> {
+@interface ContainerController () <
+	RDContainerDelegate,
+	UITableViewDataSource,
+	UITableViewDelegate>
+{
+	@private RDContainer *m_container;
+	@private RDPackage *m_package;
+	@private __weak UITableView *m_table;
 }
+
 @end
+
 
 @implementation ContainerController
 
-- (void)rdcontainer:(RDContainer *)container handleSdkError:(NSString*)message {
-    NSLog(@"READIUM SDK: %@\n", message);
+
+- (void)container:(RDContainer *)container handleSdkError:(NSString *)message {
+	NSLog(@"READIUM SDK: %@\n", message);
 }
 
-- (id)initWithPath:(NSString *)path {
+
+- (instancetype)initWithPath:(NSString *)path {
 	if (self = [super initWithTitle:nil navBarHidden:NO]) {
 
         m_container = [[RDContainer alloc] initWithDelegate:self path:path];

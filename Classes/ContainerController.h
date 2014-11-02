@@ -29,18 +29,8 @@
 
 #import "BaseViewController.h"
 
-@class RDContainer;
-@class RDPackage;
+@interface ContainerController : BaseViewController
 
-@interface ContainerController : BaseViewController <
-	UITableViewDataSource,
-	UITableViewDelegate>
-{
-	@private RDContainer *m_container;
-	@private RDPackage *m_package;
-	@private __weak UITableView *m_table;
-}
-
-- (id)initWithPath:(NSString *)path;
+- (instancetype)initWithPath:(NSString *)path;
 
 @end

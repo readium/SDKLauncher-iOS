@@ -81,7 +81,7 @@
 						 delegate: self
 				cancelButtonTitle:@"Ignore all"
 				otherButtonTitles: nil];
-			[alert addButtonWithTitle:@"Dismiss"];
+			[alert addButtonWithTitle:@"Ignore"];
 			[alert show];
 		});
 	}

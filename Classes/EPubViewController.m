@@ -299,6 +299,8 @@
 	webView.hidden = YES;
 	webView.scalesPageToFit = YES;
 	webView.scrollView.bounces = NO;
+	webView.allowsInlineMediaPlayback = YES;
+	webView.mediaPlaybackRequiresUserAction = NO;
 	[self.view addSubview:webView];
 
 	NSURL *url = [[NSBundle mainBundle] URLForResource:@"reader.html" withExtension:nil];

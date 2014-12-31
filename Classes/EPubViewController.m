@@ -32,21 +32,38 @@
 #import "BookmarkDatabase.h"
 #import "EPubSettings.h"
 #import "EPubSettingsController.h"
-#import "PackageResourceServer.h"
 #import "RDContainer.h"
 #import "RDNavigationElement.h"
 #import "RDPackage.h"
-#import "RDPackageResource.h"
+#import "RDPackageResourceServer.h"
 #import "RDSpineItem.h"
 
-#include <assert.h>
-#include <stdbool.h>
-#include <sys/types.h>
-#include <unistd.h>
-#include <sys/sysctl.h>
 
-
-@interface EPubViewController ()
+@interface EPubViewController () <
+	RDPackageResourceServerDelegate,
+	UIAlertViewDelegate,
+	UIPopoverControllerDelegate,
+	UIWebViewDelegate>
+{
+	@private UIAlertView *m_alertAddBookmark;
+	@private RDContainer *m_container;
+	@private BOOL m_currentPageCanGoLeft;
+	@private BOOL m_currentPageCanGoRight;
+	@private BOOL m_currentPageIsFixedLayout;
+	@private NSArray* m_currentPageOpenPagesArray;
+	@private BOOL m_currentPageProgressionIsLTR;
+	@private int m_currentPageSpineItemCount;
+	@private NSString *m_initialCFI;
+	@private BOOL m_moIsPlaying;
+	@private RDNavigationElement *m_navElement;
+	@private RDPackage *m_package;
+	@private UIPopoverController *m_popover;
+	@private RDPackageResourceServer *m_resourceServer;
+	@private NSData *m_specialPayload_AnnotationsCSS;
+	@private NSData *m_specialPayload_MathJaxJS;
+	@private RDSpineItem *m_spineItem;
+	@private __weak UIWebView *m_webView;
+}
 
 - (void)passSettingsToJavaScript;
 - (void)updateNavigationItems;
@@ -57,6 +74,36 @@
 
 @implementation EPubViewController
 
+- (void)initializeSpecialPayloads {
+
+    // May be left to NIL if desired (in which case MathJax and annotations.css functionality will be disabled).
+    
+    m_specialPayload_AnnotationsCSS = nil;
+    m_specialPayload_MathJaxJS = nil;
+
+
+    NSString *filePath = [[NSBundle mainBundle] pathForResource:@"MathJax" ofType:@"js" inDirectory:@"mathjax"];
+    if (filePath != nil) {
+        NSString *code = [NSString stringWithContentsOfFile:filePath encoding:NSUTF8StringEncoding error:nil];
+        if (code != nil) {
+            NSData *data = [code dataUsingEncoding:NSUTF8StringEncoding];
+            if (data != nil) {
+                m_specialPayload_MathJaxJS = data;
+            }
+        }
+    }
+
+    filePath = [[NSBundle mainBundle] pathForResource:@"annotations" ofType:@"css"];
+    if (filePath != nil) {
+        NSString *code = [NSString stringWithContentsOfFile:filePath encoding:NSUTF8StringEncoding error:nil];
+        if (code != nil) {
+            NSData *data = [code dataUsingEncoding:NSUTF8StringEncoding];
+            if (data != nil) {
+                m_specialPayload_AnnotationsCSS = data;
+            }
+        }
+    }
+}
 
 - (void)alertView:(UIAlertView *)alertView didDismissWithButtonIndex:(NSInteger)buttonIndex {
 	m_alertAddBookmark = nil;
@@ -111,7 +158,7 @@
 }
 
 
-- (id)
+- (instancetype)
 	initWithContainer:(RDContainer *)container
 	package:(RDPackage *)package
 {
@@ -119,7 +166,7 @@
 }
 
 
-- (id)
+- (instancetype)
 	initWithContainer:(RDContainer *)container
 	package:(RDPackage *)package
 	bookmark:(Bookmark *)bookmark
@@ -140,8 +187,7 @@
 		cfi:bookmark.cfi];
 }
 
-
-- (id)
+- (instancetype)
 	initWithContainer:(RDContainer *)container
 	package:(RDPackage *)package
 	navElement:(RDNavigationElement *)navElement
@@ -168,7 +214,19 @@
 		m_navElement = navElement;
 		m_package = package;
 		m_spineItem = spineItem;
-		m_resourceServer = [[PackageResourceServer alloc] initWithPackage:package];
+
+		[self initializeSpecialPayloads];
+
+		m_resourceServer = [[RDPackageResourceServer alloc]
+			initWithDelegate:self
+			package:package
+			specialPayloadAnnotationsCSS:m_specialPayload_AnnotationsCSS
+			specialPayloadMathJaxJS:m_specialPayload_MathJaxJS];
+
+		if (m_resourceServer == nil) {
+			return nil;
+		}
+
 		[self updateNavigationItems];
 	}
 
@@ -176,7 +234,7 @@
 }
 
 
-- (id)
+- (instancetype)
 	initWithContainer:(RDContainer *)container
 	package:(RDPackage *)package
 	spineItem:(RDSpineItem *)spineItem
@@ -197,12 +255,24 @@
 		return nil;
 	}
 
-	if (self = [super initWithTitle:package.title navBarHidden:NO]) {
+    if (self = [super initWithTitle:package.title navBarHidden:NO]) {
 		m_container = container;
 		m_initialCFI = cfi;
 		m_package = package;
-		m_resourceServer = [[PackageResourceServer alloc] initWithPackage:package];
 		m_spineItem = spineItem;
+
+		[self initializeSpecialPayloads];
+
+		m_resourceServer = [[RDPackageResourceServer alloc]
+			initWithDelegate:self
+			package:package
+			specialPayloadAnnotationsCSS:m_specialPayload_AnnotationsCSS
+			specialPayloadMathJaxJS:m_specialPayload_MathJaxJS];
+
+		if (m_resourceServer == nil) {
+			return nil;
+		}
+
 		[self updateNavigationItems];
 	}
 
@@ -229,6 +299,8 @@
 	webView.hidden = YES;
 	webView.scalesPageToFit = YES;
 	webView.scrollView.bounces = NO;
+	webView.allowsInlineMediaPlayback = YES;
+	webView.mediaPlaybackRequiresUserAction = NO;
 	[self.view addSubview:webView];
 
 	NSURL *url = [[NSBundle mainBundle] URLForResource:@"reader.html" withExtension:nil];
@@ -302,6 +374,16 @@
 
 - (void)onEPubSettingsDidChange:(NSNotification *)notification {
 	[self passSettingsToJavaScript];
+}
+
+
+- (void)
+	packageResourceServer:(RDPackageResourceServer *)packageResourceServer
+	executeJavaScript:(NSString *)javaScript
+{
+	dispatch_async(dispatch_get_main_queue(), ^{
+		[m_webView stringByEvaluatingJavaScriptFromString:javaScript];
+	});
 }
 
 
@@ -385,20 +467,42 @@
 	label.font = [UIFont systemFontOfSize:16];
 	label.textColor = [UIColor blackColor];
 
-	if (m_currentPageCount == 0) {
+    BOOL canGoNext = m_currentPageProgressionIsLTR ? m_currentPageCanGoRight : m_currentPageCanGoLeft;
+    BOOL canGoPrevious = m_currentPageProgressionIsLTR ? m_currentPageCanGoLeft : m_currentPageCanGoRight;
+
+    itemNext.enabled = canGoNext;
+    itemPrev.enabled = canGoPrevious;
+
+	if (m_currentPageOpenPagesArray == nil || [m_currentPageOpenPagesArray count] <= 0) {
 		label.text = @"";
-		itemNext.enabled = NO;
-		itemPrev.enabled = NO;
 	}
 	else {
-		label.text = LocStr(@"PAGE_X_OF_Y", m_currentPageIndex + 1, m_currentPageCount);
 
-		itemNext.enabled = !(
-			(m_currentSpineItemIndex + 1 == m_package.spineItems.count) &&
-			(m_currentPageIndex + m_currentOpenPageCount + 1 > m_currentPageCount)
-		);
+        NSMutableArray *pageNumbers = [NSMutableArray array];
 
-		itemPrev.enabled = !(m_currentSpineItemIndex == 0 && m_currentPageIndex == 0);
+        for (NSDictionary *pageDict in m_currentPageOpenPagesArray) {
+
+            NSNumber *spineItemIndex = [pageDict valueForKey:@"spineItemIndex"];
+            NSNumber *spineItemPageIndex = [pageDict valueForKey:@"spineItemPageIndex"];
+
+            int pageIndex = m_currentPageIsFixedLayout ? spineItemIndex.intValue : spineItemPageIndex.intValue;
+
+            [pageNumbers addObject: [NSNumber numberWithInt:pageIndex + 1]];
+        }
+
+        NSString* currentPages = [NSString stringWithFormat:@"%@", [pageNumbers componentsJoinedByString:@"-"]];
+
+        int pageCount = 0;
+        if ([m_currentPageOpenPagesArray count] > 0)
+        {
+            NSDictionary *firstOpenPageDict = [m_currentPageOpenPagesArray objectAtIndex:0];
+            NSNumber *number = [firstOpenPageDict valueForKey:@"spineItemPageCount"];
+
+            pageCount = m_currentPageIsFixedLayout ? m_currentPageSpineItemCount: number.intValue;
+        }
+        NSString* totalPages = [NSString stringWithFormat:@"%d", pageCount];
+
+        label.text = LocStr(@"PAGE_X_OF_Y", [currentPages UTF8String], [totalPages UTF8String], m_currentPageIsFixedLayout?[@"FXL" UTF8String]:[@"reflow" UTF8String]);
 	}
 
 	[label sizeToFit];
@@ -478,7 +582,6 @@
 		[self.navigationController setToolbarHidden:YES animated:YES];
 	}
 }
-
 
 - (BOOL)
 	webView:(UIWebView *)webView
@@ -564,31 +667,16 @@
 			NSDictionary *dict = [NSJSONSerialization JSONObjectWithData:data
 				options:0 error:&error];
 
-			NSString *direction = [dict objectForKey:@"pageProgressionDirection"];
+            m_currentPageCanGoLeft = ([[dict valueForKey:@"canGoLeft_"] isEqual:[NSNumber numberWithBool:YES]] ? YES : NO);
+            m_currentPageCanGoRight = ([[dict valueForKey:@"canGoRight_"] isEqual:[NSNumber numberWithBool:YES]] ? YES : NO);
 
-			if ([direction isKindOfClass:[NSString class]]) {
-				m_currentPageProgressionIsLTR = ![direction isEqualToString:@"rtl"];
-			}
-			else {
-				m_currentPageProgressionIsLTR = YES;
-			}
+            m_currentPageProgressionIsLTR = ([[dict valueForKey:@"isRightToLeft"] isEqual:[NSNumber numberWithBool:YES]] ? NO : YES);
 
-			m_currentOpenPageCount = 0;
+            m_currentPageIsFixedLayout = ([[dict valueForKey:@"isFixedLayout"] isEqual:[NSNumber numberWithBool:YES]] ? YES : NO);
 
-			for (NSDictionary *pageDict in [dict objectForKey:@"openPages"]) {
-				m_currentOpenPageCount++;
+            m_currentPageSpineItemCount = [((NSNumber*)[dict valueForKey:@"spineItemCount"]) intValue];
 
-				if (m_currentOpenPageCount == 1) {
-					NSNumber *number = [pageDict objectForKey:@"spineItemPageCount"];
-					m_currentPageCount = number.intValue;
-
-					number = [pageDict objectForKey:@"spineItemPageIndex"];
-					m_currentPageIndex = number.intValue;
-
-					number = [pageDict objectForKey:@"spineItemIndex"];
-					m_currentSpineItemIndex = number.intValue;
-				}
-			}
+            m_currentPageOpenPagesArray = (NSArray*)[dict objectForKey:@"openPages"];
 
 			m_webView.hidden = NO;
 			[self updateToolbar];

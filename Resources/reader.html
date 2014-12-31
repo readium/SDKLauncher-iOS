@@ -46,13 +46,23 @@
         <script src="readium-shared-js/js/views/media_overlay_player.js" type="text/javascript"></script>
         <script src="readium-shared-js/js/views/media_overlay_data_injector.js" type="text/javascript"></script>
         <script src="readium-shared-js/js/views/annotations_manager.js" type="text/javascript"></script>
+
+        <script src="epubReadingSystem.js" type="text/javascript"></script>
         <script src="host_app_feedback.js" type="text/javascript"></script>
         
 		<script type="text/javascript">
 
 			$(document).ready(function () {
 				"use strict";
-				ReadiumSDK.reader = new ReadiumSDK.Views.ReaderView({el:"#viewport"});
+
+                //var prefix = (self.location && self.location.origin && self.location.pathname) ? (self.location.origin + self.location.pathname + "/..") : "";
+
+                ReadiumSDK.reader = new ReadiumSDK.Views.ReaderView(
+                {
+                    el:"#viewport",
+                    annotationCSSUrl: '/readium_Annotations.css' //prefix + '/css/annotations.css'
+                });
+
 				ReadiumSDK.trigger(ReadiumSDK.Events.READER_INITIALIZED);
 			});
 

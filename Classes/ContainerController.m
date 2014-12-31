@@ -37,18 +37,78 @@
 #import "SpineItemListController.h"
 
 
+@interface ContainerController () <
+	RDContainerDelegate,
+	UITableViewDataSource,
+	UITableViewDelegate,
+	UIAlertViewDelegate>
+{
+	@private RDContainer *m_container;
+	@private RDPackage *m_package;
+	@private __weak UITableView *m_table;
+	@private NSMutableArray *m_sdkErrorMessages;
+}
+
+@end
+
+
 @implementation ContainerController
 
+- (BOOL)container:(RDContainer *)container handleSdkError:(NSString *)message isSevereEpubError:(BOOL)isSevereEpubError {
 
-- (id)initWithPath:(NSString *)path {
+	NSLog(@"READIUM SDK: %@\n", message);
+
+	if (isSevereEpubError == YES)
+		[m_sdkErrorMessages addObject:message];
+
+	// never throws an exception
+	return YES;
+}
+
+- (void) popErrorMessage
+{
+	NSInteger count = [m_sdkErrorMessages count];
+	if (count > 0)
+	{
+		__block NSString *message  = [m_sdkErrorMessages firstObject];
+		[m_sdkErrorMessages removeObjectAtIndex:0];
+
+		dispatch_async(dispatch_get_main_queue(), ^{
+
+			UIAlertView * alert =[[UIAlertView alloc]
+					initWithTitle:@"EPUB warning"
+						  message:message
+						 delegate: self
+				cancelButtonTitle:@"Ignore all"
+				otherButtonTitles: nil];
+			[alert addButtonWithTitle:@"Ignore"];
+			[alert show];
+		});
+	}
+}
+
+- (void) alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
+{
+	if (buttonIndex != [alertView cancelButtonIndex])
+	{
+		[self popErrorMessage];
+	}
+}
+
+- (instancetype)initWithPath:(NSString *)path {
 	if (self = [super initWithTitle:nil navBarHidden:NO]) {
-		m_container = [[RDContainer alloc] initWithPath:path];
 
-		if (m_container == nil || m_container.packages.count == 0) {
+		m_sdkErrorMessages = [[NSMutableArray alloc] initWithCapacity:0];
+
+		m_container = [[RDContainer alloc] initWithDelegate:self path:path];
+
+		m_package = m_container.firstPackage;
+
+		[self popErrorMessage];
+
+		if (m_package == nil) {
 			return nil;
 		}
-
-		m_package = [m_container.packages objectAtIndex:0];
 
 		NSArray *components = path.pathComponents;
 		self.title = (components == nil || components.count == 0) ? @"" : components.lastObject;

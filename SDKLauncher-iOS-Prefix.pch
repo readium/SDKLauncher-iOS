@@ -12,9 +12,7 @@
 #ifdef __OBJC__
 	#import <Foundation/Foundation.h>
 	#import <UIKit/UIKit.h>
-	#import "Constants.h"
 	#import "LocStr.h"
-	#import "LocStrError.h"
 
 	#define IS_IPAD (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad)
 	#define SCREEN_SIZE ([UIScreen mainScreen].bounds.size)

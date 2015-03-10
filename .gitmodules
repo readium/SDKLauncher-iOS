@@ -1,6 +1,6 @@
 [submodule "readium-sdk"]
 	path = readium-sdk
-	url = https://github.com/readium/readium-sdk.git
+	url = https://github.com/nodehack/readium-sdk.git
 [submodule "Resources/readium-shared-js"]
 	path = Resources/readium-shared-js
-	url = https://github.com/readium/readium-shared-js.git
+	url = https://github.com/nodehack/readium-shared-js.git

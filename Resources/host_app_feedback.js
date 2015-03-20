@@ -27,6 +27,8 @@
 
 ReadiumSDK.HostAppFeedback = function() {
 
+    this.useWKWebView = false;
+
     var initNavigatorEpubReadingSystem = function() {
 
         // Adjust to taste (application/vendor -level metadata):
@@ -78,43 +80,81 @@ ReadiumSDK.HostAppFeedback = function() {
         //console.debug(JSON.stringify(window.navigator.epubReadingSystem, undefined, 2));
     };
 
-	ReadiumSDK.on(ReadiumSDK.Events.READER_INITIALIZED, function() {
+    ReadiumSDK.on(ReadiumSDK.Events.READER_INITIALIZED, function() {
+        if (window.webkit != null &&
+            window.webkit.messageHandlers != null &&
+            window.webkit.messageHandlers.readium != null)
+        {
+            // The presence of a "readium" webkit message handler means that WKWebView is in use.
+            this.useWKWebView = true;
+        }
 
         initNavigatorEpubReadingSystem();
         
-		ReadiumSDK.reader.on(ReadiumSDK.Events.PAGINATION_CHANGED, this.onPaginationChanged, this);
-		ReadiumSDK.reader.on(ReadiumSDK.Events.SETTINGS_APPLIED, this.onSettingsApplied, this);
+        ReadiumSDK.reader.on(ReadiumSDK.Events.PAGINATION_CHANGED, this.onPaginationChanged, this);
+        ReadiumSDK.reader.on(ReadiumSDK.Events.SETTINGS_APPLIED, this.onSettingsApplied, this);
         ReadiumSDK.reader.on(ReadiumSDK.Events.MEDIA_OVERLAY_STATUS_CHANGED, this.onMediaOverlayStatusChanged, this);
         ReadiumSDK.reader.on(ReadiumSDK.Events.MEDIA_OVERLAY_TTS_SPEAK, this.onMediaOverlayTTSSpeak, this);
         ReadiumSDK.reader.on(ReadiumSDK.Events.MEDIA_OVERLAY_TTS_STOP, this.onMediaOverlayTTSStop, this);
-        
-		window.location.href = "epubobjc:readerDidInitialize";
-	}, this);
 
-	this.onPaginationChanged = function(pageChangeData) {
+        if (this.useWKWebView) {
+            window.webkit.messageHandlers.readium.postMessage(['readerDidInitialize']);
+        }
+        else {
+            window.location.href = "epubobjc:readerDidInitialize";
+        }
+    }, this);
 
+    this.onPaginationChanged = function(pageChangeData) {
         pageChangeData.paginationInfo.canGoLeft_ = pageChangeData.paginationInfo.canGoLeft();
         pageChangeData.paginationInfo.canGoRight_ = pageChangeData.paginationInfo.canGoRight();
+        var payload = JSON.stringify(pageChangeData.paginationInfo);
 
-		window.location.href = "epubobjc:pageDidChange?q=" +
-			encodeURIComponent(JSON.stringify(pageChangeData.paginationInfo));
-	};
+        if (this.useWKWebView) {
+            window.webkit.messageHandlers.readium.postMessage(['pageDidChange', payload]);
+        }
+        else {
+            window.location.href = "epubobjc:pageDidChange?q=" + encodeURIComponent(payload);
+        }
+    };
 
-	this.onSettingsApplied = function() {
-		window.location.href = "epubobjc:settingsDidApply";
-	};
+    this.onSettingsApplied = function() {
+        if (this.useWKWebView) {
+            window.webkit.messageHandlers.readium.postMessage(['settingsDidApply']);
+        }
+        else {
+            window.location.href = "epubobjc:settingsDidApply";
+        }
+    };
 
     this.onMediaOverlayStatusChanged = function(status) {
-        window.location.href = "epubobjc:mediaOverlayStatusDidChange?q=" +
-			encodeURIComponent(JSON.stringify(status));
+        var payload = JSON.stringify(status);
+
+        if (this.useWKWebView) {
+            window.webkit.messageHandlers.readium.postMessage(['mediaOverlayStatusDidChange', payload]);
+        }
+        else {
+            window.location.href = "epubobjc:mediaOverlayStatusDidChange?q=" + encodeURIComponent(payload);
+        }
     };
 
     this.onMediaOverlayTTSSpeak = function(tts) {
-        window.location.href = "epubobjc:mediaOverlayTTSDoSpeak?q=" +
-			encodeURIComponent(JSON.stringify(tts));
+        var payload = JSON.stringify(tts);
+
+        if (this.useWKWebView) {
+            window.webkit.messageHandlers.readium.postMessage(['mediaOverlayTTSDoSpeak', payload]);
+        }
+        else {
+            window.location.href = "epubobjc:mediaOverlayTTSDoSpeak?q=" + encodeURIComponent(payload);
+        }
     };
 
     this.onMediaOverlayTTSStop = function() {
-		window.location.href = "epubobjc:mediaOverlayTTSDoStop";
+        if (this.useWKWebView) {
+            window.webkit.messageHandlers.readium.postMessage(['mediaOverlayTTSDoStop']);
+        }
+        else {
+            window.location.href = "epubobjc:mediaOverlayTTSDoStop";
+        }
     };
 }();

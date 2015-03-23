@@ -1,7 +1,8 @@
+_Note:  Please don't use the zip download feature on this repo as this repo uses submodules and this is not supported at present by github and will result in an incomplete copy of the repo._
+
 ## SDKLauncher-iOS
 
 A small iOS application to serve as a launcher/testbed for the Readium SDK.
-Build instructions can be found [here](https://docs.google.com/a/shape.dk/document/d/1DphaTO2fu7mQoBKalzyfphIlOB2Ncp7yHbIbbti92CE/edit#)
 
 ## Jenkins build status
 

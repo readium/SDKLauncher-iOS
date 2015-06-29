@@ -65,6 +65,24 @@
 	return YES;
 }
 
+- (void)container:(RDContainer *)container handleContentFilterError:(NSError *)error {
+    if (error == nil) {
+        return;
+    }
+    
+    NSString *filterId = [error userInfo][@"ePub3ContentFilterIdentifierKey"];
+    if (filterId != nil) {
+        if ([filterId caseInsensitiveCompare: @"3439DA53-2559-400D-8231-981ABA6A85B4"] == NSOrderedSame) {
+            // We are dealing with a PassThroughFilter error.
+            NSLog(@"PassThroughFilter error - %@\n", [error userInfo][@"ePub3ContentFilterErrorMessageKey"]);
+            return;
+        }
+    }
+    
+    // The log message below is a "catch all" for any kind of ContentFilter that we are not aware about.
+    NSLog(@"ContentFilter error - %@\n", error);
+}
+
 - (void) popErrorMessage
 {
 	NSInteger count = [m_sdkErrorMessages count];

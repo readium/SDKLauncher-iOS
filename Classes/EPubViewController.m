@@ -599,22 +599,6 @@
 	NSString *url = request.URL.absoluteString;
 	NSString *s = @"epubobjc:";
 
-//    NSString *path = request.URL.path;
-//    if ([path hasSuffix:@".map"]) {
-//        NSString* bundlePath = [[[NSBundle mainBundle] pathForResource:@"reader" ofType:@"html" inDirectory:@"Scripts"] stringByDeletingLastPathComponent];
-//        NSString* slashPath = [NSString stringWithFormat:@"%@", [path stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
-//        if ([slashPath hasPrefix:bundlePath]) {
-//        
-//            //NSString * str = [[NSString stringWithFormat:@"file://%@", slashPath] stringByAddingPercentEscapesUsingEncoding : NSUTF8StringEncoding];
-//            //NSURL *url = [NSURL URLWithString:str];
-//            //NSMutableURLRequest *newRequest = [request mutableCopy];
-//            //[newRequest setURL: url];
-//            
-//            shouldLoad = NO;
-//            return shouldLoad;
-//        }
-//    }
-
 	if ([url hasPrefix:s]) {
 		url = [url substringFromIndex:s.length];
 		shouldLoad = NO;

@@ -119,6 +119,11 @@
 		835847161B42DB09002DA99D /* readium-shared-js.js.bundles.js in Resources */ = {isa = PBXBuildFile; fileRef = 835847081B42DB09002DA99D /* readium-shared-js.js.bundles.js */; };
 		835847171B42DB09002DA99D /* readium-shared-js.js.map in Sources */ = {isa = PBXBuildFile; fileRef = 835847091B42DB09002DA99D /* readium-shared-js.js.map */; };
 		835847181B42DB0A002DA99D /* RequireJS.js in Resources */ = {isa = PBXBuildFile; fileRef = 8358470A1B42DB09002DA99D /* RequireJS.js */; };
+		8358471A1B42E789002DA99D /* readium-cfi-js.js.map in Resources */ = {isa = PBXBuildFile; fileRef = 835847001B42DB09002DA99D /* readium-cfi-js.js.map */; };
+		8358471B1B42E789002DA99D /* readium-external-libs.js.map in Resources */ = {isa = PBXBuildFile; fileRef = 835847031B42DB09002DA99D /* readium-external-libs.js.map */; };
+		8358471C1B42E789002DA99D /* readium-plugin-annotations.js.map in Resources */ = {isa = PBXBuildFile; fileRef = 835847061B42DB09002DA99D /* readium-plugin-annotations.js.map */; };
+		8358471D1B42E789002DA99D /* readium-shared-js.js.map in Resources */ = {isa = PBXBuildFile; fileRef = 835847091B42DB09002DA99D /* readium-shared-js.js.map */; };
+		8358471E1B42E789002DA99D /* readium-shared-js_all.js.map in Resources */ = {isa = PBXBuildFile; fileRef = 835846FA1B42DAF6002DA99D /* readium-shared-js_all.js.map */; };
 		83919F161A1E074200FC8118 /* epubReadingSystem.js in Resources */ = {isa = PBXBuildFile; fileRef = A250D199754564056CB0267E /* epubReadingSystem.js */; };
 		83EBB4A419F56C1C0083E8F1 /* annotations.css in Resources */ = {isa = PBXBuildFile; fileRef = 83EBB4A319F56C1C0083E8F1 /* annotations.css */; };
 		85DE51A117FDDCAC00F55130 /* page-blanche-20130322.epub in Resources */ = {isa = PBXBuildFile; fileRef = 85DE51A017FDDCAC00F55130 /* page-blanche-20130322.epub */; };
@@ -813,6 +818,11 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				8358471A1B42E789002DA99D /* readium-cfi-js.js.map in Resources */,
+				8358471B1B42E789002DA99D /* readium-external-libs.js.map in Resources */,
+				8358471C1B42E789002DA99D /* readium-plugin-annotations.js.map in Resources */,
+				8358471D1B42E789002DA99D /* readium-shared-js.js.map in Resources */,
+				8358471E1B42E789002DA99D /* readium-shared-js_all.js.map in Resources */,
 				8358470F1B42DB09002DA99D /* readium-external-libs.js in Resources */,
 				83919F161A1E074200FC8118 /* epubReadingSystem.js in Resources */,
 				8307EC6919E3DE4A00B00468 /* mathjax in Resources */,

@@ -406,8 +406,14 @@
 
 	// Create the web view. The choice of web view type is based on the existence of the WKWebView
 	// class, but this could be decided some other way.
+    
+    // The "no optimize" RequireJS option means that the entire "readium-shared-js" folder must be copied in to the OSX app bundle's "scripts" folder! (including "node_modules" subfolder, which is populated when invoking the "npm run prepare" build command) There is therefore some significant filesystem / size overhead, but the benefits are significant too: no need for the WebView to fetch sourcemaps, and to attempt to un-mangle the obfuscated Javascript during debugging.
+    // However, the recommended development-time pattern is to invoke "npm run build" in order to refresh the "build-output" folder, with the RJS_UGLY environment variable set to "false" or "no". This way, the RequireJS single/multiple bundle(s) will be in readable uncompressed form.
+    //NSString* readerFileName = @"reader_RequireJS-no-optimize.html";
+    
+    NSString* readerFileName = @"reader_RequireJS-multiple-bundles.html";
+    //NSString* readerFileName = @"reader_RequireJS-single-bundle.html";
 
-	NSString *readerHTML = @"reader.html";
 
 	if ([WKWebView class] != nil) {
 		WKWebViewConfiguration *config = [[WKWebViewConfiguration alloc] init];
@@ -435,26 +441,25 @@
 			@"corePaths=epubReadingSystem.js,host_app_feedback.js&"
 			@"corePrefixes=readium-shared-js",
 			m_package.rootURL,
-			readerHTML];
+			readerFileName];
 
 		[webView loadRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:url]]];
 	}
 	else {
 		UIWebView *webView = [[UIWebView alloc] init];
 		m_webViewUI = webView;
-		webView.allowsInlineMediaPlayback = YES;
 		webView.delegate = self;
 		webView.hidden = YES;
-		webView.mediaPlaybackRequiresUserAction = NO;
 		webView.scalesPageToFit = YES;
 		webView.scrollView.bounces = NO;
+		webView.allowsInlineMediaPlayback = YES;
+		webView.mediaPlaybackRequiresUserAction = NO;
 		[self.view addSubview:webView];
 
-		NSURL *url = [[NSBundle mainBundle] URLForResource:readerHTML withExtension:nil];
+		NSURL *url = [[NSBundle mainBundle] URLForResource:readerFileName withExtension:nil];
 		[webView loadRequest:[NSURLRequest requestWithURL:url]];
 	}
 }
-
 
 - (void)onClickAddBookmark {
 	if (m_alertAddBookmark == nil) {

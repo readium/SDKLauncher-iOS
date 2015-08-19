@@ -411,8 +411,8 @@
     // However, the recommended development-time pattern is to invoke "npm run build" in order to refresh the "build-output" folder, with the RJS_UGLY environment variable set to "false" or "no". This way, the RequireJS single/multiple bundle(s) will be in readable uncompressed form.
     //NSString* readerFileName = @"reader_RequireJS-no-optimize.html";
     
-    NSString* readerFileName = @"reader_RequireJS-multiple-bundles.html";
-    //NSString* readerFileName = @"reader_RequireJS-single-bundle.html";
+    //NSString* readerFileName = @"reader_RequireJS-multiple-bundles.html";
+    NSString* readerFileName = @"reader_RequireJS-single-bundle.html";
 
 
 	if ([WKWebView class] != nil) {
@@ -438,7 +438,7 @@
 
 		NSString *url = [NSString stringWithFormat:
 			@"%@%@?"
-			@"corePaths=epubReadingSystem.js,host_app_feedback.js&"
+			@"corePaths=readium-shared-js_all.js,readium-shared-js_all.js.map,epubReadingSystem.js,host_app_feedback.js,sdk.css&"
 			@"corePrefixes=readium-shared-js",
 			m_package.rootURL,
 			readerFileName];

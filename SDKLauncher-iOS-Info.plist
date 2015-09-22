@@ -55,6 +55,10 @@
 	<string>0.18.0</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
+	<key>NSAppTransportSecurity</key>
+	<dict/>
+	<key>NSAllowArbitraryLoads</key>
+	<true/>
 	<key>UIFileSharingEnabled</key>
 	<true/>
 	<key>UIRequiredDeviceCapabilities</key>

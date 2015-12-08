@@ -335,6 +335,7 @@
 		A250D54A5C423A86C6099037 /* epub30-test-0220-20131022.epub */ = {isa = PBXFileReference; lastKnownFileType = file.epub; path = "epub30-test-0220-20131022.epub"; sourceTree = "<group>"; };
 		A250D58D34D67FC218608A1F /* epub30-test-0120-20131022.epub */ = {isa = PBXFileReference; lastKnownFileType = file.epub; path = "epub30-test-0120-20131022.epub"; sourceTree = "<group>"; };
 		A250DD41B691E2CA16B1735D /* epubReadingSystem.epub */ = {isa = PBXFileReference; lastKnownFileType = file.epub; path = epubReadingSystem.epub; sourceTree = "<group>"; };
+		FFE961DC1C16E73100FA2A5C /* drmInitialize.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = drmInitialize.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -611,6 +612,7 @@
 		345CA3E116C00EE100B8B56A /* Main */ = {
 			isa = PBXGroup;
 			children = (
+				FFE961DC1C16E73100FA2A5C /* drmInitialize.h */,
 				3462FBBA16BC3C43003C79E1 /* AppDelegate.h */,
 				3462FBBB16BC3C43003C79E1 /* AppDelegate.m */,
 				340535A816BC5DD100D4A802 /* BaseViewController.h */,

@@ -29,8 +29,15 @@
 
 #import "BaseViewController.h"
 
+@class LCPLicense;
+
 @interface ContainerController : BaseViewController
 
-- (instancetype)initWithPath:(NSString *)path;
+/**
+ * License instance, if the container is protected using LCP.
+ */
+@property (nonatomic, readonly) LCPLicense *license;
+
+- (instancetype)initWithPath:(NSString *)path error:(NSError **)error;
 
 @end

@@ -37,6 +37,21 @@ extern NSString * const kSDKLauncherContainerListDidChange;
 
 @property (nonatomic, readonly) NSArray *paths;
 
+/**
+ * File extensions supported by the launcher.
+ */
+@property (nonatomic, readonly) NSArray *supportedFileExtensions;
+
+/**
+ * Returns whether the given file path has a valid format extension.
+ */
+- (BOOL)isValidFile:(NSString *)path;
+
+/**
+ * Returns whether the given file can be opened by Readium.
+ */
+- (BOOL)canOpenFile:(NSString *)path;
+
 + (ContainerList *)shared;
 
 @end

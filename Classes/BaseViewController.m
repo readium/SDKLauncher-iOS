@@ -79,5 +79,15 @@
 	}
 }
 
+- (void)presentAlertWithTitle:(NSString *)title message:(NSString *)message, ... {
+    va_list args;
+    va_start(args, message);
+    message = [[NSString alloc] initWithFormat:message arguments:args];
+    va_end(args);
+    
+    UIAlertController *alert = [UIAlertController alertControllerWithTitle:title message:message preferredStyle:UIAlertControllerStyleAlert];
+    [alert addAction:[UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleDefault handler:nil]];
+    [self presentViewController:alert animated:YES completion:nil];
+}
 
 @end

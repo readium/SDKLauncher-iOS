@@ -615,12 +615,22 @@
 			//
 			//   -- Shane
 			//
+			// In order to successfully use http with a local server with the iOS 9 App Transport Security
+			// requirements, use "localhost" instead of "127.0.0.1" below. Also added a plist exception for the
+			// localhost domain under NSAppTransportSecurity. The "localhost" change is required to whitelist a domain
+			// because an ip address unfortunately cannot be used in the NSAppTransportSecurity plist exception.
+			// - msintov, 9/30/2015
+
+			NSString *rootURLDomain = @"localhost";
+			if (([[[UIDevice currentDevice] systemVersion] compare:@"9.0" options:NSNumericSearch] == NSOrderedAscending)) {
+				rootURLDomain = @"127.0.0.1";
+            }
 
 			if (m_package.rootURL == nil || m_package.rootURL.length == 0) {
 				m_package.rootURL = [NSString stringWithFormat:
-					@"http://127.0.0.1:%d/", m_resourceServer.port];
+                                     @"http://%@:%d/", rootURLDomain, m_resourceServer.port];
 			}
-
+            
 			[dict setObject:m_package.dictionary forKey:@"package"];
 			[dict setObject:[EPubSettings shared].dictionary forKey:@"settings"];
 

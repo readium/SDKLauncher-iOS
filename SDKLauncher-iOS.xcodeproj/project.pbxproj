@@ -98,6 +98,7 @@
 		34E12BA9180301A2004DCB68 /* Icon-72@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 34E12B9C180301A2004DCB68 /* Icon-72@2x.png */; };
 		34E12BAA180301A2004DCB68 /* Icon-76.png in Resources */ = {isa = PBXBuildFile; fileRef = 34E12B9D180301A2004DCB68 /* Icon-76.png */; };
 		34E12BAB180301A2004DCB68 /* Icon-76@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 34E12B9E180301A2004DCB68 /* Icon-76@2x.png */; };
+		34EB839C1ABA479A00C86B67 /* WebKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 34EB839B1ABA479A00C86B67 /* WebKit.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
 		8307EC6919E3DE4A00B00468 /* mathjax in Resources */ = {isa = PBXBuildFile; fileRef = 8307EC6719E3DDEC00B00468 /* mathjax */; };
 		835846F31B42D997002DA99D /* reader_RequireJS-multiple-bundles.html in Resources */ = {isa = PBXBuildFile; fileRef = 835846F01B42D997002DA99D /* reader_RequireJS-multiple-bundles.html */; };
 		835846F41B42D997002DA99D /* reader_RequireJS-no-optimize.html in Resources */ = {isa = PBXBuildFile; fileRef = 835846F11B42D997002DA99D /* reader_RequireJS-no-optimize.html */; };
@@ -311,6 +312,7 @@
 		34E12B9C180301A2004DCB68 /* Icon-72@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon-72@2x.png"; sourceTree = "<group>"; };
 		34E12B9D180301A2004DCB68 /* Icon-76.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon-76.png"; sourceTree = "<group>"; };
 		34E12B9E180301A2004DCB68 /* Icon-76@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon-76@2x.png"; sourceTree = "<group>"; };
+		34EB839B1ABA479A00C86B67 /* WebKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WebKit.framework; path = System/Library/Frameworks/WebKit.framework; sourceTree = SDKROOT; };
 		8307EC6719E3DDEC00B00468 /* mathjax */ = {isa = PBXFileReference; lastKnownFileType = folder; path = mathjax; sourceTree = "<group>"; };
 		835846F01B42D997002DA99D /* reader_RequireJS-multiple-bundles.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = "reader_RequireJS-multiple-bundles.html"; sourceTree = "<group>"; };
 		835846F11B42D997002DA99D /* reader_RequireJS-no-optimize.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = "reader_RequireJS-no-optimize.html"; sourceTree = "<group>"; };
@@ -349,6 +351,7 @@
 				348200FC183A9D2D007E72E6 /* MobileCoreServices.framework in Frameworks */,
 				34DAC6F018D4BD22004F926A /* Security.framework in Frameworks */,
 				340FC15D16BC3B4600346A59 /* UIKit.framework in Frameworks */,
+				34EB839C1ABA479A00C86B67 /* WebKit.framework in Frameworks */,
 				347C58C016BC879400A647B0 /* libePub3-iOS.a in Frameworks */,
 				34B5457C16BCB07800D14838 /* libxml2.dylib in Frameworks */,
 				34B5457E16BCB08000D14838 /* libz.dylib in Frameworks */,
@@ -432,6 +435,7 @@
 				348200FB183A9D2D007E72E6 /* MobileCoreServices.framework */,
 				34DAC6EF18D4BD22004F926A /* Security.framework */,
 				340FC15C16BC3B4600346A59 /* UIKit.framework */,
+				34EB839B1ABA479A00C86B67 /* WebKit.framework */,
 				34B5457B16BCB07800D14838 /* libxml2.dylib */,
 				34B5457D16BCB08000D14838 /* libz.dylib */,
 			);

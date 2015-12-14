@@ -755,6 +755,11 @@
 			attributes = {
 				LastUpgradeCheck = 0500;
 				ORGANIZATIONNAME = "The Readium Foundation";
+				TargetAttributes = {
+					340FC15816BC3B4600346A59 = {
+						DevelopmentTeam = NB74F5L25E;
+					};
+				};
 			};
 			buildConfigurationList = 340FC15416BC3B4600346A59 /* Build configuration list for PBXProject "SDKLauncher-iOS" */;
 			compatibilityVersion = "Xcode 3.2";
@@ -1042,12 +1047,15 @@
 		340FC17716BC3B4600346A59 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				HEADER_SEARCH_PATHS = (
 					"${SDKROOT}/usr/include/libxml2",
 					"${SRCROOT}/readium-sdk/Platform/Apple/include",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Debug;
@@ -1055,14 +1063,15 @@
 		340FC17816BC3B4600346A59 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				CODE_SIGN_IDENTITY = "iPhone Distribution: Readium Foundation";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Readium Foundation";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				HEADER_SEARCH_PATHS = (
 					"${SDKROOT}/usr/include/libxml2",
 					"${SRCROOT}/readium-sdk/Platform/Apple/include",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Release;

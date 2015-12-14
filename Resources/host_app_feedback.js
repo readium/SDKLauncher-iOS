@@ -25,24 +25,17 @@
 //  OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED 
 //  OF THE POSSIBILITY OF SUCH DAMAGE.
 
-$(document).ready(function () {
+$(document).ready(function ()
+{
     console.log("DOM READY");
-    require(["readium_shared_js/globalsSetup"], function () {
+    
+    require(["readium_shared_js/globalsSetup"], function ()
+    {
         console.log("globalsSetup READY");
-        require(['readium_shared_js/views/reader_view'], function (ReaderView) {
+        
+        require(['readium_shared_js/views/reader_view'], function (ReaderView)
+        {
             console.log("reader_view READY");
-
-//        require(['readium_plugin_annotations'], function (annotations)
-//                {
-//
-//                console.log(annotations);
-//
-//                console.log(ReadiumSDK);
-//                console.log(ReadiumSDK.reader);
-//                console.log(ReadiumSDK.reader.plugins);
-////                console.log(ReadiumSDK.reader.plugins.annotations);
-//
-//                });
 
             this.useWKWebView = false;
 
@@ -193,7 +186,8 @@ $(document).ready(function () {
                         window.location.href = "epubobjc:mediaOverlayTTSDoStop";
                     }
                 };
-            }();
+        
+            }(); //ReadiumSDK.HostAppFeedback = function () {
 
 
             var opts = {
@@ -202,23 +196,31 @@ $(document).ready(function () {
                 annotationCSSUrl: '/readium_Annotations.css' //prefix + '/css/annotations.css'
             };
 
-            ReadiumSDK.on(ReadiumSDK.Events.PLUGINS_LOADED, function (reader) {
+            ReadiumSDK.on(ReadiumSDK.Events.PLUGINS_LOADED, function(reader)
+            {
                 // readium built-in (should have been require()'d outside this scope)
                 console.log(reader.plugins.annotations);
-                reader.plugins.annotations.initialize({annotationCSSUrl: opts.annotationCSSUrl});
-                reader.plugins.annotations.on("annotationClicked", function (type, idref, cfi, id) {
-                    console.log("ANNOTATION CLICK: " + id);
-                    reader.plugins.annotations.removeHighlight(id);
-                });
-                reader.plugins.annotations.on("textSelectionEvent", function () {
-                    console.log("ANNOTATION SELECT");
-                    reader.plugins.annotations.addSelectionHighlight(Math.floor((Math.random() * 1000000)), "highlight");
-                });
 
+                if (reader.plugins.annotations) {
+                    reader.plugins.annotations.initialize({annotationCSSUrl: opts.annotationCSSUrl});
+            
+                    reader.plugins.annotations.on("annotationClicked", function(type, idref, cfi, id)
+                    {
+                        console.log("ANNOTATION CLICK: " + id);
+                        reader.plugins.annotations.removeHighlight(id);
+                    });
+            
+                    reader.plugins.annotations.on("textSelectionEvent", function()
+                    {
+                        console.log("ANNOTATION SELECT");
+                        reader.plugins.annotations.addSelectionHighlight(Math.floor((Math.random()*1000000)), "highlight");
+                    });
+                }
+                  
                 // external (require()'d via Dependency Injection, see examplePluginConfig function parameter passed above)
                 console.log(reader.plugins.example);
-            });
-
+        
+            }); //ReadiumSDK.on(ReadiumSDK.Events.PLUGINS_LOADED, function(reader)
 
             //var prefix = (self.location && self.location.origin && self.location.pathname) ? (self.location.origin + self.location.pathname + "/..") : "";
 
@@ -228,6 +230,9 @@ $(document).ready(function () {
 
             //Globals.emit(Globals.Events.READER_INITIALIZED, ReadiumSDK.reader);
             ReadiumSDK.emit(ReadiumSDK.Events.READER_INITIALIZED, ReadiumSDK.reader);
-        });
-    });
-});
+            
+        }); //require(['readium_shared_js/views/reader_view'], function (ReaderView)
+        
+    }); //require(["readium_shared_js/globalsSetup"], function ()
+
+}); //$(document).ready(function ()

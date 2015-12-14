@@ -598,7 +598,12 @@
 	BOOL shouldLoad = YES;
 	NSString *url = request.URL.absoluteString;
 	NSString *s = @"epubobjc:";
-
+    
+    // When opening the web inspector from Safari (on desktop OSX), the Javascript sourcemaps are requested and fetched automatically based on the location of their source file counterpart. In other words, no need for intercepting requests below (or via NSURLProtocol), unlike the OSX ReadiumSDK launcher app which requires building custom URL responses containing the sourcemap payload. This needs testing with WKWebView though (right now this works fine with UIWebView because local resources are fetched from the file:// app bundle.
+    if ([url hasSuffix:@".map"]) {
+        NSLog(@"%@", [NSString stringWithFormat:@"WEBVIEW-REQUESTED SOURCEMAP: %@", url]);
+    }
+    
 	if ([url hasPrefix:s]) {
 		url = [url substringFromIndex:s.length];
 		shouldLoad = NO;

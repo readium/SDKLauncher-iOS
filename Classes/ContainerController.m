@@ -36,6 +36,7 @@
 #import "RDPackage.h"
 #import "SpineItemListController.h"
 
+#import "drmInitialize.h"
 
 @interface ContainerController () <
 	RDContainerDelegate,
@@ -288,6 +289,12 @@
 				bookmarksForContainerPath:m_container.path].count);
 		}
 	}
+}
+
+- (void)containerRegisterContentModules:(RDContainer *)container{
+#ifdef _READIUM_DRM_
+    [[[DrmInitialize alloc] init] initialize];
+#endif
 }
 
 

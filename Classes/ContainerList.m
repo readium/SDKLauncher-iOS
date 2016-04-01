@@ -76,7 +76,7 @@ NSString * const kSDKLauncherContainerListDidChange = @"SDKLauncherContainerList
 		NSFileManager *fm = [NSFileManager defaultManager];
 
 		for (NSString *fileName in [fm contentsOfDirectoryAtPath:resPath error:nil]) {
-			if ([fileName.lowercaseString hasSuffix:@".epub"]) {
+			if ([self isValidFile:fileName]) {
 				NSString *src = [resPath stringByAppendingPathComponent:fileName];
 				NSString *dst = [docsPath stringByAppendingPathComponent:fileName];
 
@@ -102,7 +102,7 @@ NSString * const kSDKLauncherContainerListDidChange = @"SDKLauncherContainerList
 	NSFileManager *fm = [NSFileManager defaultManager];
 
 	for (NSString *fileName in [fm contentsOfDirectoryAtPath:docsPath error:nil]) {
-		if ([fileName.lowercaseString hasSuffix:@".epub"]) {
+		if ([self isValidFile:fileName]) {
 			[paths addObject:[docsPath stringByAppendingPathComponent:fileName]];
 		}
 	}
@@ -114,6 +114,20 @@ NSString * const kSDKLauncherContainerListDidChange = @"SDKLauncherContainerList
 	return paths;
 }
 
+- (BOOL)isValidFile:(NSString *)path
+{
+    return [self.supportedFileExtensions containsObject:path.pathExtension.lowercaseString];
+}
+
+- (BOOL)canOpenFile:(NSString *)path
+{
+    return [path.pathExtension.lowercaseString isEqual:@"epub"];
+}
+
+- (NSArray *)supportedFileExtensions
+{
+    return @[@"epub", @"lcpl"];
+}
 
 + (ContainerList *)shared {
 	static ContainerList *shared = nil;

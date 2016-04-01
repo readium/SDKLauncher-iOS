@@ -33,8 +33,10 @@
 #import "NavigationElementController.h"
 #import "PackageMetadataController.h"
 #import "RDContainer.h"
+#import "RDLCPService.h"
 #import "RDPackage.h"
 #import "SpineItemListController.h"
+#import <lcp/apple/lcp.h>
 
 
 @interface ContainerController () <
@@ -63,6 +65,11 @@
 
 	// never throws an exception
 	return YES;
+}
+
+- (void)containerRegisterContentFilters:(RDContainer *)container
+{
+    [[RDLCPService sharedService] registerContentFilter];
 }
 
 - (void) popErrorMessage
@@ -95,7 +102,7 @@
 	}
 }
 
-- (instancetype)initWithPath:(NSString *)path {
+- (instancetype)initWithPath:(NSString *)path error:(NSError **)error {
 	if (self = [super initWithTitle:nil navBarHidden:NO]) {
 
 		m_sdkErrorMessages = [[NSMutableArray alloc] initWithCapacity:0];
@@ -103,6 +110,9 @@
 		m_container = [[RDContainer alloc] initWithDelegate:self path:path];
 
 		m_package = m_container.firstPackage;
+        
+        if (![self loadLCPLicense:error])
+            return nil;
 
 		[self popErrorMessage];
 
@@ -117,6 +127,16 @@
 	return self;
 }
 
+- (BOOL)loadLCPLicense:(NSError **)error
+{
+    NSString *licenseJSON = [m_container contentsOfFileAtPath:@"META-INF/license.lcpl" encoding:NSUTF8StringEncoding];
+    if (licenseJSON) {
+        _license = [[RDLCPService sharedService] openLicense:licenseJSON error:error];
+        return (_license != nil);
+    }
+    
+    return YES;
+}
 
 - (void)loadView {
 	self.view = [[UIView alloc] init];
@@ -290,5 +310,53 @@
 	}
 }
 
+- (void)viewDidAppear:(BOOL)animated {
+    [super viewDidAppear:animated];
+    
+    if (self.license && !self.license.isDecrypted) {
+        [self decryptLCPLicense];
+    }
+}
+
+- (void)decryptLCPLicense {
+    [self askLCPUserPassphrase:^(BOOL cancelled, NSString *passphrase) {
+        if (cancelled) {
+            // close the container
+            [self.navigationController popToRootViewControllerAnimated:YES];
+            
+        } else {
+            NSError *error;
+            BOOL decrypted = [[RDLCPService sharedService] decryptLicense:self.license passphrase:passphrase error:&error];
+            if (!decrypted) {
+                if (error.code != LCPErrorDecryptionLicenseEncrypted && error.code != LCPErrorDecryptionUserPassphraseNotValid) {
+                    [self presentAlertWithTitle:@"LCP Error" message:@"%@ (%d)", error.domain, error.code];
+                }
+                [self decryptLCPLicense];
+            }
+        }
+    }];
+}
+
+- (void)askLCPUserPassphrase:(void(^)(BOOL cancelled, NSString *passphrase))completion {
+    NSString *message = self.license.userHint ?: @"Enter your passphrase";
+    
+    UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"LCP Protection" message:message preferredStyle:UIAlertControllerStyleAlert];
+    
+    __block UITextField *passphraseField;
+    [alert addTextFieldWithConfigurationHandler:^(UITextField * _Nonnull textField) {
+        textField.placeholder = @"Passphrase";
+        passphraseField = textField;
+    }];
+    
+    [alert addAction:[UIAlertAction actionWithTitle:@"Cancel" style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
+        completion(YES, nil);
+    }]];
+    
+    [alert addAction:[UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+        completion(NO, passphraseField.text);
+    }]];
+    
+    [self presentViewController:alert animated:YES completion:nil];
+}
 
 @end

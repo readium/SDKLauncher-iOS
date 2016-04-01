@@ -35,6 +35,11 @@
 {
 	@private NSArray *m_paths;
 	@private __weak UITableView *m_table;
+    
+    /**
+     * Map between filepaths and their matching on-going LCP acquisition.
+     */
+    @private NSMutableDictionary *m_lcpAcquisitions;
 }
 
 @end

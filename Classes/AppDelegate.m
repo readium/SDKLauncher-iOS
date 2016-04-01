@@ -29,6 +29,7 @@
 
 #import "AppDelegate.h"
 #import <AVFoundation/AVFoundation.h>
+#import "ContainerList.h"
 #import "ContainerListController.h"
 
 
@@ -71,7 +72,7 @@
 
 	NSString *pathSrc = url.path;
 
-	if (![pathSrc.lowercaseString hasSuffix:@".epub"]) {
+	if (![[ContainerList shared] isValidFile:pathSrc]) {
 		return NO;
 	}
 

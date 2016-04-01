@@ -37,4 +37,6 @@
 - (void)cleanUp;
 - (id)initWithTitle:(NSString *)title navBarHidden:(BOOL)navBarHidden;
 
+- (void)presentAlertWithTitle:(NSString *)title message:(NSString *)message, ...;
+
 @end

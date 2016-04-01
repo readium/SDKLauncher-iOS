@@ -4,6 +4,3 @@
 [submodule "Resources/readium-shared-js"]
 	path = Resources/readium-shared-js
 	url = https://github.com/readium/readium-shared-js.git
-[submodule "readium-lcp-client"]
-	path = readium-lcp-client
-	url = git@github.com:Mantano/mantano-lcp-client.git

@@ -69,8 +69,11 @@
 }
 
 - (void)decrypt:(LCPLicense*)lcpLicense container:(RDContainer *)container {
-    _license = lcpLicense;
-    [self decryptLCPLicense:container];
+    
+    dispatch_async(dispatch_get_main_queue(), ^{
+        _license = lcpLicense;
+        [self decryptLCPLicense:container];
+    });
 }
 
 //- (void)containerRegisterContentFilters:(RDContainer *)container

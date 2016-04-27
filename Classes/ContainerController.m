@@ -49,6 +49,7 @@
 	@private RDPackage *m_package;
 	@private __weak UITableView *m_table;
 	@private NSMutableArray *m_sdkErrorMessages;
+    @private NSString* _currentOpenChosenPath;
 }
 
 @end
@@ -67,10 +68,20 @@
 	return YES;
 }
 
-- (void)containerRegisterContentFilters:(RDContainer *)container
-{
-    [[RDLCPService sharedService] registerContentFilter];
+- (void)decrypt:(LCPLicense*)lcpLicense container:(RDContainer *)container {
+    _license = lcpLicense;
+    [self decryptLCPLicense:container];
 }
+
+//- (void)containerRegisterContentFilters:(RDContainer *)container
+//{
+//    [[RDLCPService sharedService] registerContentFilter];
+//}
+//
+//- (void)containerRegisterContentModules:(RDContainer *)container
+//{
+//    [[RDLCPService sharedService] registerContentModule:container.credentialHandler];
+//}
 
 - (void) popErrorMessage
 {
@@ -102,41 +113,58 @@
 	}
 }
 
+- (void)openDocumentWithPath:(NSString *)path {
+    
+    m_sdkErrorMessages = nil;
+    m_container = nil;
+    m_package = nil;
+    
+    m_sdkErrorMessages = [[NSMutableArray alloc] initWithCapacity:0];
+    
+    m_container = [[RDContainer alloc] initWithDelegate:self path:path];
+    
+    if (m_container == nil) {
+        self.title = @"EPUB OPEN ERROR";
+        return;
+    }
+    
+    m_package = m_container.firstPackage;
+    
+    // NOW WITH CONTENT MODULE
+    //        if (![self loadLCPLicense:error])
+    //            return nil;
+    
+    [self popErrorMessage];
+    
+    if (m_package == nil) {
+        self.title = @"EPUB OPEN ERROR";
+        return;
+    }
+    
+    NSArray *components = path.pathComponents;
+    self.title = (components == nil || components.count == 0) ? @"" : components.lastObject;
+}
+
 - (instancetype)initWithPath:(NSString *)path error:(NSError **)error {
 	if (self = [super initWithTitle:nil navBarHidden:NO]) {
 
-		m_sdkErrorMessages = [[NSMutableArray alloc] initWithCapacity:0];
-
-		m_container = [[RDContainer alloc] initWithDelegate:self path:path];
-
-		m_package = m_container.firstPackage;
-        
-        if (![self loadLCPLicense:error])
-            return nil;
-
-		[self popErrorMessage];
-
-		if (m_package == nil) {
-			return nil;
-		}
-
-		NSArray *components = path.pathComponents;
-		self.title = (components == nil || components.count == 0) ? @"" : components.lastObject;
+        _currentOpenChosenPath = path;
+        [self openDocumentWithPath:path];
 	}
 
 	return self;
 }
 
-- (BOOL)loadLCPLicense:(NSError **)error
-{
-    NSString *licenseJSON = [m_container contentsOfFileAtPath:@"META-INF/license.lcpl" encoding:NSUTF8StringEncoding];
-    if (licenseJSON) {
-        _license = [[RDLCPService sharedService] openLicense:licenseJSON error:error];
-        return (_license != nil);
-    }
-    
-    return YES;
-}
+//- (BOOL)loadLCPLicense:(NSError **)error
+//{
+//    NSString *licenseJSON = [m_container contentsOfFileAtPath:@"META-INF/license.lcpl" encoding:NSUTF8StringEncoding];
+//    if (licenseJSON) {
+//        _license = [[RDLCPService sharedService] openLicense:licenseJSON error:error];
+//        return (_license != nil);
+//    }
+//    
+//    return YES;
+//}
 
 - (void)loadView {
 	self.view = [[UIView alloc] init];
@@ -313,12 +341,18 @@
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
     
-    if (self.license && !self.license.isDecrypted) {
-        [self decryptLCPLicense];
-    }
+    // NOW WITH CONTENT MODULE
+//    if (self.license && !self.license.isDecrypted) {
+//        [self decryptLCPLicense];
+//    }
 }
 
-- (void)decryptLCPLicense {
+
+- (void)decryptLCPLicense:(RDContainer *)container {
+    
+    //m_container may not be init? 
+    container.executionFlowExceptionBypass = true;
+    
     [self askLCPUserPassphrase:^(BOOL cancelled, NSString *passphrase) {
         if (cancelled) {
             // close the container
@@ -331,7 +365,11 @@
                 if (error.code != LCPErrorDecryptionLicenseEncrypted && error.code != LCPErrorDecryptionUserPassphraseNotValid) {
                     [self presentAlertWithTitle:@"LCP Error" message:@"%@ (%d)", error.domain, error.code];
                 }
-                [self decryptLCPLicense];
+                [self decryptLCPLicense:container];
+            } else {
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    [self openDocumentWithPath:_currentOpenChosenPath];
+                });
             }
         }
     }];

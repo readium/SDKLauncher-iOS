@@ -125,6 +125,7 @@
 		8358471D1B42E789002DA99D /* readium-shared-js.js.map in Resources */ = {isa = PBXBuildFile; fileRef = 835847091B42DB09002DA99D /* readium-shared-js.js.map */; };
 		8358471E1B42E789002DA99D /* readium-shared-js_all.js.map in Resources */ = {isa = PBXBuildFile; fileRef = 835846FA1B42DAF6002DA99D /* readium-shared-js_all.js.map */; };
 		83919F161A1E074200FC8118 /* epubReadingSystem.js in Resources */ = {isa = PBXBuildFile; fileRef = A250D199754564056CB0267E /* epubReadingSystem.js */; };
+		83A783DF1CD0401D00B0741E /* RDLcpCredentialHandler.mm in Sources */ = {isa = PBXBuildFile; fileRef = 83A783DE1CD0401D00B0741E /* RDLcpCredentialHandler.mm */; };
 		83EBB4A419F56C1C0083E8F1 /* annotations.css in Resources */ = {isa = PBXBuildFile; fileRef = 83EBB4A319F56C1C0083E8F1 /* annotations.css */; };
 		85DE51A117FDDCAC00F55130 /* page-blanche-20130322.epub in Resources */ = {isa = PBXBuildFile; fileRef = 85DE51A017FDDCAC00F55130 /* page-blanche-20130322.epub */; };
 		A250D5118ECA530997C6E72B /* epubReadingSystem.js in Sources */ = {isa = PBXBuildFile; fileRef = A250D199754564056CB0267E /* epubReadingSystem.js */; };
@@ -168,6 +169,13 @@
 			proxyType = 2;
 			remoteGlobalIDString = 5ACE2E1B1BF21D8C00AC0585;
 			remoteInfo = "LCP Client (iOS)";
+		};
+		83A783E41CD0401E00B0741E /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 5A9A11E41C19B04A00F1691F /* LCP Client.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 833882881C5FC6DD003400CD;
+			remoteInfo = "LCP Client (OS X)";
 		};
 /* End PBXContainerItemProxy section */
 
@@ -345,6 +353,8 @@
 		835847081B42DB09002DA99D /* readium-shared-js.js.bundles.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; name = "readium-shared-js.js.bundles.js"; path = "readium-shared-js/build-output/_multiple-bundles/readium-shared-js.js.bundles.js"; sourceTree = "<group>"; };
 		835847091B42DB09002DA99D /* readium-shared-js.js.map */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = "sourcecode.module-map"; name = "readium-shared-js.js.map"; path = "readium-shared-js/build-output/_multiple-bundles/readium-shared-js.js.map"; sourceTree = "<group>"; };
 		8358470A1B42DB09002DA99D /* RequireJS.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; name = RequireJS.js; path = "readium-shared-js/build-output/_multiple-bundles/RequireJS.js"; sourceTree = "<group>"; };
+		83A783DE1CD0401D00B0741E /* RDLcpCredentialHandler.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = RDLcpCredentialHandler.mm; sourceTree = "<group>"; };
+		83A783E61CD0404500B0741E /* RDLcpCredentialHandler.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RDLcpCredentialHandler.h; sourceTree = "<group>"; };
 		83EBB4A319F56C1C0083E8F1 /* annotations.css */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.css; path = annotations.css; sourceTree = "<group>"; };
 		85DE51A017FDDCAC00F55130 /* page-blanche-20130322.epub */ = {isa = PBXFileReference; lastKnownFileType = file; path = "page-blanche-20130322.epub"; sourceTree = "<group>"; };
 		A250D199754564056CB0267E /* epubReadingSystem.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = epubReadingSystem.js; sourceTree = "<group>"; };
@@ -493,6 +503,8 @@
 				34212F6F18F0649500A9109F /* RDSmilData.mm */,
 				34212F7018F0649500A9109F /* RDSpineItem.h */,
 				34212F7118F0649500A9109F /* RDSpineItem.mm */,
+				83A783DE1CD0401D00B0741E /* RDLcpCredentialHandler.mm */,
+				83A783E61CD0404500B0741E /* RDLcpCredentialHandler.h */,
 			);
 			path = Main;
 			sourceTree = "<group>";
@@ -752,6 +764,7 @@
 			isa = PBXGroup;
 			children = (
 				5A9A11EB1C19B04A00F1691F /* libLCP-client-iOS.a */,
+				83A783E51CD0401E00B0741E /* libLCP-client-OSX.a */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -846,6 +859,13 @@
 			fileType = archive.ar;
 			path = "libLCP-client-iOS.a";
 			remoteRef = 5A9A11EA1C19B04A00F1691F /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		83A783E51CD0401E00B0741E /* libLCP-client-OSX.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = "libLCP-client-OSX.a";
+			remoteRef = 83A783E41CD0401E00B0741E /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 /* End PBXReferenceProxy section */
@@ -959,6 +979,7 @@
 				34C4064817A451D100354C33 /* EPubSettings.m in Sources */,
 				34212FC718F0649500A9109F /* HTTPAsyncFileResponse.m in Sources */,
 				34212FD318F0649500A9109F /* DDFileLogger.m in Sources */,
+				83A783DF1CD0401D00B0741E /* RDLcpCredentialHandler.mm in Sources */,
 				34212FBA18F0649500A9109F /* RDPackageResourceServer.m in Sources */,
 				34C4064317A43A1700354C33 /* EPubSettingsController.m in Sources */,
 				3411DF03175FACC000FCE6D9 /* EPubViewController.m in Sources */,

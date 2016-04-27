@@ -8,13 +8,22 @@
 //  launcher's root certificate, located in Resources/LCP Root Certificate.crt
 //
 
+#import <Foundation/Foundation.h>
+
 #import <lcp/apple/lcp.h>
+
+//#import <lcp/LcpContentFilter.h>
+//#import <lcp/LcpContentModule.h>
+
+@class RDLcpCredentialHandler;
 
 @interface RDLCPService : LCPService
 
 + (instancetype)sharedService;
 
 // To be called by the RDContainerDelegate implementation
-- (void)registerContentFilter;
+//- (void)registerContentFilter;
+- (void)registerContentModule:(RDLcpCredentialHandler *) credentialHandler;
+//- (void)registerContentModule:(lcp::ICredentialHandler *) credentialHandler;
 
 @end

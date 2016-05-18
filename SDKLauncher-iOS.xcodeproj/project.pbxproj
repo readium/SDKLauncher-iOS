@@ -102,6 +102,7 @@
 		5A1B61261C1880A700D45788 /* RDLCPService.mm in Sources */ = {isa = PBXBuildFile; fileRef = 5A1B61251C1880A700D45788 /* RDLCPService.mm */; };
 		5A1B612C1C1881A100D45788 /* LCP Root Certificate.crt in Resources */ = {isa = PBXBuildFile; fileRef = 5A1B612B1C1881A100D45788 /* LCP Root Certificate.crt */; };
 		5A9A11EC1C19B05700F1691F /* libLCP-client-iOS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5A9A11EB1C19B04A00F1691F /* libLCP-client-iOS.a */; };
+		80382A081CD3F222004541FF /* NSDate+RDDateAsString.m in Sources */ = {isa = PBXBuildFile; fileRef = 80382A071CD3F222004541FF /* NSDate+RDDateAsString.m */; };
 		8307EC6919E3DE4A00B00468 /* mathjax in Resources */ = {isa = PBXBuildFile; fileRef = 8307EC6719E3DDEC00B00468 /* mathjax */; };
 		835846F31B42D997002DA99D /* reader_RequireJS-multiple-bundles.html in Resources */ = {isa = PBXBuildFile; fileRef = 835846F01B42D997002DA99D /* reader_RequireJS-multiple-bundles.html */; };
 		835846F41B42D997002DA99D /* reader_RequireJS-no-optimize.html in Resources */ = {isa = PBXBuildFile; fileRef = 835846F11B42D997002DA99D /* reader_RequireJS-no-optimize.html */; };
@@ -335,6 +336,8 @@
 		5A1B61251C1880A700D45788 /* RDLCPService.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = RDLCPService.mm; sourceTree = "<group>"; };
 		5A1B612B1C1881A100D45788 /* LCP Root Certificate.crt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "LCP Root Certificate.crt"; sourceTree = "<group>"; };
 		5A9A11E41C19B04A00F1691F /* LCP Client.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = "LCP Client.xcodeproj"; path = "readium-lcp-client/platform/apple/LCP Client.xcodeproj"; sourceTree = "<group>"; };
+		80382A061CD3F222004541FF /* NSDate+RDDateAsString.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSDate+RDDateAsString.h"; sourceTree = "<group>"; };
+		80382A071CD3F222004541FF /* NSDate+RDDateAsString.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSDate+RDDateAsString.m"; sourceTree = "<group>"; };
 		8307EC6719E3DDEC00B00468 /* mathjax */ = {isa = PBXFileReference; lastKnownFileType = folder; path = mathjax; sourceTree = "<group>"; };
 		835846F01B42D997002DA99D /* reader_RequireJS-multiple-bundles.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = "reader_RequireJS-multiple-bundles.html"; sourceTree = "<group>"; };
 		835846F11B42D997002DA99D /* reader_RequireJS-no-optimize.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = "reader_RequireJS-no-optimize.html"; sourceTree = "<group>"; };
@@ -481,6 +484,8 @@
 		34212F5D18F0649500A9109F /* Main */ = {
 			isa = PBXGroup;
 			children = (
+				80382A061CD3F222004541FF /* NSDate+RDDateAsString.h */,
+				80382A071CD3F222004541FF /* NSDate+RDDateAsString.m */,
 				34212F5E18F0649500A9109F /* RDContainer.h */,
 				34212F5F18F0649500A9109F /* RDContainer.mm */,
 				34212F6018F0649500A9109F /* RDMediaOverlaysSmilModel.h */,
@@ -990,6 +995,7 @@
 				34212FB718F0649500A9109F /* RDPackageResource.mm in Sources */,
 				34212FC918F0649500A9109F /* HTTPDynamicFileResponse.m in Sources */,
 				34212FB818F0649500A9109F /* RDPackageResourceConnection.m in Sources */,
+				80382A081CD3F222004541FF /* NSDate+RDDateAsString.m in Sources */,
 				34212FBB18F0649500A9109F /* RDSmilData.mm in Sources */,
 				34212FCD18F0649500A9109F /* WebSocket.m in Sources */,
 				3462FBBE16BC3C43003C79E1 /* main.m in Sources */,

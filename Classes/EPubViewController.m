@@ -158,7 +158,13 @@
 
 	m_package.rootURL = [NSString stringWithFormat:@"http://127.0.0.1:%d/", m_resourceServer.port];
 
-	[self updateNavigationItems];
+    // Observe application background/foreground notifications
+    // HTTP server becomes unreachable after the application has become inactive
+    // so we need to stop and restart it whenever it happens
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(handleAppWillResignActiveNotification:) name:UIApplicationWillResignActiveNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(handleAppWillEnterForegroundNotification:) name:UIApplicationWillEnterForegroundNotification object:nil];
+
+    [self updateNavigationItems];
 	return YES;
 }
 
@@ -841,6 +847,14 @@
 	}
 
 	return shouldLoad;
+}
+
+- (void)handleAppWillResignActiveNotification:(NSNotification *)notification {
+    [m_resourceServer stopHTTPServer];
+}
+
+- (void)handleAppWillEnterForegroundNotification:(NSNotification *)notification {
+    [m_resourceServer startHTTPServer];
 }
 
 

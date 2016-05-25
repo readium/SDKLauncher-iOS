@@ -113,10 +113,6 @@
 
 
 - (void)cleanUp {
-    if (m_webViewWK != nil) {
-        [m_webViewWK.configuration.userContentController removeScriptMessageHandlerForName:@"readium"];
-    }
-    
 	[[NSNotificationCenter defaultCenter] removeObserver:self];
 	m_moIsPlaying = NO;
 

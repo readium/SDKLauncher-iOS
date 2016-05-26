@@ -36,7 +36,7 @@
 #import "RDLCPService.h"
 #import "RDPackage.h"
 #import "SpineItemListController.h"
-#import <lcp/apple/lcp.h>
+#import <platform/apple/src/lcp.h>
 
 
 @interface ContainerController () <

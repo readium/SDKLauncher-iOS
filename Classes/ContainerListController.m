@@ -31,7 +31,7 @@
 #import "ContainerController.h"
 #import "ContainerList.h"
 #import "RDLCPService.h"
-#import <lcp/apple/lcp.h>
+#import <platform/apple/src/lcp.h>
 
 
 static NSInteger const kAcquisitionProgressBar = 3208;

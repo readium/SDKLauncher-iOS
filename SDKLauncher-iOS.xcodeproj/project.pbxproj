@@ -1116,7 +1116,9 @@
 				HEADER_SEARCH_PATHS = (
 					"${SDKROOT}/usr/include/libxml2",
 					"${SRCROOT}/readium-sdk/Platform/Apple/include",
-					"${SRCROOT}/readium-lcp-client/include",
+					"${SRCROOT}/readium-lcp-client/src/lcp-content-filter/public",
+					"${SRCROOT}/readium-lcp-client/src/lcp-client-lib/public",
+					"${SRCROOT}/readium-lcp-client",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
@@ -1133,7 +1135,9 @@
 				HEADER_SEARCH_PATHS = (
 					"${SDKROOT}/usr/include/libxml2",
 					"${SRCROOT}/readium-sdk/Platform/Apple/include",
-					"${SRCROOT}/readium-lcp-client/include",
+					"${SRCROOT}/readium-lcp-client/src/lcp-content-filter/public",
+					"${SRCROOT}/readium-lcp-client/src/lcp-client-lib/public",
+					"${SRCROOT}/readium-lcp-client",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";

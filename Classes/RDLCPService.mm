@@ -7,8 +7,8 @@
 
 #import "RDLcpCredentialHandler.h"
 
-//#import <lcp/LcpContentFilter.h>
-#import <lcp/LcpContentModule.h>
+//#import <LcpContentFilter.h>
+#import <LcpContentModule.h>
 
 @implementation RDLCPService
 

@@ -10,12 +10,11 @@
 
 #import <Foundation/Foundation.h>
 
-#import <platform/apple/src/lcp.h>
-
-//#import <LcpContentFilter.h>
-//#import <LcpContentModule.h>
-
+//#import "RDLcpCredentialHandler.h"
 @class RDLcpCredentialHandler;
+
+#import <platform/apple/src/lcp.h>
+//@class LCPService;
 
 @interface RDLCPService : LCPService
 

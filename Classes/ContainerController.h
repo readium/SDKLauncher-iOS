@@ -29,6 +29,8 @@
 
 #import "BaseViewController.h"
 
+#import <Foundation/Foundation.h>
+
 @class LCPLicense;
 
 @interface ContainerController : BaseViewController

@@ -5,10 +5,15 @@
 
 #import "RDLCPService.h"
 
-#import "RDLcpCredentialHandler.h"
+#import <platform/apple/src/lcp.h>
 
 //#import <LcpContentFilter.h>
 #import <LcpContentModule.h>
+
+//#import "RDContainer.h"
+
+#import "RDLcpCredentialHandler.h"
+
 
 @implementation RDLCPService
 

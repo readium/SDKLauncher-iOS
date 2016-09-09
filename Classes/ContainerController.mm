@@ -33,14 +33,79 @@
 #import "NavigationElementController.h"
 #import "PackageMetadataController.h"
 #import "RDContainer.h"
-#import "RDLCPService.h"
 #import "RDPackage.h"
 #import "SpineItemListController.h"
+
+#import "RDLCPService.h"
+
 #import <platform/apple/src/lcp.h>
+
+//#import <LcpContentFilter.h>
+#import <LcpContentModule.h>
+
+#import "RDLcpCredentialHandler.h"
+
+//#import "LocStr.h"
+// TODO: THIS IS A HACK!! (linker complains about missing LocStr.m)
+NSString *LocStr(NSString *key, ...) {
+    if (key == nil) {
+        NSLog(@"Got a nil key!");
+    }
+    else {
+        NSString *s = [[NSBundle mainBundle] localizedStringForKey:key
+                                                             value:nil table:nil];
+        
+        if (s == nil) {
+            NSLog(@"Key '%@' has a nil value!", key);
+        }
+        else if ([s isEqualToString:key]) {
+            NSLog(@"Key '%@' not found!", key);
+        }
+        else {
+            // We found the string.  Apply the formatting arguments.
+            
+            va_list list;
+            va_start(list, key);
+            s = [[NSString alloc] initWithFormat:s arguments:list];
+            va_end(list);
+            
+            return s;
+        }
+    }
+    
+    return @"NOT FOUND";
+}
+
+@protocol RDContainerLCPDelegate <NSObject>
+
+- (void)decrypt:(LCPLicense*)licence container:(RDContainer*)container;
+
+@end
+
+
+class LcpCredentialHandler : public lcp::ICredentialHandler
+{
+private:
+    id <RDContainerLCPDelegate> _delegate;
+    RDContainer* _container;
+public:
+    LcpCredentialHandler(RDContainer* container, id <RDContainerLCPDelegate> delegate) {
+        _container = container;
+        _delegate = delegate;
+    }
+    
+    void decrypt(lcp::ILicense *license) {
+        //if (![_delegate respondsToSelector:@selector(decrypt:)]) return;
+        
+        LCPLicense* lcpLicense = [[LCPLicense alloc] initWithLicense:license];
+        [_delegate decrypt:lcpLicense container:_container];
+    }
+};
 
 
 @interface ContainerController () <
 	RDContainerDelegate,
+    RDContainerLCPDelegate,
 	UITableViewDataSource,
 	UITableViewDelegate,
 	UIAlertViewDelegate>
@@ -80,11 +145,14 @@
 //{
 //    [[RDLCPService sharedService] registerContentFilter];
 //}
-//
-//- (void)containerRegisterContentModules:(RDContainer *)container
-//{
-//    [[RDLCPService sharedService] registerContentModule:container.credentialHandler];
-//}
+
+- (void)containerRegisterContentModules:(RDContainer *)container
+{
+    lcp::ICredentialHandler* credentialHandlerNative = new LcpCredentialHandler(container, self);
+    RDLcpCredentialHandler* credentialHandler = [[RDLcpCredentialHandler alloc] initWithNative:credentialHandlerNative];
+    
+    [[RDLCPService sharedService] registerContentModule:credentialHandler];
+}
 
 - (void) popErrorMessage
 {
@@ -352,9 +420,6 @@
 
 
 - (void)decryptLCPLicense:(RDContainer *)container {
-    
-    //m_container may not be init? 
-    container.executionFlowExceptionBypass = true;
     
     [self askLCPUserPassphrase:^(BOOL cancelled, NSString *passphrase) {
         if (cancelled) {

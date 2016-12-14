@@ -37,7 +37,21 @@
 static NSInteger const kAcquisitionProgressBar = 3208;
 
 
-@interface ContainerListController () <LCPAcquisitionDelegate>
+@interface ContainerListController ()
+#if ENABLE_NET_PROVIDER
+<LCPAcquisitionDelegate>
+#else
+<NSURLSessionDataDelegate>
+#endif //ENABLE_NET_PROVIDER
+
+#if ENABLE_NET_PROVIDER
+@property (strong, nonatomic) NSURLSession *session;
+
+@property (strong, nonatomic) NSMutableDictionary *sessionDownloadPaths;
+@property (strong, nonatomic) NSMutableDictionary *sessionSuggestedFilenames;
+// @property (strong, nonatomic) NSMutableDictionary *sessionLCPPaths;
+#endif //ENABLE_NET_PROVIDER
+
 @end
 
 
@@ -53,7 +67,16 @@ static NSInteger const kAcquisitionProgressBar = 3208;
 	if (self = [super initWithTitle:LocStr(@"CONTAINER_LIST_TITLE") navBarHidden:NO]) {
 		m_paths = [ContainerList shared].paths;
         m_lcpAcquisitions = [NSMutableDictionary dictionary];
-
+        
+#if !ENABLE_NET_PROVIDER
+        NSURLSessionConfiguration *config = [NSURLSessionConfiguration ephemeralSessionConfiguration];
+        _session = [NSURLSession sessionWithConfiguration:config delegate:self delegateQueue:nil];
+        
+        _sessionDownloadPaths = [NSMutableDictionary dictionary];
+        _sessionSuggestedFilenames = [NSMutableDictionary dictionary];
+        // _sessionLCPPaths = [NSMutableDictionary dictionary]; // see m_lcpAcquisitions
+#endif //!ENABLE_NET_PROVIDER
+        
 		[[NSNotificationCenter defaultCenter] addObserver:self
 			selector:@selector(onContainerListDidChange)
 			name:kSDKLauncherContainerListDidChange object:nil];
@@ -133,6 +156,7 @@ static NSInteger const kAcquisitionProgressBar = 3208;
     } else if ([path.pathExtension.lowercaseString isEqual:@"lcpl"]) {
         errorTitle = @"Cannot Download Publication";
         
+#if ENABLE_NET_PROVIDER
         LCPAcquisition *acquisition = m_lcpAcquisitions[path];
         if (acquisition) {
             success = YES;
@@ -140,6 +164,15 @@ static NSInteger const kAcquisitionProgressBar = 3208;
         } else {
             success = [self acquirePublicationWithLicense:path error:&error];
         }
+#else
+        NSURLSessionDataTask *task = m_lcpAcquisitions[path];
+        if (task) {
+            success = YES;
+            [task cancel];
+        } else {
+            success = [self acquirePublicationWithLicense:path error:&error];
+        }
+#endif //ENABLE_NET_PROVIDER
     }
     
     if (!success) {
@@ -190,6 +223,8 @@ static NSInteger const kAcquisitionProgressBar = 3208;
     LCPLicense *license = [lcp openLicense:licenseJSON error:error];
     if (!license)
         return NO;
+
+#if ENABLE_NET_PROVIDER
     
     NSString *fileName = [NSString stringWithFormat:@"%@_%@", [[NSProcessInfo processInfo] globallyUniqueString], @"lcp.epub"];
     NSURL *downloadFileURL = [NSURL fileURLWithPath:[NSTemporaryDirectory() stringByAppendingPathComponent:fileName]];
@@ -200,9 +235,27 @@ static NSInteger const kAcquisitionProgressBar = 3208;
     
     m_lcpAcquisitions[licensePath] = acquisition;
     [acquisition startWithDelegate:self];
+#else
+
+    NSURL *sourceUrl = [NSURL URLWithString:license.linkPublication];
+    
+    NSURLSessionDataTask *task = [self.session dataTaskWithURL:sourceUrl];
+//        id identifier = @(task.taskIdentifier);
+//        self.requests[identifier] = [NSValue valueWithPointer:request];
+//        self.callbacks[identifier] = [NSValue valueWithPointer:callback];
+    
+    m_lcpAcquisitions[licensePath] = task;
+    [task resume];
+    
+#endif //ENABLE_NET_PROVIDER
     
     return YES;
 }
+
+
+
+
+#if ENABLE_NET_PROVIDER
 
 - (NSString *)pathForAcquisition:(LCPAcquisition *)acquisition
 {
@@ -236,25 +289,198 @@ static NSInteger const kAcquisitionProgressBar = 3208;
     }
     
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
-        if (success) {
-            // move the downloaded publication to the Documents/ folder, using
-            // the suggested filename if any
-            NSString *licensePath = [self pathForAcquisition:acquisition];
-            NSString *filename = (acquisition.suggestedFilename.length > 0) ? acquisition.suggestedFilename : [licensePath lastPathComponent];
-            filename = [NSString stringWithFormat:@"%@.epub", [filename stringByDeletingPathExtension]];
-            
-            NSURL *documentsURL = [[[NSFileManager defaultManager] URLsForDirectory:NSDocumentDirectory inDomains:NSUserDomainMask] lastObject];
-            NSString *destinationPath = [[documentsURL URLByAppendingPathComponent:filename] path];
-            
-            [[NSFileManager defaultManager] moveItemAtPath:acquisition.publicationPath toPath:destinationPath error:NULL];
-            
-            [[NSFileManager defaultManager] removeItemAtPath:licensePath error:NULL];
-        }
+
+        // move the downloaded publication to the Documents/ folder, using
+        // the suggested filename if any
+        NSString *licensePath = [self pathForAcquisition:acquisition];
+        NSString *filename = (acquisition.suggestedFilename.length > 0) ? acquisition.suggestedFilename : [licensePath lastPathComponent];
+        filename = [NSString stringWithFormat:@"%@.epub", [filename stringByDeletingPathExtension]];
+        
+        NSURL *documentsURL = [[[NSFileManager defaultManager] URLsForDirectory:NSDocumentDirectory inDomains:NSUserDomainMask] lastObject];
+        NSString *destinationPath = [[documentsURL URLByAppendingPathComponent:filename] path];
+        
+        [[NSFileManager defaultManager] moveItemAtPath:acquisition.publicationPath toPath:destinationPath error:NULL];
+        
+        // [[NSFileManager defaultManager] removeItemAtPath:licensePath error:NULL];
+    
         
         dispatch_async(dispatch_get_main_queue(), ^{
             [self endAcquisition:acquisition];
         });
     });
 }
+
+#else
+
+- (NSString *)pathForAcquisition:(NSURLSessionDataTask *)task
+{
+    return [[m_lcpAcquisitions allKeysForObject:task] firstObject];
+}
+
+- (void)endAcquisition:(NSURLSessionDataTask *)task
+{
+    NSString *path = [self pathForAcquisition:task];
+    [self setCellProgress:0 forPath:path];
+    [m_lcpAcquisitions removeObjectForKey:path];
+}
+
+- (void)getSessionInfo:(NSString **)sessionDownloadPath
+    sessionSuggestedFilename:(NSString **)sessionSuggestedFilename
+    //sessionLCPPath:(NSString**)sessionLCPPath
+    forTask:(NSURLSessionTask *)task
+{
+    id identifier = @(task.taskIdentifier);
+
+    if (sessionDownloadPath != NULL) {
+        *sessionDownloadPath = (NSString *)[self.sessionDownloadPaths[identifier] pointerValue];
+    }
+
+    if (sessionSuggestedFilename != NULL) {
+        *sessionSuggestedFilename = (NSString *)[self.sessionSuggestedFilenames[identifier] pointerValue];
+    }
+    //
+    // if (sessionLCPPath != NULL) {
+    //     *sessionLCPPath = (NSString *)[self.sessionLCPPaths[identifier] pointerValue];
+    // }
+    
+}
+
+- (void)taskEnded:(NSURLSessionTask *)task
+{
+    id identifier = @(task.taskIdentifier);
+    [self.sessionDownloadPaths removeObjectForKey:identifier];
+    [self.sessionSuggestedFilenames removeObjectForKey:identifier];
+    // [self.sessionLCPPaths removeObjectForKey:identifier];
+}
+
+- (void)URLSession:(NSURLSession *)session dataTask:(NSURLSessionDataTask *)dataTask didReceiveResponse:(NSURLResponse *)response completionHandler:(void (^)(NSURLSessionResponseDisposition))completionHandler
+{
+    id identifier = @(dataTask.taskIdentifier);
+    
+    NSString *sessionDownloadPath;
+    NSString *sessionSuggestedFilename;
+    // NSString *sessionLCPPath;
+    [self getSessionInfo:&sessionDownloadPath
+        sessionSuggestedFilename:&sessionSuggestedFilename
+        // sessionLCPPath:&sessionLCPPath
+        forTask:dataTask];
+    
+    NSString *sessionLCPPath = [self pathForAcquisition:dataTask];
+    
+    if (!sessionLCPPath)
+        return;
+    
+    NSString *filePath;
+    
+    NSString *filename = response.suggestedFilename;
+    if (filename.length > 0) {
+        self.sessionSuggestedFilenames[identifier] = [NSValue valueWithPointer:filename];
+    }
+    
+    if (false && // better to name file to match LCPL
+        filename.length > 0) {
+        
+        NSString *folderPath = [sessionLCPPath stringByDeletingLastPathComponent];
+        filePath = [folderPath stringByAppendingPathComponent:filename];
+//       filePath = [NSString stringWithFormat:@"%@%@%@", sessionLCPPath, @"_", filename];
+    } else {
+        filePath = [NSString stringWithFormat:@"%@%@", sessionLCPPath, @".epub"];
+    }
+    
+    if ([[NSFileManager defaultManager] fileExistsAtPath:filePath]) {
+        [[NSFileManager defaultManager] removeItemAtPath:filePath error:NULL];
+    }
+    
+    self.sessionDownloadPaths[identifier] = [NSValue valueWithPointer:filePath];
+    
+    completionHandler(NSURLSessionResponseAllow);
+}
+
+- (void)URLSession:(NSURLSession *)session dataTask:(NSURLSessionDataTask *)task didReceiveData:(NSData *)data
+{
+    NSString *sessionDownloadPath;
+    NSString *sessionSuggestedFilename;
+    // NSString *sessionLCPPath;
+    [self getSessionInfo:&sessionDownloadPath
+        sessionSuggestedFilename:&sessionSuggestedFilename
+        // sessionLCPPath:&sessionLCPPath
+        forTask:task];
+    
+    if (![[NSFileManager defaultManager] fileExistsAtPath:sessionDownloadPath]) {
+        [data writeToFile:sessionDownloadPath atomically:YES];
+    } else {
+        // TODO: keep handle alive to avoid lots of open/close
+        //(const unsigned char *)data.bytes
+        //data.length
+        //getSessionInfo() for sessionDownloadFileHandle?
+        NSFileHandle *fileHandle = [NSFileHandle fileHandleForWritingAtPath:sessionDownloadPath];
+        [fileHandle seekToEndOfFile];
+        [fileHandle writeData:data];
+        [fileHandle closeFile];
+    }
+    
+    float progress = -1;
+    float received = task.countOfBytesReceived;
+    float expected = task.countOfBytesExpectedToReceive;
+    if (expected > 0) {
+        progress = received / expected;
+    }
+
+    NSString *path = [self pathForAcquisition:task];
+    [self setCellProgress:progress forPath:path];
+}
+
+- (void)URLSession:(NSURLSession *)session task:(NSURLSessionTask *)task didCompleteWithError:(NSError *)error
+{
+    NSString *sessionDownloadPath;
+    NSString *sessionSuggestedFilename;
+    [self getSessionInfo:&sessionDownloadPath sessionSuggestedFilename:&sessionSuggestedFilename forTask:task];
+    if (!sessionDownloadPath)
+        return;
+    
+    
+    NSInteger code = [(NSHTTPURLResponse *)task.response statusCode];
+    
+    if (error) {
+        [self presentAlertWithTitle:@"Cannot Download Publication" message:@"%@ (%d) (%li)", error.domain, error.code, code];
+        
+        [self taskEnded:task];
+        [self endAcquisition:task];
+    } else if (code < 200 || code >= 300) {
+
+        [self presentAlertWithTitle:@"Cannot Download Publication" message:@"(%li)", code];
+        
+        [self taskEnded:task];
+        [self endAcquisition:task];
+    } else {
+
+        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
+            
+            // move the downloaded publication to the Documents/ folder, using
+            // the suggested filename if any
+            NSString *licensePath = [self pathForAcquisition:task];
+            NSString *filename = (sessionSuggestedFilename != nil && sessionSuggestedFilename.length > 0) ? sessionSuggestedFilename : [licensePath lastPathComponent];
+            filename = [NSString stringWithFormat:@"%@.epub", [filename stringByDeletingPathExtension]];
+        
+            NSURL *documentsURL = [[[NSFileManager defaultManager] URLsForDirectory:NSDocumentDirectory inDomains:NSUserDomainMask] lastObject];
+            NSString *destinationPath = [[documentsURL URLByAppendingPathComponent:filename] path];
+        
+            // [[NSFileManager defaultManager] moveItemAtPath:sessionDownloadPath toPath:destinationPath error:NULL];
+        
+            // [[NSFileManager defaultManager] removeItemAtPath:licensePath error:NULL];
+        
+        
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [self taskEnded:task];
+                [self endAcquisition:task];
+            });
+        });
+    }
+    
+    
+}
+
+#endif //ENABLE_NET_PROVIDER
+
 
 @end

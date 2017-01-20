@@ -804,11 +804,6 @@
 			attributes = {
 				LastUpgradeCheck = 0500;
 				ORGANIZATIONNAME = "The Readium Foundation";
-				TargetAttributes = {
-					340FC15816BC3B4600346A59 = {
-						DevelopmentTeam = NB74F5L25E;
-					};
-				};
 			};
 			buildConfigurationList = 340FC15416BC3B4600346A59 /* Build configuration list for PBXProject "SDKLauncher-iOS" */;
 			compatibilityVersion = "Xcode 3.2";
@@ -1112,6 +1107,7 @@
 			buildSettings = {
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				DEVELOPMENT_TEAM = "";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				HEADER_SEARCH_PATHS = (
 					"${SDKROOT}/usr/include/libxml2",
@@ -1132,6 +1128,7 @@
 			buildSettings = {
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				DEVELOPMENT_TEAM = "";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				HEADER_SEARCH_PATHS = (
 					"${SDKROOT}/usr/include/libxml2",

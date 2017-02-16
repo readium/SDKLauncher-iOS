@@ -13,6 +13,7 @@
 //#import "RDContainer.h"
 
 #import "RDLcpCredentialHandler.h"
+#import "RDLcpStatusDocumentHandler.h"
 
 
 @implementation RDLCPService
@@ -46,8 +47,8 @@
 //- (void)registerContentFilter {
 //    lcp::LcpContentFilter::Register(self.nativeService);
 //}
-- (void)registerContentModule:(RDLcpCredentialHandler *) credentialHandler {
-    lcp::LcpContentModule::Register(self.nativeService, credentialHandler.native);
+- (void)registerContentModule:(RDLcpCredentialHandler *) credentialHandler statusDocumentHandler:(RDLcpStatusDocumentHandler.h *) statusDocumentHandler {
+    lcp::LcpContentModule::Register(self.nativeService, credentialHandler.native, statusDocumentHandler.native);
 }
 
 

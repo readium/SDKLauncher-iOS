@@ -12,6 +12,7 @@
 
 //#import "RDLcpCredentialHandler.h"
 @class RDLcpCredentialHandler;
+@class RDLcpStatusDocumentHandler;
 
 #import <platform/apple/src/lcp.h>
 //@class LCPService;
@@ -22,7 +23,7 @@
 
 // To be called by the RDContainerDelegate implementation
 //- (void)registerContentFilter;
-- (void)registerContentModule:(RDLcpCredentialHandler *) credentialHandler;
+- (void)registerContentModule:(RDLcpCredentialHandler *) credentialHandler statusDocumentHandler:(RDLcpStatusDocumentHandler.h *) statusDocumentHandler;
 //- (void)registerContentModule:(lcp::ICredentialHandler *) credentialHandler;
 
 @end

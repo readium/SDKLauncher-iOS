@@ -103,6 +103,7 @@
 		5A9A11EC1C19B05700F1691F /* libLCP-client-iOS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5A9A11EB1C19B04A00F1691F /* libLCP-client-iOS.a */; };
 		80382A081CD3F222004541FF /* NSDate+RDDateAsString.m in Sources */ = {isa = PBXBuildFile; fileRef = 80382A071CD3F222004541FF /* NSDate+RDDateAsString.m */; };
 		8307EC6919E3DE4A00B00468 /* mathjax in Resources */ = {isa = PBXBuildFile; fileRef = 8307EC6719E3DDEC00B00468 /* mathjax */; };
+		8330F8441E559F29003233B9 /* RDLcpStatusDocumentHandler.mm in Sources */ = {isa = PBXBuildFile; fileRef = 8330F8431E559F29003233B9 /* RDLcpStatusDocumentHandler.mm */; };
 		835846F31B42D997002DA99D /* reader_RequireJS-multiple-bundles.html in Resources */ = {isa = PBXBuildFile; fileRef = 835846F01B42D997002DA99D /* reader_RequireJS-multiple-bundles.html */; };
 		835846F41B42D997002DA99D /* reader_RequireJS-no-optimize.html in Resources */ = {isa = PBXBuildFile; fileRef = 835846F11B42D997002DA99D /* reader_RequireJS-no-optimize.html */; };
 		835846F51B42D997002DA99D /* reader_RequireJS-single-bundle.html in Resources */ = {isa = PBXBuildFile; fileRef = 835846F21B42D997002DA99D /* reader_RequireJS-single-bundle.html */; };
@@ -338,6 +339,8 @@
 		80382A061CD3F222004541FF /* NSDate+RDDateAsString.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSDate+RDDateAsString.h"; sourceTree = "<group>"; };
 		80382A071CD3F222004541FF /* NSDate+RDDateAsString.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSDate+RDDateAsString.m"; sourceTree = "<group>"; };
 		8307EC6719E3DDEC00B00468 /* mathjax */ = {isa = PBXFileReference; lastKnownFileType = folder; path = mathjax; sourceTree = "<group>"; };
+		8330F8421E559F29003233B9 /* RDLcpStatusDocumentHandler.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RDLcpStatusDocumentHandler.h; sourceTree = "<group>"; };
+		8330F8431E559F29003233B9 /* RDLcpStatusDocumentHandler.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = RDLcpStatusDocumentHandler.mm; sourceTree = "<group>"; };
 		835846F01B42D997002DA99D /* reader_RequireJS-multiple-bundles.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = "reader_RequireJS-multiple-bundles.html"; sourceTree = "<group>"; };
 		835846F11B42D997002DA99D /* reader_RequireJS-no-optimize.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = "reader_RequireJS-no-optimize.html"; sourceTree = "<group>"; };
 		835846F21B42D997002DA99D /* reader_RequireJS-single-bundle.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = "reader_RequireJS-single-bundle.html"; sourceTree = "<group>"; };
@@ -646,6 +649,8 @@
 		345CA3E116C00EE100B8B56A /* Main */ = {
 			isa = PBXGroup;
 			children = (
+				8330F8421E559F29003233B9 /* RDLcpStatusDocumentHandler.h */,
+				8330F8431E559F29003233B9 /* RDLcpStatusDocumentHandler.mm */,
 				3462FBBA16BC3C43003C79E1 /* AppDelegate.h */,
 				3462FBBB16BC3C43003C79E1 /* AppDelegate.m */,
 				340535A816BC5DD100D4A802 /* BaseViewController.h */,
@@ -960,6 +965,7 @@
 				340535AA16BC5DD100D4A802 /* BaseViewController.m in Sources */,
 				34B56B431722DB2200A5A4B8 /* Bookmark.m in Sources */,
 				34212FC018F0649500A9109F /* HTTPAuthenticationRequest.m in Sources */,
+				8330F8441E559F29003233B9 /* RDLcpStatusDocumentHandler.mm in Sources */,
 				8387C9DC1D82FD4200BC2AE6 /* ContainerController.mm in Sources */,
 				34212FD418F0649500A9109F /* DDLog.m in Sources */,
 				835846FD1B42DAF6002DA99D /* readium-shared-js_all.js.map in Sources */,
@@ -1135,10 +1141,8 @@
 					"${SRCROOT}/readium-lcp-client/src/lcp-client-lib/public",
 					"${SRCROOT}/readium-lcp-client",
 				);
-
 				IPHONEOS_DEPLOYMENT_TARGET = 9.3;
 				PRODUCT_BUNDLE_IDENTIFIER = org.readium.SDKLauncher.iOS;
-
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
 				WRAPPER_EXTENSION = app;
@@ -1159,10 +1163,8 @@
 					"${SRCROOT}/readium-lcp-client/src/lcp-client-lib/public",
 					"${SRCROOT}/readium-lcp-client",
 				);
-				
 				IPHONEOS_DEPLOYMENT_TARGET = 9.3;
 				PRODUCT_BUNDLE_IDENTIFIER = org.readium.SDKLauncher.iOS;
-
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
 				WRAPPER_EXTENSION = app;

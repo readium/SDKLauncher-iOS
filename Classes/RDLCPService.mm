@@ -47,7 +47,7 @@
 //- (void)registerContentFilter {
 //    lcp::LcpContentFilter::Register(self.nativeService);
 //}
-- (void)registerContentModule:(RDLcpCredentialHandler *) credentialHandler statusDocumentHandler:(RDLcpStatusDocumentHandler.h *) statusDocumentHandler {
+- (void)registerContentModule:(RDLcpCredentialHandler *) credentialHandler statusDocumentHandler:(RDLcpStatusDocumentHandler *) statusDocumentHandler {
     lcp::LcpContentModule::Register(self.nativeService, credentialHandler.native, statusDocumentHandler.native);
 }
 

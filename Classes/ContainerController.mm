@@ -44,6 +44,9 @@
 #import <LcpContentModule.h>
 
 #import "RDLcpCredentialHandler.h"
+#import "RDLcpStatusDocumentHandler.h"
+
+#import "LCPStatusDocumentProcessing_DeviceIdManager.h"
 
 //#import "LocStr.h"
 // TODO: THIS IS A HACK!! (linker complains about missing LocStr.m)
@@ -79,6 +82,7 @@ NSString *LocStr(NSString *key, ...) {
 @protocol RDContainerLCPDelegate <NSObject>
 
 - (void)decrypt:(LCPLicense*)licence container:(RDContainer*)container;
+- (void)launchStatusDocumentProcessing:(LCPLicense*)licence container:(RDContainer*)container;
 
 @end
 
@@ -103,24 +107,69 @@ public:
 };
 
 
+class LcpStatusDocumentHandler : public lcp::IStatusDocumentHandler
+{
+private:
+    id <RDContainerLCPDelegate> _delegate;
+    RDContainer* _container;
+public:
+    LcpStatusDocumentHandler(RDContainer* container, id <RDContainerLCPDelegate> delegate) {
+        _container = container;
+        _delegate = delegate;
+    }
+    
+    void process(lcp::ILicense *license) {
+        //if (![_delegate respondsToSelector:@selector(process:)]) return;
+        
+        LCPLicense* lcpLicense = [[LCPLicense alloc] initWithLicense:license];
+        [_delegate launchStatusDocumentProcessing:lcpLicense container:_container];
+    }
+};
+
+
 @interface ContainerController () <
 	RDContainerDelegate,
     RDContainerLCPDelegate,
 	UITableViewDataSource,
 	UITableViewDelegate,
-	UIAlertViewDelegate>
+	UIAlertViewDelegate,
+    StatusDocumentProcessingListener>
 {
 	@private RDContainer *m_container;
 	@private RDPackage *m_package;
 	@private __weak UITableView *m_table;
 	@private NSMutableArray *m_sdkErrorMessages;
     @private NSString* _currentOpenChosenPath;
+    
+    @private LCPStatusDocumentProcessing * _statusDocumentProcessing;
 }
+
+- (void)onStatusDocumentProcessingComplete_:(NSObject*)nope;
 
 @end
 
 
 @implementation ContainerController
+
+
+- (void)onStatusDocumentProcessingComplete_:(NSObject*)nope
+{
+    [self openDocumentWithPath:_currentOpenChosenPath];
+}
+
+- (void)onStatusDocumentProcessingComplete:(LCPStatusDocumentProcessing*)lsdProcessing
+{
+    if (_statusDocumentProcessing == nil) return;
+    _statusDocumentProcessing = nil;
+    
+    if ([lsdProcessing wasCancelled]) return;
+    
+    [self performSelectorOnMainThread:@selector(onStatusDocumentProcessingComplete_:) withObject:nil waitUntilDone:NO];
+    //
+    //    dispatch_async(dispatch_get_main_queue(), ^{
+    //
+    //    });
+}
 
 - (BOOL)container:(RDContainer *)container handleSdkError:(NSString *)message isSevereEpubError:(BOOL)isSevereEpubError {
 
@@ -141,6 +190,14 @@ public:
     });
 }
 
+- (void)launchStatusDocumentProcessing:(LCPLicense*)lcpLicense container:(RDContainer *)container {
+    
+    dispatch_async(dispatch_get_main_queue(), ^{
+        _license = lcpLicense;
+        [self processStatusDocument:container];
+    });
+}
+
 //- (void)containerRegisterContentFilters:(RDContainer *)container
 //{
 //    [[RDLCPService sharedService] registerContentFilter];
@@ -151,7 +208,10 @@ public:
     lcp::ICredentialHandler* credentialHandlerNative = new LcpCredentialHandler(container, self);
     RDLcpCredentialHandler* credentialHandler = [[RDLcpCredentialHandler alloc] initWithNative:credentialHandlerNative];
     
-    [[RDLCPService sharedService] registerContentModule:credentialHandler];
+    lcp::IStatusDocumentHandler* statusDocumentHandlerNative = new LcpStatusDocumentHandler(container, self);
+    RDLcpStatusDocumentHandler* statusDocumentHandler = [[RDLcpStatusDocumentHandler alloc] initWithNative:statusDocumentHandlerNative];
+    
+    [[RDLCPService sharedService] registerContentModule:credentialHandler statusDocumentHandler:statusDocumentHandler];
 }
 
 - (void) popErrorMessage
@@ -418,6 +478,20 @@ public:
 //    }
 }
 
+- (void)processStatusDocument:(RDContainer *)container {
+    
+    if (_statusDocumentProcessing != nil) {
+        [_statusDocumentProcessing cancel];
+        _statusDocumentProcessing = nil;
+    }
+    
+    LCPStatusDocumentProcessing_DeviceIdManager* deviceIdManager = [[LCPStatusDocumentProcessing_DeviceIdManager alloc] init];
+    
+    _statusDocumentProcessing = [[LCPStatusDocumentProcessing alloc] init_:[RDLCPService sharedService] path:_currentOpenChosenPath license:self.license deviceIdManager:deviceIdManager];
+    
+    [_statusDocumentProcessing start:self];
+    
+}
 
 - (void)decryptLCPLicense:(RDContainer *)container {
     

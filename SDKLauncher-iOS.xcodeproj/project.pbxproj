@@ -104,6 +104,7 @@
 		80382A081CD3F222004541FF /* NSDate+RDDateAsString.m in Sources */ = {isa = PBXBuildFile; fileRef = 80382A071CD3F222004541FF /* NSDate+RDDateAsString.m */; };
 		8307EC6919E3DE4A00B00468 /* mathjax in Resources */ = {isa = PBXBuildFile; fileRef = 8307EC6719E3DDEC00B00468 /* mathjax */; };
 		8330F8441E559F29003233B9 /* RDLcpStatusDocumentHandler.mm in Sources */ = {isa = PBXBuildFile; fileRef = 8330F8431E559F29003233B9 /* RDLcpStatusDocumentHandler.mm */; };
+		8330F84B1E55A319003233B9 /* LCPStatusDocumentProcessing_DeviceIdManager.mm in Sources */ = {isa = PBXBuildFile; fileRef = 8330F84A1E55A319003233B9 /* LCPStatusDocumentProcessing_DeviceIdManager.mm */; };
 		835846F31B42D997002DA99D /* reader_RequireJS-multiple-bundles.html in Resources */ = {isa = PBXBuildFile; fileRef = 835846F01B42D997002DA99D /* reader_RequireJS-multiple-bundles.html */; };
 		835846F41B42D997002DA99D /* reader_RequireJS-no-optimize.html in Resources */ = {isa = PBXBuildFile; fileRef = 835846F11B42D997002DA99D /* reader_RequireJS-no-optimize.html */; };
 		835846F51B42D997002DA99D /* reader_RequireJS-single-bundle.html in Resources */ = {isa = PBXBuildFile; fileRef = 835846F21B42D997002DA99D /* reader_RequireJS-single-bundle.html */; };
@@ -341,6 +342,8 @@
 		8307EC6719E3DDEC00B00468 /* mathjax */ = {isa = PBXFileReference; lastKnownFileType = folder; path = mathjax; sourceTree = "<group>"; };
 		8330F8421E559F29003233B9 /* RDLcpStatusDocumentHandler.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RDLcpStatusDocumentHandler.h; sourceTree = "<group>"; };
 		8330F8431E559F29003233B9 /* RDLcpStatusDocumentHandler.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = RDLcpStatusDocumentHandler.mm; sourceTree = "<group>"; };
+		8330F8491E55A319003233B9 /* LCPStatusDocumentProcessing_DeviceIdManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LCPStatusDocumentProcessing_DeviceIdManager.h; sourceTree = "<group>"; };
+		8330F84A1E55A319003233B9 /* LCPStatusDocumentProcessing_DeviceIdManager.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = LCPStatusDocumentProcessing_DeviceIdManager.mm; sourceTree = "<group>"; };
 		835846F01B42D997002DA99D /* reader_RequireJS-multiple-bundles.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = "reader_RequireJS-multiple-bundles.html"; sourceTree = "<group>"; };
 		835846F11B42D997002DA99D /* reader_RequireJS-no-optimize.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = "reader_RequireJS-no-optimize.html"; sourceTree = "<group>"; };
 		835846F21B42D997002DA99D /* reader_RequireJS-single-bundle.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = "reader_RequireJS-single-bundle.html"; sourceTree = "<group>"; };
@@ -649,6 +652,8 @@
 		345CA3E116C00EE100B8B56A /* Main */ = {
 			isa = PBXGroup;
 			children = (
+				8330F8491E55A319003233B9 /* LCPStatusDocumentProcessing_DeviceIdManager.h */,
+				8330F84A1E55A319003233B9 /* LCPStatusDocumentProcessing_DeviceIdManager.mm */,
 				8330F8421E559F29003233B9 /* RDLcpStatusDocumentHandler.h */,
 				8330F8431E559F29003233B9 /* RDLcpStatusDocumentHandler.mm */,
 				3462FBBA16BC3C43003C79E1 /* AppDelegate.h */,
@@ -809,6 +814,12 @@
 			attributes = {
 				LastUpgradeCheck = 0800;
 				ORGANIZATIONNAME = "The Readium Foundation";
+				TargetAttributes = {
+					340FC15816BC3B4600346A59 = {
+						DevelopmentTeam = LTLC8BE8XV;
+						ProvisioningStyle = Automatic;
+					};
+				};
 			};
 			buildConfigurationList = 340FC15416BC3B4600346A59 /* Build configuration list for PBXProject "SDKLauncher-iOS" */;
 			compatibilityVersion = "Xcode 3.2";
@@ -970,6 +981,7 @@
 				34212FD418F0649500A9109F /* DDLog.m in Sources */,
 				835846FD1B42DAF6002DA99D /* readium-shared-js_all.js.map in Sources */,
 				34212FBD18F0649500A9109F /* DDData.m in Sources */,
+				8330F84B1E55A319003233B9 /* LCPStatusDocumentProcessing_DeviceIdManager.mm in Sources */,
 				34212FCA18F0649500A9109F /* HTTPErrorResponse.m in Sources */,
 				5A1B61261C1880A700D45788 /* RDLCPService.mm in Sources */,
 				34212FCC18F0649500A9109F /* HTTPRedirectResponse.m in Sources */,
@@ -1062,8 +1074,10 @@
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = NO;
+				DEVELOPMENT_TEAM = LTLC8BE8XV;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
@@ -1106,8 +1120,10 @@
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = YES;
+				DEVELOPMENT_TEAM = LTLC8BE8XV;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_NO_COMMON_BLOCKS = YES;
@@ -1132,8 +1148,13 @@
 			buildSettings = {
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
-				DEVELOPMENT_TEAM = "";
+				DEVELOPMENT_TEAM = LTLC8BE8XV;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+					"ENABLE_NET_PROVIDER_ACQUISITION=1",
+				);
 				HEADER_SEARCH_PATHS = (
 					"${SDKROOT}/usr/include/libxml2",
 					"${SRCROOT}/readium-sdk/Platform/Apple/include",
@@ -1142,7 +1163,7 @@
 					"${SRCROOT}/readium-lcp-client",
 				);
 				IPHONEOS_DEPLOYMENT_TARGET = 9.3;
-				PRODUCT_BUNDLE_IDENTIFIER = org.readium.SDKLauncher.iOS;
+				PRODUCT_BUNDLE_IDENTIFIER = org.readium.SDKLauncher.iOS.DANIEL;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
 				WRAPPER_EXTENSION = app;
@@ -1154,7 +1175,7 @@
 			buildSettings = {
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
-				DEVELOPMENT_TEAM = "";
+				DEVELOPMENT_TEAM = LTLC8BE8XV;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				HEADER_SEARCH_PATHS = (
 					"${SDKROOT}/usr/include/libxml2",
@@ -1164,7 +1185,7 @@
 					"${SRCROOT}/readium-lcp-client",
 				);
 				IPHONEOS_DEPLOYMENT_TARGET = 9.3;
-				PRODUCT_BUNDLE_IDENTIFIER = org.readium.SDKLauncher.iOS;
+				PRODUCT_BUNDLE_IDENTIFIER = org.readium.SDKLauncher.iOS.DANIEL;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
 				WRAPPER_EXTENSION = app;

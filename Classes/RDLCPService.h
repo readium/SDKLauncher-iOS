@@ -23,7 +23,7 @@
 
 // To be called by the RDContainerDelegate implementation
 //- (void)registerContentFilter;
-- (void)registerContentModule:(RDLcpCredentialHandler *) credentialHandler statusDocumentHandler:(RDLcpStatusDocumentHandler.h *) statusDocumentHandler;
+- (void)registerContentModule:(RDLcpCredentialHandler *) credentialHandler statusDocumentHandler:(RDLcpStatusDocumentHandler *) statusDocumentHandler;
 //- (void)registerContentModule:(lcp::ICredentialHandler *) credentialHandler;
 
 @end

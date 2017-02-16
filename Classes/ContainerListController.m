@@ -38,19 +38,19 @@ static NSInteger const kAcquisitionProgressBar = 3208;
 
 
 @interface ContainerListController ()
-#if ENABLE_NET_PROVIDER
+#if ENABLE_NET_PROVIDER_ACQUISITION
 <LCPAcquisitionDelegate>
 #else
 <NSURLSessionDataDelegate>
-#endif //ENABLE_NET_PROVIDER
+#endif //ENABLE_NET_PROVIDER_ACQUISITION
 
-#if ENABLE_NET_PROVIDER
+#if ENABLE_NET_PROVIDER_ACQUISITION
 @property (strong, nonatomic) NSURLSession *session;
 
 @property (strong, nonatomic) NSMutableDictionary *sessionDownloadPaths;
 @property (strong, nonatomic) NSMutableDictionary *sessionSuggestedFilenames;
 // @property (strong, nonatomic) NSMutableDictionary *sessionLCPPaths;
-#endif //ENABLE_NET_PROVIDER
+#endif //ENABLE_NET_PROVIDER_ACQUISITION
 
 @end
 
@@ -68,14 +68,14 @@ static NSInteger const kAcquisitionProgressBar = 3208;
 		m_paths = [ContainerList shared].paths;
         m_lcpAcquisitions = [NSMutableDictionary dictionary];
         
-#if !ENABLE_NET_PROVIDER
+#if !ENABLE_NET_PROVIDER_ACQUISITION
         NSURLSessionConfiguration *config = [NSURLSessionConfiguration ephemeralSessionConfiguration];
         _session = [NSURLSession sessionWithConfiguration:config delegate:self delegateQueue:nil];
         
         _sessionDownloadPaths = [NSMutableDictionary dictionary];
         _sessionSuggestedFilenames = [NSMutableDictionary dictionary];
         // _sessionLCPPaths = [NSMutableDictionary dictionary]; // see m_lcpAcquisitions
-#endif //!ENABLE_NET_PROVIDER
+#endif //!ENABLE_NET_PROVIDER_ACQUISITION
         
 		[[NSNotificationCenter defaultCenter] addObserver:self
 			selector:@selector(onContainerListDidChange)
@@ -156,7 +156,7 @@ static NSInteger const kAcquisitionProgressBar = 3208;
     } else if ([path.pathExtension.lowercaseString isEqual:@"lcpl"]) {
         errorTitle = @"Cannot Download Publication";
         
-#if ENABLE_NET_PROVIDER
+#if ENABLE_NET_PROVIDER_ACQUISITION
         LCPAcquisition *acquisition = m_lcpAcquisitions[path];
         if (acquisition) {
             success = YES;
@@ -172,7 +172,7 @@ static NSInteger const kAcquisitionProgressBar = 3208;
         } else {
             success = [self acquirePublicationWithLicense:path error:&error];
         }
-#endif //ENABLE_NET_PROVIDER
+#endif //ENABLE_NET_PROVIDER_ACQUISITION
     }
     
     if (!success) {
@@ -220,11 +220,11 @@ static NSInteger const kAcquisitionProgressBar = 3208;
     RDLCPService *lcp = [RDLCPService sharedService];
     NSString *licenseJSON = [NSString stringWithContentsOfFile:licensePath encoding:NSUTF8StringEncoding error:NULL];
     
-    LCPLicense *license = [lcp openLicense:licenseJSON error:error];
+    LCPLicense *license = [lcp openLicense:@"" licenseJSON:licenseJSON error:error];
     if (!license)
         return NO;
 
-#if ENABLE_NET_PROVIDER
+#if ENABLE_NET_PROVIDER_ACQUISITION
     
     NSString *fileName = [NSString stringWithFormat:@"%@_%@", [[NSProcessInfo processInfo] globallyUniqueString], @"lcp.epub"];
     NSURL *downloadFileURL = [NSURL fileURLWithPath:[NSTemporaryDirectory() stringByAppendingPathComponent:fileName]];
@@ -247,7 +247,7 @@ static NSInteger const kAcquisitionProgressBar = 3208;
     m_lcpAcquisitions[licensePath] = task;
     [task resume];
     
-#endif //ENABLE_NET_PROVIDER
+#endif //ENABLE_NET_PROVIDER_ACQUISITION
     
     return YES;
 }
@@ -255,7 +255,7 @@ static NSInteger const kAcquisitionProgressBar = 3208;
 
 
 
-#if ENABLE_NET_PROVIDER
+#if ENABLE_NET_PROVIDER_ACQUISITION
 
 - (NSString *)pathForAcquisition:(LCPAcquisition *)acquisition
 {
@@ -480,7 +480,7 @@ static NSInteger const kAcquisitionProgressBar = 3208;
     
 }
 
-#endif //ENABLE_NET_PROVIDER
+#endif //ENABLE_NET_PROVIDER_ACQUISITION
 
 
 @end

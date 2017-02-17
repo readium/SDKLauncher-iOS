@@ -293,11 +293,20 @@ static NSInteger const kAcquisitionProgressBar = 3208;
         // move the downloaded publication to the Documents/ folder, using
         // the suggested filename if any
         NSString *licensePath = [self pathForAcquisition:acquisition];
+        
         NSString *filename = (acquisition.suggestedFilename.length > 0) ? acquisition.suggestedFilename : [licensePath lastPathComponent];
         filename = [NSString stringWithFormat:@"%@.epub", [filename stringByDeletingPathExtension]];
         
+        filename = [NSString stringWithFormat:@"%@%@", [licensePath lastPathComponent], @".epub"];
+
+        
+        
         NSURL *documentsURL = [[[NSFileManager defaultManager] URLsForDirectory:NSDocumentDirectory inDomains:NSUserDomainMask] lastObject];
         NSString *destinationPath = [[documentsURL URLByAppendingPathComponent:filename] path];
+        
+       if ([[NSFileManager defaultManager] fileExistsAtPath:destinationPath]) {
+           [[NSFileManager defaultManager] removeItemAtPath:destinationPath error:NULL];
+       }
         
         [[NSFileManager defaultManager] moveItemAtPath:acquisition.publicationPath toPath:destinationPath error:NULL];
         

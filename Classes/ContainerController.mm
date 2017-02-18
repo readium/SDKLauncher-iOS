@@ -487,7 +487,7 @@ public:
     
     LCPStatusDocumentProcessing_DeviceIdManager* deviceIdManager = [[LCPStatusDocumentProcessing_DeviceIdManager alloc] init];
     
-    _statusDocumentProcessing = [[LCPStatusDocumentProcessing alloc] init_:[RDLCPService sharedService] path:_currentOpenChosenPath license:self.license deviceIdManager:deviceIdManager];
+    _statusDocumentProcessing = [[LCPStatusDocumentProcessing alloc] init_:[RDLCPService sharedService] epubPath:_currentOpenChosenPath license:self.license deviceIdManager:deviceIdManager];
     
     [_statusDocumentProcessing start:self];
     

@@ -254,6 +254,8 @@ public:
     
     m_container = [[RDContainer alloc] initWithDelegate:self path:path];
     
+    [self popErrorMessage];
+    
     if (m_container == nil) {
         self.title = @"EPUB OPEN ERROR";
         return;
@@ -264,8 +266,6 @@ public:
     // NOW WITH CONTENT MODULE
     //        if (![self loadLCPLicense:error])
     //            return nil;
-    
-    [self popErrorMessage];
     
     if (m_package == nil) {
         self.title = @"EPUB OPEN ERROR";
@@ -485,7 +485,7 @@ public:
         _statusDocumentProcessing = nil;
     }
     
-    LCPStatusDocumentProcessing_DeviceIdManager* deviceIdManager = [[LCPStatusDocumentProcessing_DeviceIdManager alloc] init];
+    LCPStatusDocumentProcessing_DeviceIdManager* deviceIdManager = [[LCPStatusDocumentProcessing_DeviceIdManager alloc] init_:@"APPLE iOS"];
     
     _statusDocumentProcessing = [[LCPStatusDocumentProcessing alloc] init_:[RDLCPService sharedService] epubPath:_currentOpenChosenPath license:self.license deviceIdManager:deviceIdManager];
     

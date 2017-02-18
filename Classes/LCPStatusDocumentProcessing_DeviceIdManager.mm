@@ -28,30 +28,93 @@
 using namespace lcp;
 
 @interface LCPStatusDocumentProcessing_DeviceIdManager ()
-    
+
 
 @end
 
-@implementation LCPStatusDocumentProcessing_DeviceIdManager
+@implementation LCPStatusDocumentProcessing_DeviceIdManager {
+@private
+    NSString* m_deviceName;
+}
 
-- (instancetype)init
+NSString* PREF_KEY_DEVICE_ID = @"READIUM_LCP_LSD_DEVICE_ID";
+NSString* PREF_KEY_DEVICE_ID_CHECK = @"READIUM_LCP_LSD_DEVICE_ID_CHECK_";
+
+- (instancetype)init_:(NSString*)deviceName
 {
     self = [super init];
     if (self) {
+        m_deviceName = deviceName;
     }
     
     return self;
 }
 
+- (NSString*)getDeviceNAME {
+    return m_deviceName;
+}
+
 - (NSString*)getDeviceID {
-    return @"UID";
+    
+    @try
+    {
+        NSUserDefaults *ud = [NSUserDefaults standardUserDefaults];
+        
+        NSString* uuid = [ud objectForKey:PREF_KEY_DEVICE_ID];
+        if (uuid == nil) {
+            
+            CFUUIDRef uid = CFUUIDCreate(NULL);
+            uuid = CFBridgingRelease(CFUUIDCreateString(NULL, uid));
+            CFRelease(uid);
+            
+            [ud setObject:uuid forKey:PREF_KEY_DEVICE_ID];
+            [ud synchronize];
+        }
+        
+        return uuid;
+    }
+    @catch(NSException *ex)
+    {
+        NSLog(@"Error: %@", ex);
+        return @"UID";
+    }
 }
 
 - (NSString*)checkDeviceID:(NSString*)key {
-    return @"UID";
+    
+    @try
+    {
+        NSUserDefaults *ud = [NSUserDefaults standardUserDefaults];
+        
+        NSString* prefKey = [NSString stringWithFormat:@"%@%@", PREF_KEY_DEVICE_ID_CHECK, key];
+        NSString* uuid = [ud objectForKey:prefKey];
+        
+        return uuid;
+    }
+    @catch(NSException *ex)
+    {
+        NSLog(@"Error: %@", ex);
+        return nil;
+    }
 }
 
 - (void)recordDeviceID:(NSString*)key {
+    
+    @try
+    {
+        NSUserDefaults *ud = [NSUserDefaults standardUserDefaults];
+        
+        NSString* prefKey = [NSString stringWithFormat:@"%@%@", PREF_KEY_DEVICE_ID_CHECK, key];
+        
+        NSString* uuid = [self getDeviceID];
+        
+        [ud setObject:uuid forKey:prefKey];
+        [ud synchronize];
+    }
+    @catch(NSException *ex)
+    {
+        NSLog(@"Error: %@", ex);
+    }
 }
 
 @end

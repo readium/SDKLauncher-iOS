@@ -29,6 +29,6 @@
 
 @interface LCPStatusDocumentProcessing_DeviceIdManager : NSObject<DeviceIdManager>
 
-- (instancetype)init;
+- (instancetype)init_:(NSString*)deviceName;
 
 @end

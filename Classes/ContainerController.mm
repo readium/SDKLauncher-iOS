@@ -38,6 +38,7 @@
 
 #import "RDLCPService.h"
 
+// includes LCPStatusDocumentProcessing.h
 #import <platform/apple/src/lcp.h>
 
 //#import <LcpContentFilter.h>
@@ -47,6 +48,7 @@
 #import "RDLcpStatusDocumentHandler.h"
 
 #import "LCPStatusDocumentProcessing_DeviceIdManager.h"
+
 
 //#import "LocStr.h"
 // TODO: THIS IS A HACK!! (linker complains about missing LocStr.m)
@@ -126,7 +128,6 @@ public:
     }
 };
 
-
 @interface ContainerController () <
 	RDContainerDelegate,
     RDContainerLCPDelegate,
@@ -157,18 +158,103 @@ public:
     [self openDocumentWithPath:_currentOpenChosenPath];
 }
 
-- (void)onStatusDocumentProcessingComplete:(LCPStatusDocumentProcessing*)lsdProcessing
+- (void)onStatusDocumentProcessingComplete:(LCPStatusDocumentProcessing*)lsd
 {
     if (_statusDocumentProcessing == nil) return;
     _statusDocumentProcessing = nil;
     
-    if ([lsdProcessing wasCancelled]) return;
+    if ([lsd wasCancelled]) return;
     
-    [self performSelectorOnMainThread:@selector(onStatusDocumentProcessingComplete_:) withObject:nil waitUntilDone:NO];
-    //
+    // Note that when the license is updated (injected) inside the EPUB archive,
+    // the LCPL file has a different canonical form, and therefore the user passphrase
+    // is asked again (even though it probably is exactly the same).
+    // This is because the passphrase is cached in secure storage based on unique keys
+    // for each LCPL file, based on their canonical form (serialised JSON syntax).
+    if ([lsd hasLicenseUpdatePending]) {
+        
+        [self performSelectorOnMainThread:@selector(onStatusDocumentProcessingComplete_:) withObject:nil waitUntilDone:NO];
+        
+        return;
+    }
+    
+    // The renew + return LSD interactions are invoked here for demonstration purposes only.
+    // A real-word app would probably expose the return link in a very different fashion,
+    // and may even not necessarily expose the return / renew interactions at the app level (to the end-user),
+    // instead: via an intermediary online service / web page, controlled by the content provider.
+    
+    [self checkLink_RENEW:lsd doneCallback_checkLink_RENEW:^(bool done_checkLink_RENEW){
+        
+        if (done_checkLink_RENEW) {
+            [self performSelectorOnMainThread:@selector(onStatusDocumentProcessingComplete_:) withObject:nil waitUntilDone:NO];
+            
+            return;
+        }
+        
+        [self checkLink_RETURN:lsd doneCallback_checkLink_RETURN:^(bool done_checkLink_RETURN){
+            
+            [self performSelectorOnMainThread:@selector(onStatusDocumentProcessingComplete_:) withObject:nil waitUntilDone:NO];
+        }];
+    }];
+    
     //    dispatch_async(dispatch_get_main_queue(), ^{
     //
     //    });
+}
+
+-(void)checkLink_RENEW:(LCPStatusDocumentProcessing*)lsd doneCallback_checkLink_RENEW:(DoneCallback)doneCallback_checkLink_RENEW //void(^)(bool)
+{
+    if (![lsd isActive]) {
+        doneCallback_checkLink_RENEW(false);
+        return;
+    }
+    
+    if (![lsd hasRenewLink]) {
+        doneCallback_checkLink_RENEW(false);
+        return;
+    }
+    
+    UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"LSD renew?" message:@"Renew LCP license?" preferredStyle:UIAlertControllerStyleAlert];
+    
+    
+    [alert addAction:[UIAlertAction actionWithTitle:@"No" style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
+        
+        doneCallback_checkLink_RENEW(false);
+    }]];
+    
+    [alert addAction:[UIAlertAction actionWithTitle:@"Yes" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+        
+        [lsd doRenew:doneCallback_checkLink_RENEW];
+    }]];
+    
+    [self presentViewController:alert animated:YES completion:nil];
+}
+
+-(void)checkLink_RETURN:(LCPStatusDocumentProcessing*)lsd doneCallback_checkLink_RETURN:(DoneCallback)doneCallback_checkLink_RETURN //void(^)(bool)
+{
+    if (![lsd isActive]) {
+        doneCallback_checkLink_RETURN(false);
+        return;
+    }
+    
+    if (![lsd hasReturnLink]) {
+        doneCallback_checkLink_RETURN(false);
+        return;
+    }
+    
+    UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"LSD return?" message:@"Return LCP license?" preferredStyle:UIAlertControllerStyleAlert];
+    
+    
+    [alert addAction:[UIAlertAction actionWithTitle:@"No" style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
+        
+        doneCallback_checkLink_RETURN(false);
+    }]];
+    
+    [alert addAction:[UIAlertAction actionWithTitle:@"Yes" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+        
+        [lsd doReturn:doneCallback_checkLink_RETURN];
+    }]];
+    
+    [self presentViewController:alert animated:YES completion:nil];
 }
 
 - (BOOL)container:(RDContainer *)container handleSdkError:(NSString *)message isSevereEpubError:(BOOL)isSevereEpubError {

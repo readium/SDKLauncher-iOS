@@ -795,6 +795,7 @@
 				340FC15616BC3B4600346A59 /* Frameworks */,
 				340FC15716BC3B4600346A59 /* Resources */,
 				83919F191A1E074C00FC8118 /* ShellScript */,
+				F30229771E5AE50F00253C39 /* ShellScript */,
 			);
 			buildRules = (
 			);
@@ -816,8 +817,8 @@
 				ORGANIZATIONNAME = "The Readium Foundation";
 				TargetAttributes = {
 					340FC15816BC3B4600346A59 = {
-						DevelopmentTeam = LTLC8BE8XV;
-						ProvisioningStyle = Automatic;
+						DevelopmentTeam = 327YA3JNGT;
+						ProvisioningStyle = Manual;
 					};
 				};
 			};
@@ -961,6 +962,19 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = ./Resources/epubReadingSystem.sh;
+		};
+		F30229771E5AE50F00253C39 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"/Users/alexandrecamilleri/Desktop/dev/frameworks/Crashlytics-iOS/Fabric.framework/run\" 8697fc2d6b052922d0b776297ecd35750f08b5aa 97d2dd9b077b4fcfcae94e848193021e9f5d44dd2759b545fb7a525ee0693c2b";
 		};
 /* End PBXShellScriptBuildPhase section */
 
@@ -1149,8 +1163,9 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CODE_SIGN_IDENTITY = "iPhone Developer";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
-				DEVELOPMENT_TEAM = LTLC8BE8XV;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
+				CURRENT_PROJECT_VERSION = 13;
+				DEVELOPMENT_TEAM = 327YA3JNGT;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREPROCESSOR_DEFINITIONS = "$(inherited)";
 				HEADER_SEARCH_PATHS = (
@@ -1161,9 +1176,10 @@
 					"${SRCROOT}/readium-lcp-client",
 				);
 				IPHONEOS_DEPLOYMENT_TARGET = 9.3;
-				PRODUCT_BUNDLE_IDENTIFIER = org.readium.SDKLauncher.iOS.DANIEL;
+				PRODUCT_BUNDLE_IDENTIFIER = org.readium.SDKLauncher.beta;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "";
+				PROVISIONING_PROFILE = "507c48dd-a37d-406a-b553-36a28eed223a";
+				PROVISIONING_PROFILE_SPECIFIER = SDKLauncher;
 				WRAPPER_EXTENSION = app;
 			};
 			name = Debug;
@@ -1172,8 +1188,9 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CODE_SIGN_IDENTITY = "iPhone Developer";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
-				DEVELOPMENT_TEAM = LTLC8BE8XV;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
+				CURRENT_PROJECT_VERSION = 13;
+				DEVELOPMENT_TEAM = 327YA3JNGT;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREPROCESSOR_DEFINITIONS = "${inherited}";
 				HEADER_SEARCH_PATHS = (
@@ -1184,9 +1201,10 @@
 					"${SRCROOT}/readium-lcp-client",
 				);
 				IPHONEOS_DEPLOYMENT_TARGET = 9.3;
-				PRODUCT_BUNDLE_IDENTIFIER = org.readium.SDKLauncher.iOS.DANIEL;
+				PRODUCT_BUNDLE_IDENTIFIER = org.readium.SDKLauncher.beta;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "";
+				PROVISIONING_PROFILE = "d8e3acb6-42eb-4293-8ea4-48e2046133f0";
+				PROVISIONING_PROFILE_SPECIFIER = SDKLauncher;
 				WRAPPER_EXTENSION = app;
 			};
 			name = Release;

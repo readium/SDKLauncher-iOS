@@ -5,7 +5,7 @@
 	<key>CFBundleDevelopmentRegion</key>
 	<string>en</string>
 	<key>CFBundleDisplayName</key>
-	<string>Readium</string>
+	<string>Readium-Beta</string>
 	<key>CFBundleDocumentTypes</key>
 	<array>
 		<dict>

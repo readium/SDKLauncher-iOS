@@ -22,8 +22,8 @@ lane :beta do
   # upload to Beta by Crashlytics
   crashlytics(
    crashlytics_path: "/Users/alexandrecamilleri/Desktop/dev/frameworks/Crashlytics-iOS/Crashlytics.framework",
-   api_token: "8697fc2d6b052922d0b776297ecd35750f08b5aa",
-   build_secret: "97d2dd9b077b4fcfcae94e848193021e9f5d44dd2759b545fb7a525ee0693c2b",
+   api_token: "",
+   build_secret: "",
    notes: "New beta build at " + Time.new.strftime("%H:%M:%S %d.%m.%Y")
   )
 

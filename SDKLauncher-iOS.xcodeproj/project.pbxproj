@@ -766,7 +766,8 @@
 				ORGANIZATIONNAME = "The Readium Foundation";
 				TargetAttributes = {
 					340FC15816BC3B4600346A59 = {
-						DevelopmentTeam = NB74F5L25E;
+						DevelopmentTeam = 327YA3JNGT;
+						ProvisioningStyle = Automatic;
 					};
 				};
 			};
@@ -1078,6 +1079,7 @@
 			buildSettings = {
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				DEVELOPMENT_TEAM = 327YA3JNGT;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				HEADER_SEARCH_PATHS = (
 					"${SDKROOT}/usr/include/libxml2",
@@ -1095,6 +1097,7 @@
 			buildSettings = {
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				DEVELOPMENT_TEAM = 327YA3JNGT;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				HEADER_SEARCH_PATHS = (
 					"${SDKROOT}/usr/include/libxml2",

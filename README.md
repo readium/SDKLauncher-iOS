@@ -12,7 +12,7 @@ This fork of Readium SDKLauncher-iOS uses [Mantano's LCP client library](https:/
 
 ### Root Certificate
 
-You need to put your Root Certificate in `Resources/LCP Root Certificate.crt` to be able to read LCP protected EPUB. The Root Certificates are delivered by the Readium Foundation to licensees.
+You need to put your Root Certificate in `Resources/LCP Root Certificate.crt` to be able to read LCP protected EPUB. The Root Certificates are delivered by EDRLab to licensees.
 
 As an alternative, you can use your own self-signed certificate paired with a LCP server (see: Installing a LCP Server).
 

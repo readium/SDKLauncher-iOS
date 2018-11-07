@@ -7,8 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		3403516516CE93F2009E3B88 /* reader.css in Resources */ = {isa = PBXBuildFile; fileRef = 3403516116CE93F2009E3B88 /* reader.css */; };
-		3403516616CE93F2009E3B88 /* reader.html in Resources */ = {isa = PBXBuildFile; fileRef = 3403516216CE93F2009E3B88 /* reader.html */; };
 		340535AA16BC5DD100D4A802 /* BaseViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 340535A916BC5DD100D4A802 /* BaseViewController.m */; };
 		340535AD16BC5F4700D4A802 /* ContainerListController.m in Sources */ = {isa = PBXBuildFile; fileRef = 340535AC16BC5F4700D4A802 /* ContainerListController.m */; };
 		340535B216BC608900D4A802 /* LocStr.m in Sources */ = {isa = PBXBuildFile; fileRef = 340535AF16BC608900D4A802 /* LocStr.m */; };
@@ -105,31 +103,14 @@
 		8307EC6919E3DE4A00B00468 /* mathjax in Resources */ = {isa = PBXBuildFile; fileRef = 8307EC6719E3DDEC00B00468 /* mathjax */; };
 		8330F8441E559F29003233B9 /* RDLcpStatusDocumentHandler.mm in Sources */ = {isa = PBXBuildFile; fileRef = 8330F8431E559F29003233B9 /* RDLcpStatusDocumentHandler.mm */; };
 		8330F84B1E55A319003233B9 /* LCPStatusDocumentProcessing_DeviceIdManager.mm in Sources */ = {isa = PBXBuildFile; fileRef = 8330F84A1E55A319003233B9 /* LCPStatusDocumentProcessing_DeviceIdManager.mm */; };
-		835846F31B42D997002DA99D /* reader_RequireJS-multiple-bundles.html in Resources */ = {isa = PBXBuildFile; fileRef = 835846F01B42D997002DA99D /* reader_RequireJS-multiple-bundles.html */; };
-		835846F41B42D997002DA99D /* reader_RequireJS-no-optimize.html in Resources */ = {isa = PBXBuildFile; fileRef = 835846F11B42D997002DA99D /* reader_RequireJS-no-optimize.html */; };
-		835846F51B42D997002DA99D /* reader_RequireJS-single-bundle.html in Resources */ = {isa = PBXBuildFile; fileRef = 835846F21B42D997002DA99D /* reader_RequireJS-single-bundle.html */; };
+		833F57C7218F6FC000E40EA3 /* reader_RequireJS-single-bundle.html in Resources */ = {isa = PBXBuildFile; fileRef = 833F57C6218F6FC000E40EA3 /* reader_RequireJS-single-bundle.html */; };
 		835846F71B42DA05002DA99D /* sdk.css in Resources */ = {isa = PBXBuildFile; fileRef = 835846F61B42DA05002DA99D /* sdk.css */; };
 		835846FB1B42DAF6002DA99D /* readium-shared-js_all.js in Resources */ = {isa = PBXBuildFile; fileRef = 835846F81B42DAF6002DA99D /* readium-shared-js_all.js */; };
-		835846FC1B42DAF6002DA99D /* readium-shared-js_all.js.bundles.js in Resources */ = {isa = PBXBuildFile; fileRef = 835846F91B42DAF6002DA99D /* readium-shared-js_all.js.bundles.js */; };
 		835846FD1B42DAF6002DA99D /* readium-shared-js_all.js.map in Sources */ = {isa = PBXBuildFile; fileRef = 835846FA1B42DAF6002DA99D /* readium-shared-js_all.js.map */; };
-		8358470C1B42DB09002DA99D /* readium-cfi-js.js in Resources */ = {isa = PBXBuildFile; fileRef = 835846FE1B42DB09002DA99D /* readium-cfi-js.js */; };
-		8358470D1B42DB09002DA99D /* readium-cfi-js.js.bundles.js in Resources */ = {isa = PBXBuildFile; fileRef = 835846FF1B42DB09002DA99D /* readium-cfi-js.js.bundles.js */; };
-		8358470E1B42DB09002DA99D /* readium-cfi-js.js.map in Sources */ = {isa = PBXBuildFile; fileRef = 835847001B42DB09002DA99D /* readium-cfi-js.js.map */; };
-		8358470F1B42DB09002DA99D /* readium-external-libs.js in Resources */ = {isa = PBXBuildFile; fileRef = 835847011B42DB09002DA99D /* readium-external-libs.js */; };
-		835847101B42DB09002DA99D /* readium-external-libs.js.bundles.js in Resources */ = {isa = PBXBuildFile; fileRef = 835847021B42DB09002DA99D /* readium-external-libs.js.bundles.js */; };
-		835847111B42DB09002DA99D /* readium-external-libs.js.map in Sources */ = {isa = PBXBuildFile; fileRef = 835847031B42DB09002DA99D /* readium-external-libs.js.map */; };
-		835847151B42DB09002DA99D /* readium-shared-js.js in Resources */ = {isa = PBXBuildFile; fileRef = 835847071B42DB09002DA99D /* readium-shared-js.js */; };
-		835847161B42DB09002DA99D /* readium-shared-js.js.bundles.js in Resources */ = {isa = PBXBuildFile; fileRef = 835847081B42DB09002DA99D /* readium-shared-js.js.bundles.js */; };
-		835847171B42DB09002DA99D /* readium-shared-js.js.map in Sources */ = {isa = PBXBuildFile; fileRef = 835847091B42DB09002DA99D /* readium-shared-js.js.map */; };
-		835847181B42DB0A002DA99D /* RequireJS.js in Resources */ = {isa = PBXBuildFile; fileRef = 8358470A1B42DB09002DA99D /* RequireJS.js */; };
-		8358471A1B42E789002DA99D /* readium-cfi-js.js.map in Resources */ = {isa = PBXBuildFile; fileRef = 835847001B42DB09002DA99D /* readium-cfi-js.js.map */; };
-		8358471B1B42E789002DA99D /* readium-external-libs.js.map in Resources */ = {isa = PBXBuildFile; fileRef = 835847031B42DB09002DA99D /* readium-external-libs.js.map */; };
-		8358471D1B42E789002DA99D /* readium-shared-js.js.map in Resources */ = {isa = PBXBuildFile; fileRef = 835847091B42DB09002DA99D /* readium-shared-js.js.map */; };
 		8358471E1B42E789002DA99D /* readium-shared-js_all.js.map in Resources */ = {isa = PBXBuildFile; fileRef = 835846FA1B42DAF6002DA99D /* readium-shared-js_all.js.map */; };
 		8387C9DA1D82F88000BC2AE6 /* RDLcpCredentialHandler.mm in Sources */ = {isa = PBXBuildFile; fileRef = 8387C9D91D82F88000BC2AE6 /* RDLcpCredentialHandler.mm */; };
 		8387C9DC1D82FD4200BC2AE6 /* ContainerController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 8387C9DB1D82FD4200BC2AE6 /* ContainerController.mm */; };
 		83919F161A1E074200FC8118 /* epubReadingSystem.js in Resources */ = {isa = PBXBuildFile; fileRef = A250D199754564056CB0267E /* epubReadingSystem.js */; };
-		83EBB4A419F56C1C0083E8F1 /* annotations.css in Resources */ = {isa = PBXBuildFile; fileRef = 83EBB4A319F56C1C0083E8F1 /* annotations.css */; };
 		85DE51A117FDDCAC00F55130 /* page-blanche-20130322.epub in Resources */ = {isa = PBXBuildFile; fileRef = 85DE51A017FDDCAC00F55130 /* page-blanche-20130322.epub */; };
 		A250D5118ECA530997C6E72B /* epubReadingSystem.js in Sources */ = {isa = PBXBuildFile; fileRef = A250D199754564056CB0267E /* epubReadingSystem.js */; };
 		A250D5FFC597F4E5EB74D3AC /* epub30-test-0120-20131022.epub in Resources */ = {isa = PBXBuildFile; fileRef = A250D58D34D67FC218608A1F /* epub30-test-0120-20131022.epub */; };
@@ -183,8 +164,6 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		3403516116CE93F2009E3B88 /* reader.css */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.css; path = reader.css; sourceTree = "<group>"; };
-		3403516216CE93F2009E3B88 /* reader.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = reader.html; sourceTree = "<group>"; };
 		340535A816BC5DD100D4A802 /* BaseViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BaseViewController.h; sourceTree = "<group>"; };
 		340535A916BC5DD100D4A802 /* BaseViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BaseViewController.m; sourceTree = "<group>"; };
 		340535AB16BC5F4700D4A802 /* ContainerListController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ContainerListController.h; sourceTree = "<group>"; };
@@ -344,27 +323,13 @@
 		8330F8431E559F29003233B9 /* RDLcpStatusDocumentHandler.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = RDLcpStatusDocumentHandler.mm; sourceTree = "<group>"; };
 		8330F8491E55A319003233B9 /* LCPStatusDocumentProcessing_DeviceIdManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LCPStatusDocumentProcessing_DeviceIdManager.h; sourceTree = "<group>"; };
 		8330F84A1E55A319003233B9 /* LCPStatusDocumentProcessing_DeviceIdManager.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = LCPStatusDocumentProcessing_DeviceIdManager.mm; sourceTree = "<group>"; };
-		835846F01B42D997002DA99D /* reader_RequireJS-multiple-bundles.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = "reader_RequireJS-multiple-bundles.html"; sourceTree = "<group>"; };
-		835846F11B42D997002DA99D /* reader_RequireJS-no-optimize.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = "reader_RequireJS-no-optimize.html"; sourceTree = "<group>"; };
-		835846F21B42D997002DA99D /* reader_RequireJS-single-bundle.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = "reader_RequireJS-single-bundle.html"; sourceTree = "<group>"; };
+		833F57C6218F6FC000E40EA3 /* reader_RequireJS-single-bundle.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = "reader_RequireJS-single-bundle.html"; sourceTree = "<group>"; };
 		835846F61B42DA05002DA99D /* sdk.css */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.css; name = sdk.css; path = "readium-shared-js/static/sdk.css"; sourceTree = "<group>"; };
 		835846F81B42DAF6002DA99D /* readium-shared-js_all.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; name = "readium-shared-js_all.js"; path = "readium-shared-js/build-output/_single-bundle/readium-shared-js_all.js"; sourceTree = "<group>"; };
-		835846F91B42DAF6002DA99D /* readium-shared-js_all.js.bundles.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; name = "readium-shared-js_all.js.bundles.js"; path = "readium-shared-js/build-output/_single-bundle/readium-shared-js_all.js.bundles.js"; sourceTree = "<group>"; };
 		835846FA1B42DAF6002DA99D /* readium-shared-js_all.js.map */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = "sourcecode.module-map"; name = "readium-shared-js_all.js.map"; path = "readium-shared-js/build-output/_single-bundle/readium-shared-js_all.js.map"; sourceTree = "<group>"; };
-		835846FE1B42DB09002DA99D /* readium-cfi-js.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; name = "readium-cfi-js.js"; path = "readium-shared-js/build-output/_multiple-bundles/readium-cfi-js.js"; sourceTree = "<group>"; };
-		835846FF1B42DB09002DA99D /* readium-cfi-js.js.bundles.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; name = "readium-cfi-js.js.bundles.js"; path = "readium-shared-js/build-output/_multiple-bundles/readium-cfi-js.js.bundles.js"; sourceTree = "<group>"; };
-		835847001B42DB09002DA99D /* readium-cfi-js.js.map */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = "sourcecode.module-map"; name = "readium-cfi-js.js.map"; path = "readium-shared-js/build-output/_multiple-bundles/readium-cfi-js.js.map"; sourceTree = "<group>"; };
-		835847011B42DB09002DA99D /* readium-external-libs.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; name = "readium-external-libs.js"; path = "readium-shared-js/build-output/_multiple-bundles/readium-external-libs.js"; sourceTree = "<group>"; };
-		835847021B42DB09002DA99D /* readium-external-libs.js.bundles.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; name = "readium-external-libs.js.bundles.js"; path = "readium-shared-js/build-output/_multiple-bundles/readium-external-libs.js.bundles.js"; sourceTree = "<group>"; };
-		835847031B42DB09002DA99D /* readium-external-libs.js.map */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = "sourcecode.module-map"; name = "readium-external-libs.js.map"; path = "readium-shared-js/build-output/_multiple-bundles/readium-external-libs.js.map"; sourceTree = "<group>"; };
-		835847071B42DB09002DA99D /* readium-shared-js.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; name = "readium-shared-js.js"; path = "readium-shared-js/build-output/_multiple-bundles/readium-shared-js.js"; sourceTree = "<group>"; };
-		835847081B42DB09002DA99D /* readium-shared-js.js.bundles.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; name = "readium-shared-js.js.bundles.js"; path = "readium-shared-js/build-output/_multiple-bundles/readium-shared-js.js.bundles.js"; sourceTree = "<group>"; };
-		835847091B42DB09002DA99D /* readium-shared-js.js.map */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = "sourcecode.module-map"; name = "readium-shared-js.js.map"; path = "readium-shared-js/build-output/_multiple-bundles/readium-shared-js.js.map"; sourceTree = "<group>"; };
-		8358470A1B42DB09002DA99D /* RequireJS.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; name = RequireJS.js; path = "readium-shared-js/build-output/_multiple-bundles/RequireJS.js"; sourceTree = "<group>"; };
 		8387C9D81D82F88000BC2AE6 /* RDLcpCredentialHandler.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RDLcpCredentialHandler.h; sourceTree = "<group>"; };
 		8387C9D91D82F88000BC2AE6 /* RDLcpCredentialHandler.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = RDLcpCredentialHandler.mm; sourceTree = "<group>"; };
 		8387C9DB1D82FD4200BC2AE6 /* ContainerController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = ContainerController.mm; sourceTree = "<group>"; };
-		83EBB4A319F56C1C0083E8F1 /* annotations.css */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.css; path = annotations.css; sourceTree = "<group>"; };
 		85DE51A017FDDCAC00F55130 /* page-blanche-20130322.epub */ = {isa = PBXFileReference; lastKnownFileType = file; path = "page-blanche-20130322.epub"; sourceTree = "<group>"; };
 		A250D199754564056CB0267E /* epubReadingSystem.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = epubReadingSystem.js; sourceTree = "<group>"; };
 		A250D54A5C423A86C6099037 /* epub30-test-0220-20131022.epub */ = {isa = PBXFileReference; lastKnownFileType = file.epub; path = "epub30-test-0220-20131022.epub"; sourceTree = "<group>"; };
@@ -398,28 +363,12 @@
 		3403515F16CE9362009E3B88 /* Injection */ = {
 			isa = PBXGroup;
 			children = (
-				835846FE1B42DB09002DA99D /* readium-cfi-js.js */,
-				835846FF1B42DB09002DA99D /* readium-cfi-js.js.bundles.js */,
-				835847001B42DB09002DA99D /* readium-cfi-js.js.map */,
-				835847011B42DB09002DA99D /* readium-external-libs.js */,
-				835847021B42DB09002DA99D /* readium-external-libs.js.bundles.js */,
-				835847031B42DB09002DA99D /* readium-external-libs.js.map */,
-				835847071B42DB09002DA99D /* readium-shared-js.js */,
-				835847081B42DB09002DA99D /* readium-shared-js.js.bundles.js */,
-				835847091B42DB09002DA99D /* readium-shared-js.js.map */,
-				8358470A1B42DB09002DA99D /* RequireJS.js */,
+				833F57C6218F6FC000E40EA3 /* reader_RequireJS-single-bundle.html */,
 				835846F81B42DAF6002DA99D /* readium-shared-js_all.js */,
-				835846F91B42DAF6002DA99D /* readium-shared-js_all.js.bundles.js */,
 				835846FA1B42DAF6002DA99D /* readium-shared-js_all.js.map */,
 				835846F61B42DA05002DA99D /* sdk.css */,
-				835846F01B42D997002DA99D /* reader_RequireJS-multiple-bundles.html */,
-				835846F11B42D997002DA99D /* reader_RequireJS-no-optimize.html */,
-				835846F21B42D997002DA99D /* reader_RequireJS-single-bundle.html */,
-				83EBB4A319F56C1C0083E8F1 /* annotations.css */,
 				8307EC6719E3DDEC00B00468 /* mathjax */,
 				341A1F701790BC6800E603C4 /* host_app_feedback.js */,
-				3403516116CE93F2009E3B88 /* reader.css */,
-				3403516216CE93F2009E3B88 /* reader.html */,
 				A250D199754564056CB0267E /* epubReadingSystem.js */,
 			);
 			name = Injection;
@@ -812,7 +761,7 @@
 		340FC15116BC3B4600346A59 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0800;
+				LastUpgradeCheck = 1010;
 				ORGANIZATIONNAME = "The Readium Foundation";
 				TargetAttributes = {
 					340FC15816BC3B4600346A59 = {
@@ -891,23 +840,17 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				8358471A1B42E789002DA99D /* readium-cfi-js.js.map in Resources */,
 				5A1B612C1C1881A100D45788 /* LCP Root Certificate.crt in Resources */,
-				8358471B1B42E789002DA99D /* readium-external-libs.js.map in Resources */,
-				8358471D1B42E789002DA99D /* readium-shared-js.js.map in Resources */,
 				8358471E1B42E789002DA99D /* readium-shared-js_all.js.map in Resources */,
-				8358470F1B42DB09002DA99D /* readium-external-libs.js in Resources */,
 				83919F161A1E074200FC8118 /* epubReadingSystem.js in Resources */,
 				8307EC6919E3DE4A00B00468 /* mathjax in Resources */,
-				835847181B42DB0A002DA99D /* RequireJS.js in Resources */,
 				34B56B5E1723158E00A5A4B8 /* childrens-literature-20130206.epub in Resources */,
 				3462FBEB16BC40F9003C79E1 /* Default.png in Resources */,
 				34E12BA9180301A2004DCB68 /* Icon-72@2x.png in Resources */,
 				3462FBEC16BC40F9003C79E1 /* Default@2x.png in Resources */,
+				833F57C7218F6FC000E40EA3 /* reader_RequireJS-single-bundle.html in Resources */,
 				3462FBE616BC40F9003C79E1 /* Default-568h@2x.png in Resources */,
-				8358470C1B42DB09002DA99D /* readium-cfi-js.js in Resources */,
 				3462FBE716BC40F9003C79E1 /* Default-Landscape.png in Resources */,
-				835847101B42DB09002DA99D /* readium-external-libs.js.bundles.js in Resources */,
 				3462FBE816BC40F9003C79E1 /* Default-Landscape@2x.png in Resources */,
 				34E12BA7180301A2004DCB68 /* Icon-60@2x.png in Resources */,
 				3462FBE916BC40F9003C79E1 /* Default-Portrait.png in Resources */,
@@ -917,24 +860,14 @@
 				34E12BA8180301A2004DCB68 /* Icon-72.png in Resources */,
 				34E12BA5180301A2004DCB68 /* Icon-57.png in Resources */,
 				3462FBEA16BC40F9003C79E1 /* Default-Portrait@2x.png in Resources */,
-				835847161B42DB09002DA99D /* readium-shared-js.js.bundles.js in Resources */,
-				835846FC1B42DAF6002DA99D /* readium-shared-js_all.js.bundles.js in Resources */,
 				34E12BA2180301A2004DCB68 /* Icon-40@2x.png in Resources */,
 				3436EB2A1790C3F300246925 /* host_app_feedback.js in Resources */,
-				835846F31B42D997002DA99D /* reader_RequireJS-multiple-bundles.html in Resources */,
 				34E12BA3180301A2004DCB68 /* Icon-50.png in Resources */,
 				34E12BA6180301A2004DCB68 /* Icon-57@2x.png in Resources */,
-				835847151B42DB09002DA99D /* readium-shared-js.js in Resources */,
-				835846F51B42D997002DA99D /* reader_RequireJS-single-bundle.html in Resources */,
 				34E12BAA180301A2004DCB68 /* Icon-76.png in Resources */,
 				34E12BA0180301A2004DCB68 /* Icon-29@2x.png in Resources */,
 				3462FBC816BC3C8F003C79E1 /* Localizable.strings in Resources */,
-				835846F41B42D997002DA99D /* reader_RequireJS-no-optimize.html in Resources */,
-				83EBB4A419F56C1C0083E8F1 /* annotations.css in Resources */,
 				340535B916BC729200D4A802 /* moby-dick-20120118.epub in Resources */,
-				3403516516CE93F2009E3B88 /* reader.css in Resources */,
-				3403516616CE93F2009E3B88 /* reader.html in Resources */,
-				8358470D1B42DB09002DA99D /* readium-cfi-js.js.bundles.js in Resources */,
 				85DE51A117FDDCAC00F55130 /* page-blanche-20130322.epub in Resources */,
 				34E12BA4180301A2004DCB68 /* Icon-50@2x.png in Resources */,
 				340535BB16BC793700D4A802 /* wasteland-20120118.epub in Resources */,
@@ -988,7 +921,6 @@
 				34B56B4C1722DFB700A5A4B8 /* BookmarkDatabase.m in Sources */,
 				34212FBC18F0649500A9109F /* RDSpineItem.mm in Sources */,
 				34B56B5C17230FDF00A5A4B8 /* BookmarkListController.m in Sources */,
-				835847171B42DB09002DA99D /* readium-shared-js.js.map in Sources */,
 				34212FC818F0649500A9109F /* HTTPDataResponse.m in Sources */,
 				34269C5C190F55DA00D315ED /* RDPackageResourceDataResponse.m in Sources */,
 				340535B616BC669C00D4A802 /* ContainerList.m in Sources */,
@@ -1012,7 +944,6 @@
 				34212FBB18F0649500A9109F /* RDSmilData.mm in Sources */,
 				34212FCD18F0649500A9109F /* WebSocket.m in Sources */,
 				3462FBBE16BC3C43003C79E1 /* main.m in Sources */,
-				835847111B42DB09002DA99D /* readium-external-libs.js.map in Sources */,
 				34212FBE18F0649500A9109F /* DDNumber.m in Sources */,
 				34212FB518F0649500A9109F /* RDNavigationElement.mm in Sources */,
 				34CE0B1F1720D8FE00F55192 /* NavigationElementController.m in Sources */,
@@ -1029,7 +960,6 @@
 				34212FD718F0649500A9109F /* DispatchQueueLogFormatter.m in Sources */,
 				34B56B4F1722E54A00A5A4B8 /* Settings.m in Sources */,
 				341652A816C2F9E700AFDB8B /* SpineItemListController.m in Sources */,
-				8358470E1B42DB09002DA99D /* readium-cfi-js.js.map in Sources */,
 				342817DD18DBC48700C8434E /* NavigationElementItem.m in Sources */,
 				34212FCF18F0649500A9109F /* GCDAsyncSocket.m in Sources */,
 				A250D5118ECA530997C6E72B /* epubReadingSystem.js in Sources */,
@@ -1065,12 +995,20 @@
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
 				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
 				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
 				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN_ENUM_CONVERSION = YES;
 				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
@@ -1112,12 +1050,20 @@
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
 				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
 				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
 				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN_ENUM_CONVERSION = YES;
 				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;

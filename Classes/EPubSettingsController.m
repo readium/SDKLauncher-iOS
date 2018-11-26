@@ -195,15 +195,18 @@
 
 - (void)onColumnGapDidChange:(UIStepper *)stepper {
 	[EPubSettings shared].columnGap = stepper.value;
+    [self updateCells];
 }
 
 
 - (void)onFontScaleDidChange:(UIStepper *)stepper {
 	[EPubSettings shared].fontScale = stepper.value;
+    [self updateCells];
 }
 
 
 - (void)onTapDone {
+    [[EPubSettings shared] update];
 	[self dismissViewControllerAnimated:YES completion:nil];
 }
 
@@ -241,6 +244,8 @@
 	else if (cell == m_cellSyntheticSpreadSingle) {
 		[EPubSettings shared].syntheticSpread = EPubSettingsSyntheticSpreadSingle;
 	}
+    
+    [self updateCells];
 }
 
 
